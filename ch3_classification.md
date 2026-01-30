@@ -310,21 +310,43 @@ La hessienne est donc semi-définie positive (définie positive si $\mathbf{X}$ 
 
 ## Régression logistique multiclasse
 
-### La fonction softmax
+### Le modèle probabiliste catégoriel
 
-Pour la classification à $C$ classes, nous généralisons la sigmoïde par la fonction **softmax**:
+Pour la classification binaire, nous avons utilisé la distribution de **Bernoulli**: la sortie $y \in \{0, 1\}$ suit $y \sim \text{Bernoulli}(\mu)$, où le paramètre $\mu \in (0, 1)$ est la probabilité de la classe 1. La contrainte $\mu \in (0, 1)$ est garantie par la fonction sigmoïde appliquée à la sortie linéaire.
+
+Pour la classification à $C$ classes, la généralisation naturelle est la distribution **catégorielle** (aussi appelée multinoulli). La sortie $y \in \{0, 1, \ldots, C-1\}$ suit:
 
 $$
-p(y = c | \mathbf{x}; \boldsymbol{\Theta}) = \text{softmax}(\mathbf{a})_c = \frac{e^{a_c}}{\sum_{c'=1}^{C} e^{a_{c'}}}
+y \sim \text{Catégoriel}(\boldsymbol{\mu}), \quad \boldsymbol{\mu} = (\mu_0, \mu_1, \ldots, \mu_{C-1})
+$$
+
+où $\mu_c = p(y = c | \mathbf{x})$ est la probabilité de la classe $c$. Ces probabilités doivent satisfaire deux contraintes:
+1. **Positivité**: $\mu_c > 0$ pour tout $c$
+2. **Normalisation**: $\sum_{c=0}^{C-1} \mu_c = 1$
+
+Le parallèle avec les chapitres précédents est complet:
+
+| Problème | Distribution | Paramètre(s) | Contrainte | Fonction |
+|----------|-------------|--------------|------------|----------|
+| Régression | $\mathcal{N}(\mu, \sigma^2)$ | $\mu = f(\mathbf{x})$ | $\mu \in \mathbb{R}$ | Identité |
+| Classification binaire | $\text{Bernoulli}(\mu)$ | $\mu = f(\mathbf{x})$ | $\mu \in (0, 1)$ | Sigmoïde |
+| Classification multiclasse | $\text{Catégoriel}(\boldsymbol{\mu})$ | $\boldsymbol{\mu} = f(\mathbf{x})$ | $\mu_c > 0$, $\sum_c \mu_c = 1$ | **Softmax** |
+
+### La fonction softmax
+
+Nous avons besoin d'une fonction qui transforme $C$ scores réels $\mathbf{a} = (a_0, \ldots, a_{C-1}) \in \mathbb{R}^C$ en un vecteur de probabilités valide. La **fonction softmax** remplit exactement ce rôle:
+
+$$
+\mu_c = \text{softmax}(\mathbf{a})_c = \frac{e^{a_c}}{\sum_{c'=0}^{C-1} e^{a_{c'}}}
 $$
 
 où $\mathbf{a} = \boldsymbol{\Theta} \mathbf{x}$ est le vecteur de **logits** (un score par classe), et $\boldsymbol{\Theta} \in \mathbb{R}^{C \times d}$ est la matrice de paramètres.
 
-La fonction softmax a deux propriétés essentielles:
-1. Les sorties sont positives: $\text{softmax}(\mathbf{a})_c > 0$ pour tout $c$
-2. Les sorties somment à 1: $\sum_{c=1}^C \text{softmax}(\mathbf{a})_c = 1$
+Pourquoi l'exponentielle? Elle garantit les deux contraintes:
+1. **Positivité**: $e^{a_c} > 0$ pour tout $a_c \in \mathbb{R}$, donc $\mu_c > 0$
+2. **Normalisation**: la division par $\sum_{c'} e^{a_{c'}}$ assure que $\sum_c \mu_c = 1$
 
-C'est donc une distribution de probabilité valide sur les $C$ classes.
+C'est la même idée que pour la sigmoïde: nous utilisons une transformation non linéaire pour projeter la sortie linéaire dans l'espace des paramètres valides de la distribution.
 
 ```{code-cell} python
 :tags: [hide-input]
@@ -367,21 +389,31 @@ plt.tight_layout()
 
 ### Entropie croisée catégorielle
 
-La log-vraisemblance négative pour le cas multiclasse utilise l'**entropie croisée catégorielle**:
+Appliquons le maximum de vraisemblance à la distribution catégorielle, exactement comme nous l'avons fait pour Bernoulli. La vraisemblance d'une observation $(y, \mathbf{x})$ est la probabilité assignée à la vraie classe:
 
 $$
-\text{LVN}(\boldsymbol{\Theta}) = -\frac{1}{N} \sum_{i=1}^N \sum_{c=1}^{C} y_{ic} \log \mu_{ic}
+p(y | \mathbf{x}; \boldsymbol{\Theta}) = \prod_{c=0}^{C-1} \mu_c^{\mathbb{1}(y = c)} = \mu_y
 $$
 
-où $y_{ic} = \mathbb{1}(y_i = c)$ est l'**encodage one-hot** de l'étiquette (1 pour la vraie classe, 0 ailleurs) et $\mu_{ic} = p(y = c | \mathbf{x}_i)$.
-
-Puisque $y_{ic}$ est nul sauf pour la vraie classe, cette somme se simplifie:
+Cette forme produit est l'écriture générale de la distribution catégorielle, où $\mathbb{1}(y = c)$ vaut 1 si $y = c$ et 0 sinon. En prenant le logarithme:
 
 $$
-\text{LVN}(\boldsymbol{\Theta}) = -\frac{1}{N} \sum_{i=1}^N \log p(y = y_i | \mathbf{x}_i)
+\log p(y | \mathbf{x}; \boldsymbol{\Theta}) = \sum_{c=0}^{C-1} \mathbb{1}(y = c) \log \mu_c = \log \mu_y
 $$
 
-C'est simplement la moyenne du logarithme négatif de la probabilité assignée à la vraie classe.
+En notant $y_{ic} = \mathbb{1}(y_i = c)$ l'**encodage one-hot** de l'étiquette, la log-vraisemblance négative sur $N$ observations est:
+
+$$
+\text{LVN}(\boldsymbol{\Theta}) = -\frac{1}{N} \sum_{i=1}^N \sum_{c=0}^{C-1} y_{ic} \log \mu_{ic}
+$$
+
+C'est l'**entropie croisée catégorielle**. Puisque $y_{ic}$ est nul sauf pour la vraie classe, cette expression se simplifie en:
+
+$$
+\text{LVN}(\boldsymbol{\Theta}) = -\frac{1}{N} \sum_{i=1}^N \log \mu_{i, y_i}
+$$
+
+C'est simplement la moyenne du logarithme négatif de la probabilité assignée à la vraie classe. Comme pour le cas binaire, **l'entropie croisée n'est pas un choix arbitraire**: elle découle directement du maximum de vraisemblance appliqué au modèle catégoriel.
 
 ### Cas binaire comme cas particulier
 
@@ -633,6 +665,145 @@ ax.set_title('Convergence de l\'entraînement')
 
 plt.tight_layout()
 ```
+
+## Démos : jeux de données pour la régression logistique
+
+Jusqu’ici nous avons illustré la régression logistique sur un jeu de données synthétique en deux dimensions. Pour voir comment le modèle se comporte en pratique et comment interpréter les coefficients, nous passons à des jeux de données réels, chargés en une ligne avec `ucimlrepo`. Nous commençons par le béton, déjà rencontré au chapitre 2 en régression ; nous enchaînons avec les défauts sur plaques d’acier (contrôle qualité en fabrication), puis avec les supraconducteurs (haute ou basse température critique). Une ressource pour aller plus loin (défauts CVC) clôt la section.
+
+### Du béton en régression au béton en classification
+
+Au chapitre 2 nous avons prédit la résistance du béton en MPa à partir de sa formulation. Ici nous posons une question binaire : la résistance dépasse-t-elle un seuil donné ? On obtient une étiquette « conforme » (résistance suffisante) ou « non conforme » (résistance insuffisante). Les mêmes caractéristiques (ciment, laitier, eau, âge, etc.) servent à prédire cette étiquette ; la régression logistique fournit en plus une probabilité de conformité et des coefficients interprétables.
+
+```{code-cell} python
+:tags: [hide-input]
+
+import numpy as np
+import matplotlib.pyplot as plt
+from ucimlrepo import fetch_ucirepo
+from sklearn.linear_model import LogisticRegression
+
+# Charger le jeu de données (même source qu'au chapitre 2)
+beton = fetch_ucirepo(id=165)
+X_df = beton.data.features
+y_resistance = beton.data.targets.values.ravel()
+
+# Seuil de conformité : par ex. médiane (50 % conformes)
+seuil = np.median(y_resistance)
+y_bin = (y_resistance >= seuil).astype(int)
+
+# Noms des caractéristiques en français
+noms_carac = ['Ciment', 'Laitier', 'Cendres', 'Eau', 'Plastifiant',
+              'Granulat gros', 'Granulat fin', 'Âge']
+X = X_df.values
+X_biais = np.column_stack([np.ones(len(X)), X])
+
+# Régression logistique
+modele = LogisticRegression(max_iter=1000, random_state=42)
+modele.fit(X_biais, y_bin)
+theta = modele.coef_[0]  # biais dans theta[0], poids dans theta[1:]
+
+# Graphique des coefficients (poids seulement)
+fig, ax = plt.subplots(figsize=(8, 4))
+couleurs = ['C0' if c > 0 else 'C1' for c in theta[1:]]
+barres = ax.barh(noms_carac, theta[1:], color=couleurs, alpha=0.8)
+ax.axvline(0, color='gray', linewidth=0.8)
+ax.set_xlabel('Coefficient (log-cote de conformité)')
+ax.set_ylabel('Caractéristique')
+ax.set_title('Influence des ingrédients sur la probabilité de conformité du béton')
+plt.tight_layout()
+plt.show()
+```
+
+Le ciment et l’âge augmentent la probabilité que la résistance dépasse le seuil ; l’eau la diminue (excès d’eau affaiblit le béton). Les coefficients s’interprètent comme en régression, mais en log-cote : une augmentation d’une unité de la caractéristique multiplie la cote de conformité par $\exp(\theta_j)$.
+
+### Défauts sur plaques d’acier
+
+De la même façon, on peut appliquer la régression logistique au contrôle qualité en fabrication, qui consiste souvent à classifier les défauts à partir de mesures (géométrie, luminance, etc.). Le jeu *Steel Plates Faults* contient des plaques d’acier avec des défauts de plusieurs types (rayure, tache, bosse, etc.). On peut d’abord simplifier en binaire : « défaut de type rayure » (étiquettes Z_Scratch ou K_Scratch) contre « autre défaut ». La régression logistique apprend quelles mesures sont associées à la présence d’une rayure.
+
+```{code-cell} python
+:tags: [hide-input]
+
+import warnings
+import numpy as np
+from ucimlrepo import fetch_ucirepo
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.exceptions import ConvergenceWarning
+
+warnings.filterwarnings("ignore", category=ConvergenceWarning)
+
+# Charger le jeu de données
+acier = fetch_ucirepo(id=198)
+X_acier = acier.data.features.values
+# Cibles : 7 colonnes binaires (Pastry, Z_Scratch, K_Scratch, Stains, Dirtiness, Bumps, Other_Faults)
+cibles = acier.data.targets
+# Binaire : rayure = Z_Scratch OU K_Scratch
+y_rayure = (cibles['Z_Scratch'].values | cibles['K_Scratch'].values).astype(int)
+
+# Séparation train / test
+X_train, X_test, y_train, y_test = train_test_split(
+    X_acier, y_rayure, test_size=0.25, random_state=42
+)
+# Standardiser pour assurer la convergence de l'optimiseur
+scaler = StandardScaler()
+X_train_std = scaler.fit_transform(X_train)
+X_test_std = scaler.transform(X_test)
+X_train_b = np.column_stack([np.ones(len(X_train)), X_train_std])
+X_test_b = np.column_stack([np.ones(len(X_test)), X_test_std])
+
+modele_acier = LogisticRegression(max_iter=5000, random_state=42)
+modele_acier.fit(X_train_b, y_train)
+score_train = modele_acier.score(X_train_b, y_train)
+score_test = modele_acier.score(X_test_b, y_test)
+
+print(f"Précision entraînement : {score_train:.3f}")
+print(f"Précision test : {score_test:.3f}")
+```
+
+On peut ensuite passer à la classification multiclasse (quel type de défaut parmi les sept) avec la même API en utilisant la matrice de cibles complète ; le modèle utilise alors la fonction softmax et l’entropie croisée catégorielle vues plus haut.
+
+### Supraconducteurs : haute ou basse température critique
+
+Un autre domaine où la régression logistique est utile est la découverte de matériaux. Le jeu *Superconductor* décrit des matériaux par des descripteurs chimiques (composition, nombre d’électrons, etc.) et donne la température critique $T_c$. On peut définir une cible binaire : « haute $T_c$ » (par ex. $T_c \geq 30$ K) contre « basse $T_c$ ». Le modèle apprend quels descripteurs sont associés aux matériaux à haute température critique.
+
+```{code-cell} python
+:tags: [hide-input]
+
+import numpy as np
+from ucimlrepo import fetch_ucirepo
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+
+# Charger les données (même source qu'au chapitre 2)
+supra = fetch_ucirepo(id=464)
+X_supra = supra.data.features.values
+y_tc = supra.data.targets.values.ravel()
+
+# Binaire : haute T_c si T_c >= 30 K
+seuil_tc = 30
+y_haute = (y_tc >= seuil_tc).astype(int)
+
+X_tr, X_te, y_tr, y_te = train_test_split(
+    X_supra, y_haute, test_size=0.2, random_state=42
+)
+scaler = StandardScaler()
+X_tr_std = scaler.fit_transform(X_tr)
+X_te_std = scaler.transform(X_te)
+X_tr_b = np.column_stack([np.ones(len(X_tr_std)), X_tr_std])
+X_te_b = np.column_stack([np.ones(len(X_te_std)), X_te_std])
+
+modele_supra = LogisticRegression(max_iter=1000, random_state=42)
+modele_supra.fit(X_tr_b, y_tr)
+precision_te = modele_supra.score(X_te_b, y_te)
+print(f"Précision sur l'ensemble de test : {precision_te:.3f}")
+print("Les descripteurs chimiques permettent de séparer partiellement les matériaux à haute et basse T_c.")
+```
+
+### Pour aller plus loin : défauts CVC
+
+Pour appliquer la régression logistique à des données de bâtiment (CVC : chauffage, ventilation, climatisation), le jeu [LBNL HVAC Fault Detection](https://data.openei.org/submissions/5763) (OpenEI) fournit des mesures de capteurs (températures, pressions, débits, positions de vannes, puissance) sur des centrales de froid, des centrales de traitement d’air et des unités terminales. La cible peut être binaire (fonctionnement normal vs en défaut) ou multiclasse (type de défaut : biais de capteur, vanne bloquée, encrassement, etc.). Les données sont des séries temporelles ; on peut agréger les variables sur une fenêtre glissante (moyenne, écart-type) pour obtenir un vecteur de caractéristiques par fenêtre, puis réutiliser la même chaîne : chargement, construction des étiquettes, entraînement avec `LogisticRegression` ou l’implémentation SGD du chapitre.
 
 ## Résumé
 

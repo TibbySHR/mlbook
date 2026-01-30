@@ -13,6 +13,7 @@ dependencies = [
     "scipy",
     "scikit-learn",
     "pandas",
+    "ucimlrepo",
     "sphinx-proof",
     "sphinxcontrib-mermaid",
     "sphinxcontrib-bibtex",

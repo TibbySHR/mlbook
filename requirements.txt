@@ -4,6 +4,8 @@ numpy
 scipy
 scikit-learn
 pandas
+# UCI ML Repository datasets
+ucimlrepo
 # Deep learning (optional)
 torch
 # Sphinx extensions

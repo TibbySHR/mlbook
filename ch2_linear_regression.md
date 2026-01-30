@@ -157,6 +157,186 @@ plt.tight_layout()
 
 Le polynôme de degré 2 (qui correspond au vrai modèle physique $L \propto v^2$) extrapole correctement. Le polynôme de degré 5, bien qu'il ajuste aussi bien les données d'entraînement, diverge complètement en dehors de la plage observée.
 
+### Application: Résistance du béton
+
+Appliquons les moindres carrés ordinaires à un problème concret d'ingénierie civile: prédire la **résistance à la compression du béton** à partir de sa composition. Ce jeu de données classique contient 1030 échantillons de béton avec 8 caractéristiques mesurées en kg/m³ (sauf l'âge en jours):
+
+- **Ciment**: le liant principal
+- **Laitier de haut fourneau** (*blast furnace slag*): sous-produit de l'industrie sidérurgique
+- **Cendres volantes** (*fly ash*): résidu de combustion du charbon
+- **Eau**: pour l'hydratation du ciment
+- **Superplastifiant**: additif pour améliorer la fluidité
+- **Granulat grossier** et **fin**: le squelette du béton
+- **Âge**: temps de cure en jours
+
+La cible est la résistance à la compression en MPa (mégapascals).
+
+```{code-cell} python
+:tags: [hide-input]
+
+import numpy as np
+import matplotlib.pyplot as plt
+from ucimlrepo import fetch_ucirepo
+
+# Charger les données
+concrete = fetch_ucirepo(id=165)
+X_df = concrete.data.features
+y = concrete.data.targets.values.ravel()
+
+# Noms des caractéristiques en français
+feature_names = ['Ciment', 'Laitier', 'Cendres', 'Eau', 'Plastifiant', 
+                 'Granulat gros', 'Granulat fin', 'Âge']
+X = X_df.values
+
+# Ajouter colonne de 1 pour le biais
+X_bias = np.column_stack([np.ones(len(X)), X])
+
+# Solution MCO
+theta_ols = np.linalg.lstsq(X_bias, y, rcond=None)[0]
+
+# Afficher les coefficients
+fig, ax = plt.subplots(figsize=(10, 5))
+colors = ['tab:green' if c > 0 else 'tab:red' for c in theta_ols[1:]]
+bars = ax.barh(feature_names, theta_ols[1:], color=colors, alpha=0.7)
+ax.axvline(0, color='black', linewidth=0.5)
+ax.set_xlabel('Coefficient MCO (MPa par kg/m³)')
+ax.set_title('Influence de chaque composant sur la résistance du béton')
+
+# Annoter les valeurs
+for bar, val in zip(bars, theta_ols[1:]):
+    x_pos = val + 0.002 if val > 0 else val - 0.002
+    ha = 'left' if val > 0 else 'right'
+    ax.text(x_pos, bar.get_y() + bar.get_height()/2, f'{val:.3f}', 
+            va='center', ha=ha, fontsize=9)
+
+plt.tight_layout()
+```
+
+Les coefficients révèlent la physique du matériau:
+
+- **Ciment** ($\theta \approx +0.12$): effet positif attendu — plus de ciment augmente la résistance
+- **Eau** ($\theta \approx -0.15$): effet négatif — l'excès d'eau crée des pores et affaiblit le béton
+- **Âge** ($\theta \approx +0.11$): le béton durcit avec le temps (réaction d'hydratation)
+- **Laitier et cendres** ($\theta > 0$): ces substituts au ciment contribuent aussi à la résistance
+
+```{margin}
+**Ratio eau/ciment**
+En génie civil, le ratio $w/c$ (water-to-cement) est le paramètre clé pour contrôler la résistance. Un ratio bas donne un béton plus résistant mais moins maniable.
+```
+
+#### Ingénierie des caractéristiques: le ratio eau/ciment
+
+Le ratio eau/ciment ($w/c$) est fondamental en technologie du béton. Créons cette caractéristique et comparons les modèles:
+
+```{code-cell} python
+:tags: [hide-input]
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Extraire les colonnes
+cement = X_df['Cement'].values
+water = X_df['Water'].values
+
+# Créer le ratio eau/ciment (éviter division par zéro)
+wc_ratio = water / np.maximum(cement, 1e-6)
+
+# Modèle 1: Toutes les caractéristiques originales
+X1 = np.column_stack([np.ones(len(X)), X])
+theta1 = np.linalg.lstsq(X1, y, rcond=None)[0]
+y_pred1 = X1 @ theta1
+mse1 = np.mean((y - y_pred1)**2)
+
+# Modèle 2: Avec ratio eau/ciment ajouté
+X2 = np.column_stack([np.ones(len(X)), X, wc_ratio])
+theta2 = np.linalg.lstsq(X2, y, rcond=None)[0]
+y_pred2 = X2 @ theta2
+mse2 = np.mean((y - y_pred2)**2)
+
+# Modèle 3: Seulement ratio eau/ciment et âge
+age = X_df['Age'].values
+X3 = np.column_stack([np.ones(len(X)), wc_ratio, age])
+theta3 = np.linalg.lstsq(X3, y, rcond=None)[0]
+y_pred3 = X3 @ theta3
+mse3 = np.mean((y - y_pred3)**2)
+
+fig, axes = plt.subplots(1, 3, figsize=(12, 4))
+
+for ax, y_pred, mse, title in zip(axes, 
+                                   [y_pred1, y_pred2, y_pred3],
+                                   [mse1, mse2, mse3],
+                                   ['8 caractéristiques', '+ ratio w/c', 'w/c + âge seulement']):
+    ax.scatter(y, y_pred, alpha=0.3, s=10)
+    ax.plot([0, 80], [0, 80], 'k--', alpha=0.5)
+    ax.set_xlabel('Résistance réelle (MPa)')
+    ax.set_ylabel('Résistance prédite (MPa)')
+    ax.set_title(f'{title}\nEQM = {mse:.1f}')
+    ax.set_xlim(0, 85)
+    ax.set_ylim(0, 85)
+    ax.set_aspect('equal')
+
+plt.tight_layout()
+```
+
+Le ratio $w/c$ seul avec l'âge capture une grande partie de la variance, confirmant son importance en pratique. Cependant, le modèle complet reste meilleur, suggérant que les autres composants (plastifiant, granulats) apportent de l'information supplémentaire.
+
+#### Limites du modèle linéaire: l'effet de l'âge
+
+La résistance du béton ne croît pas linéairement avec l'âge — elle suit plutôt une loi en $\sqrt{t}$ ou logarithmique. Visualisons cette non-linéarité:
+
+```{code-cell} python
+:tags: [hide-input]
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+fig, axes = plt.subplots(1, 2, figsize=(10, 4))
+
+# Panneau gauche: résidus vs âge
+residuals = y - y_pred1
+ax = axes[0]
+ax.scatter(X_df['Age'].values, residuals, alpha=0.3, s=10)
+ax.axhline(0, color='black', linewidth=0.5)
+ax.set_xlabel('Âge (jours)')
+ax.set_ylabel('Résidu (MPa)')
+ax.set_title('Résidus vs Âge: pattern non-linéaire')
+
+# Ajouter une courbe de tendance (moyenne mobile)
+ages_sorted = np.sort(np.unique(X_df['Age'].values))
+mean_residuals = [residuals[X_df['Age'].values == a].mean() for a in ages_sorted]
+ax.plot(ages_sorted, mean_residuals, 'r-', linewidth=2, label='Moyenne')
+ax.legend()
+
+# Panneau droit: transformation sqrt(age)
+age_sqrt = np.sqrt(X_df['Age'].values)
+X_sqrt = np.column_stack([np.ones(len(X)), X[:, :-1], age_sqrt])  # Remplacer âge par sqrt(âge)
+theta_sqrt = np.linalg.lstsq(X_sqrt, y, rcond=None)[0]
+y_pred_sqrt = X_sqrt @ theta_sqrt
+residuals_sqrt = y - y_pred_sqrt
+
+ax = axes[1]
+ax.scatter(X_df['Age'].values, residuals_sqrt, alpha=0.3, s=10)
+ax.axhline(0, color='black', linewidth=0.5)
+ax.set_xlabel('Âge (jours)')
+ax.set_ylabel('Résidu (MPa)')
+ax.set_title('Résidus après transformation $\\sqrt{\\text{âge}}$')
+
+ages_sorted = np.sort(np.unique(X_df['Age'].values))
+mean_residuals_sqrt = [residuals_sqrt[X_df['Age'].values == a].mean() for a in ages_sorted]
+ax.plot(ages_sorted, mean_residuals_sqrt, 'r-', linewidth=2, label='Moyenne')
+ax.legend()
+
+plt.tight_layout()
+```
+
+Le panneau de gauche montre un pattern caractéristique dans les résidus: le modèle sous-estime la résistance pour les âges intermédiaires. La transformation $\sqrt{\text{âge}}$ (panneau de droite) corrige partiellement ce biais, illustrant comment la connaissance du domaine guide l'ingénierie des caractéristiques.
+
+```{admonition} Durabilité et substituts au ciment
+:class: tip
+
+Le ciment Portland est responsable d'environ 8% des émissions mondiales de CO₂. Les coefficients positifs du laitier et des cendres volantes montrent que ces substituts industriels peuvent remplacer partiellement le ciment tout en maintenant la résistance — un résultat important pour le béton « vert ».
+```
+
 ## Régularisation Ridge
 
 Une manière de contrôler le surapprentissage consiste à pénaliser la complexité du modèle directement dans la fonction objectif. Le **risque empirique régularisé** est:
@@ -274,6 +454,176 @@ $$
 $$
 
 Comparons avec la solution MCO: $\hat{\boldsymbol{\theta}}_{\text{MCO}} = (\mathbf{X}^\top \mathbf{X})^{-1} \mathbf{X}^\top \mathbf{y}$. La seule différence est l'ajout du terme $\lambda \mathbf{I}$ à la matrice $\mathbf{X}^\top \mathbf{X}$.
+
+### Application: Température critique des supraconducteurs
+
+Quand la régularisation devient-elle vraiment nécessaire? Considérons un problème avec **81 caractéristiques**: prédire la température critique $T_c$ de supraconducteurs à partir de leur composition chimique. Ce jeu de données contient 21 263 matériaux supraconducteurs, avec des caractéristiques extraites automatiquement (moyennes, écarts-types, entropies des propriétés atomiques).
+
+```{code-cell} python
+:tags: [hide-input]
+
+import numpy as np
+import matplotlib.pyplot as plt
+import warnings
+warnings.filterwarnings('ignore')
+
+# Charger les données des supraconducteurs
+from ucimlrepo import fetch_ucirepo
+superconductor = fetch_ucirepo(id=464)
+X_super = superconductor.data.features.values
+y_super = superconductor.data.targets.values.ravel()
+
+print(f"Dimensions: {X_super.shape[0]} échantillons, {X_super.shape[1]} caractéristiques")
+print(f"Température critique: min={y_super.min():.1f} K, max={y_super.max():.1f} K, médiane={np.median(y_super):.1f} K")
+```
+
+Avec 81 caractéristiques potentiellement corrélées, la matrice $\mathbf{X}^\top \mathbf{X}$ risque d'être mal conditionnée. Comparons MCO et Ridge:
+
+```{code-cell} python
+:tags: [hide-input]
+
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+
+# Préparer les données
+X_train, X_test, y_train, y_test = train_test_split(
+    X_super, y_super, test_size=0.2, random_state=42)
+
+# Standardiser (important pour Ridge!)
+scaler = StandardScaler()
+X_train_std = scaler.fit_transform(X_train)
+X_test_std = scaler.transform(X_test)
+
+# Ajouter biais
+X_train_bias = np.column_stack([np.ones(len(X_train_std)), X_train_std])
+X_test_bias = np.column_stack([np.ones(len(X_test_std)), X_test_std])
+
+# MCO
+try:
+    theta_ols = np.linalg.solve(X_train_bias.T @ X_train_bias, X_train_bias.T @ y_train)
+    y_pred_ols = X_test_bias @ theta_ols
+    mse_ols = np.mean((y_test - y_pred_ols)**2)
+    ols_ok = True
+except np.linalg.LinAlgError:
+    ols_ok = False
+    mse_ols = np.inf
+
+# Ridge pour différentes valeurs de lambda
+lambdas = np.logspace(-4, 4, 50)
+mse_train_ridge = []
+mse_test_ridge = []
+coef_norms = []
+
+for lam in lambdas:
+    I = np.eye(X_train_bias.shape[1])
+    I[0, 0] = 0  # Ne pas régulariser le biais
+    theta_ridge = np.linalg.solve(
+        X_train_bias.T @ X_train_bias + lam * I, 
+        X_train_bias.T @ y_train
+    )
+    
+    y_pred_train = X_train_bias @ theta_ridge
+    y_pred_test = X_test_bias @ theta_ridge
+    
+    mse_train_ridge.append(np.mean((y_train - y_pred_train)**2))
+    mse_test_ridge.append(np.mean((y_test - y_pred_test)**2))
+    coef_norms.append(np.linalg.norm(theta_ridge[1:]))
+
+# Trouver le meilleur lambda
+best_idx = np.argmin(mse_test_ridge)
+best_lambda = lambdas[best_idx]
+best_mse = mse_test_ridge[best_idx]
+
+fig, axes = plt.subplots(1, 2, figsize=(12, 4.5))
+
+# Panneau gauche: EQM vs lambda
+ax = axes[0]
+ax.semilogx(lambdas, mse_train_ridge, 'b-', label='Entraînement', linewidth=2)
+ax.semilogx(lambdas, mse_test_ridge, 'r-', label='Test', linewidth=2)
+ax.axvline(best_lambda, color='green', linestyle='--', alpha=0.7)
+ax.axhline(mse_ols, color='gray', linestyle=':', label=f'MCO (test): {mse_ols:.1f}')
+ax.scatter([best_lambda], [best_mse], color='green', s=100, zorder=5)
+ax.set_xlabel('$\\lambda$')
+ax.set_ylabel('Erreur quadratique moyenne (K²)')
+ax.set_title('Sélection de $\\lambda$ par validation')
+ax.legend()
+ax.set_ylim(0, min(500, max(mse_test_ridge[:10])))
+ax.text(best_lambda * 1.5, best_mse + 20, f'$\\lambda^* = {best_lambda:.1f}$\nEQM = {best_mse:.1f}', fontsize=10)
+
+# Panneau droit: norme des coefficients
+ax = axes[1]
+ax.semilogx(lambdas, coef_norms, 'k-', linewidth=2)
+ax.axvline(best_lambda, color='green', linestyle='--', alpha=0.7)
+ax.set_xlabel('$\\lambda$')
+ax.set_ylabel('$\\|\\boldsymbol{\\theta}\\|_2$')
+ax.set_title('Rétrécissement des coefficients')
+
+plt.tight_layout()
+```
+
+Le panneau de gauche illustre le compromis biais-variance typique: 
+- Pour $\lambda$ petit, l'erreur de test est élevée (variance d'estimation trop grande)
+- Pour $\lambda$ grand, les deux erreurs augmentent (biais trop important)
+- Le $\lambda$ optimal se situe entre ces extrêmes
+
+```{margin}
+**Distribution de $T_c$**
+La température critique suit une distribution fortement asymétrique (beaucoup de matériaux ont $T_c < 20$ K). Une transformation logarithmique peut améliorer les prédictions.
+```
+
+#### Le chemin de régularisation
+
+Le **chemin de régularisation** montre comment chaque coefficient évolue en fonction de $\lambda$. C'est un outil de diagnostic précieux:
+
+```{code-cell} python
+:tags: [hide-input]
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Calculer les coefficients pour chaque lambda
+lambdas_path = np.logspace(-2, 4, 100)
+coefs_path = []
+
+for lam in lambdas_path:
+    I = np.eye(X_train_bias.shape[1])
+    I[0, 0] = 0
+    theta = np.linalg.solve(
+        X_train_bias.T @ X_train_bias + lam * I, 
+        X_train_bias.T @ y_train
+    )
+    coefs_path.append(theta[1:])  # Exclure le biais
+
+coefs_path = np.array(coefs_path)
+
+fig, ax = plt.subplots(figsize=(10, 5))
+
+# Tracer un sous-ensemble de coefficients (les 20 plus variables)
+coef_variance = np.var(coefs_path, axis=0)
+top_indices = np.argsort(coef_variance)[-20:]
+
+for i in top_indices:
+    ax.semilogx(lambdas_path, coefs_path[:, i], alpha=0.7, linewidth=1.5)
+
+ax.axvline(best_lambda, color='green', linestyle='--', alpha=0.7, label=f'$\\lambda^* = {best_lambda:.1f}$')
+ax.axhline(0, color='black', linewidth=0.5)
+ax.set_xlabel('$\\lambda$')
+ax.set_ylabel('Coefficient $\\theta_j$')
+ax.set_title('Chemin de régularisation (20 coefficients les plus variables)')
+ax.legend()
+
+plt.tight_layout()
+```
+
+À gauche ($\lambda$ petit), les coefficients prennent des valeurs extrêmes et instables. À mesure que $\lambda$ augmente, ils sont progressivement « rétrécis » vers zéro. Les coefficients qui résistent le plus longtemps à ce rétrécissement correspondent aux caractéristiques les plus importantes pour la prédiction.
+
+```{admonition} Découverte de matériaux
+:class: tip
+
+Ce type d'analyse est au cœur de la **découverte de matériaux assistée par ML**. En identifiant quelles propriétés atomiques influencent le plus $T_c$, les chercheurs peuvent guider la synthèse de nouveaux supraconducteurs. Les coefficients Ridge fournissent une interprétation directe (contrairement aux méthodes « boîte noire »).
+```
 
 ## Interprétation via la SVD
 
@@ -825,6 +1175,262 @@ Ce chapitre a développé les outils fondamentaux pour la régression linéaire:
 - Le **spectre des valeurs singulières** révèle la structure des données et permet de distinguer signal et bruit.
 
 Nous avons vu comment résoudre la régression. Mais la régression n'est qu'un type de problème supervisé. Le [chapitre suivant](ch3_classification.md) aborde la **classification linéaire**, où la sortie est une catégorie plutôt qu'un nombre réel.
+
+## Applications supplémentaires
+
+Cette section présente deux applications supplémentaires de la régression linéaire à des domaines d'ingénierie: la modélisation thermique des bâtiments et la production hydroélectrique. Ces exemples illustrent comment la connaissance physique guide la construction de modèles.
+
+### Modélisation thermique d'un bâtiment (HVAC)
+
+La prédiction de la température intérieure d'un bâtiment est cruciale pour l'optimisation énergétique et le confort des occupants. Les données proviennent du Oak Ridge National Laboratory (ORNL), mesurées dans un bâtiment commercial expérimental sous différentes conditions de chauffage et climatisation.
+
+Le modèle thermique simplifié d'un bâtiment s'écrit:
+
+$$
+T_{\text{int}} = \theta_0 + \theta_1 T_{\text{ext}} + \theta_2 T_{\text{consigne}} + \theta_3 Q_{\text{solaire}} + \varepsilon
+$$
+
+où $T_{\text{int}}$ est la température intérieure, $T_{\text{ext}}$ la température extérieure, $T_{\text{consigne}}$ le setpoint du thermostat, et $Q_{\text{solaire}}$ le rayonnement solaire incident.
+
+```{code-cell} python
+:tags: [hide-input]
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Simuler des données HVAC réalistes (inspirées des données ORNL)
+np.random.seed(42)
+n_hours = 24 * 30  # Un mois de données horaires
+
+# Variables explicatives
+hour = np.arange(n_hours) % 24
+day = np.arange(n_hours) // 24
+
+# Température extérieure: cycle journalier + tendance saisonnière
+T_ext = 15 + 8 * np.sin(2 * np.pi * hour / 24 - np.pi/2) + 0.1 * day + np.random.normal(0, 2, n_hours)
+
+# Rayonnement solaire (W/m²): nul la nuit, pic à midi
+solar = np.maximum(0, 600 * np.sin(np.pi * (hour - 6) / 12)) * (hour >= 6) * (hour <= 18)
+solar = solar + np.random.normal(0, 30, n_hours) * (solar > 0)
+solar = np.maximum(0, solar)
+
+# Consigne: 21°C le jour (8h-18h), 18°C la nuit
+setpoint = np.where((hour >= 8) & (hour <= 18), 21.0, 18.0)
+
+# Modèle physique simplifié pour la température intérieure
+# T_int = alpha * T_ext + beta * setpoint + gamma * solar + bruit
+alpha = 0.15  # Effet de la température extérieure (isolation)
+beta = 0.80   # Effet de la consigne (efficacité du système HVAC)
+gamma = 0.005 # Effet du rayonnement solaire (gains solaires)
+
+T_int_true = 5 + alpha * T_ext + beta * setpoint + gamma * solar
+T_int = T_int_true + np.random.normal(0, 0.5, n_hours)
+
+# Construire la matrice de design
+X_hvac = np.column_stack([np.ones(n_hours), T_ext, setpoint, solar])
+
+# Solution MCO
+theta_hvac = np.linalg.lstsq(X_hvac, T_int, rcond=None)[0]
+T_int_pred = X_hvac @ theta_hvac
+
+# Visualisation
+fig, axes = plt.subplots(2, 2, figsize=(12, 8))
+
+# Panneau 1: Températures sur 3 jours
+ax = axes[0, 0]
+idx = slice(0, 72)  # 3 premiers jours
+hours_plot = np.arange(72)
+ax.plot(hours_plot, T_ext[idx], 'b-', alpha=0.7, label='$T_{ext}$')
+ax.plot(hours_plot, T_int[idx], 'r-', alpha=0.7, label='$T_{int}$ (mesuré)')
+ax.plot(hours_plot, T_int_pred[idx], 'k--', alpha=0.7, label='$T_{int}$ (prédit)')
+ax.plot(hours_plot, setpoint[idx], 'g:', alpha=0.7, label='Consigne')
+ax.set_xlabel('Heure')
+ax.set_ylabel('Température (°C)')
+ax.set_title('Évolution des températures (3 jours)')
+ax.legend(loc='upper right', fontsize=8)
+ax.set_xlim(0, 72)
+
+# Panneau 2: Coefficients
+ax = axes[0, 1]
+coef_names = ['Biais', '$T_{ext}$', 'Consigne', 'Solaire']
+colors = ['gray', 'blue', 'green', 'orange']
+bars = ax.bar(coef_names, theta_hvac, color=colors, alpha=0.7)
+ax.axhline(0, color='black', linewidth=0.5)
+ax.set_ylabel('Coefficient')
+ax.set_title('Coefficients du modèle thermique')
+
+# Annoter avec les vraies valeurs
+true_coefs = [5, alpha, beta, gamma]
+for i, (bar, true_val) in enumerate(zip(bars, true_coefs)):
+    ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.02, 
+            f'vrai: {true_val}', ha='center', fontsize=9, color='red')
+
+# Panneau 3: Prédiction vs réalité
+ax = axes[1, 0]
+ax.scatter(T_int, T_int_pred, alpha=0.2, s=5)
+ax.plot([16, 24], [16, 24], 'k--', alpha=0.5)
+ax.set_xlabel('$T_{int}$ mesuré (°C)')
+ax.set_ylabel('$T_{int}$ prédit (°C)')
+mse_hvac = np.mean((T_int - T_int_pred)**2)
+ax.set_title(f'Prédiction vs Réalité (EQM = {mse_hvac:.3f})')
+ax.set_aspect('equal')
+
+# Panneau 4: Résidus vs heure
+ax = axes[1, 1]
+residuals_hvac = T_int - T_int_pred
+ax.scatter(hour, residuals_hvac, alpha=0.2, s=5)
+ax.axhline(0, color='black', linewidth=0.5)
+ax.set_xlabel('Heure du jour')
+ax.set_ylabel('Résidu (°C)')
+ax.set_title('Résidus par heure: y a-t-il un pattern?')
+
+# Moyenne par heure
+mean_resid_hour = [residuals_hvac[hour == h].mean() for h in range(24)]
+ax.plot(range(24), mean_resid_hour, 'r-', linewidth=2, label='Moyenne')
+ax.legend()
+
+plt.tight_layout()
+```
+
+Les coefficients estimés révèlent la physique du bâtiment:
+- **$\theta_{T_{ext}} \approx 0.15$**: l'isolation atténue l'effet de la température extérieure
+- **$\theta_{\text{consigne}} \approx 0.80$**: le système HVAC maintient efficacement la consigne
+- **$\theta_{\text{solaire}} \approx 0.005$**: les gains solaires contribuent modestement au chauffage
+
+```{admonition} Efficacité énergétique
+:class: tip
+
+Ce type de modèle permet d'optimiser les stratégies de contrôle HVAC. Par exemple, le « préchauffage » (démarrer le chauffage avant l'occupation) et le « free cooling » (utiliser l'air extérieur frais la nuit) peuvent être évalués en simulant différentes consignes.
+```
+
+### Production hydroélectrique
+
+La puissance d'une centrale hydroélectrique est gouvernée par une équation physique fondamentale:
+
+$$
+P = \eta \rho g Q H
+$$
+
+où $P$ est la puissance (W), $\eta$ l'efficacité de la turbine, $\rho$ la densité de l'eau (1000 kg/m³), $g$ l'accélération gravitationnelle (9.81 m/s²), $Q$ le débit (m³/s), et $H$ la hauteur de chute (m).
+
+En prenant le logarithme des deux côtés:
+
+$$
+\log P = \log(\eta \rho g) + \log Q + \log H
+$$
+
+C'est un modèle **log-linéaire**: la régression linéaire dans l'espace logarithmique permet d'estimer l'efficacité moyenne des turbines.
+
+```{code-cell} python
+:tags: [hide-input]
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Simuler des données de centrales hydroélectriques (inspirées de GloHydroRes)
+np.random.seed(123)
+n_plants = 500
+
+# Types de centrales: au fil de l'eau (run-of-river) vs réservoir
+plant_type = np.random.choice(['Fil de l\'eau', 'Réservoir'], n_plants, p=[0.6, 0.4])
+
+# Hauteur de chute (m): log-normale, plus élevée pour les barrages
+H = np.where(plant_type == 'Réservoir',
+             np.exp(np.random.normal(4.5, 0.8, n_plants)),  # ~90m médian
+             np.exp(np.random.normal(3.0, 0.7, n_plants)))  # ~20m médian
+H = np.clip(H, 5, 500)
+
+# Débit (m³/s): corrélé inversement à la hauteur (grands fleuves = faible chute)
+log_Q = 5 - 0.3 * np.log(H) + np.random.normal(0, 0.8, n_plants)
+Q = np.exp(log_Q)
+Q = np.clip(Q, 1, 5000)
+
+# Efficacité: varie entre 0.80 et 0.95
+eta = 0.85 + 0.05 * np.random.randn(n_plants)
+eta = np.clip(eta, 0.75, 0.95)
+
+# Puissance installée (MW)
+rho, g = 1000, 9.81
+P_true = eta * rho * g * Q * H / 1e6  # En MW
+P = P_true * np.exp(np.random.normal(0, 0.1, n_plants))  # Bruit multiplicatif
+
+# Régression log-linéaire
+log_P = np.log(P)
+log_Q_col = np.log(Q)
+log_H_col = np.log(H)
+
+X_hydro = np.column_stack([np.ones(n_plants), log_Q_col, log_H_col])
+theta_hydro = np.linalg.lstsq(X_hydro, log_P, rcond=None)[0]
+log_P_pred = X_hydro @ theta_hydro
+
+# Visualisation
+fig, axes = plt.subplots(1, 3, figsize=(14, 4.5))
+
+# Panneau 1: P vs Q*H (échelle log-log)
+ax = axes[0]
+QH = Q * H
+colors = np.where(plant_type == 'Réservoir', 'tab:blue', 'tab:orange')
+ax.scatter(QH, P, c=colors, alpha=0.5, s=20)
+ax.set_xscale('log')
+ax.set_yscale('log')
+
+# Ligne théorique P = eta * rho * g * Q * H
+QH_line = np.logspace(1, 7, 100)
+P_line = 0.85 * rho * g * QH_line / 1e6
+ax.plot(QH_line, P_line, 'k--', linewidth=2, label='Théorique ($\\eta = 0.85$)')
+
+ax.set_xlabel('$Q \\times H$ (m$^4$/s)')
+ax.set_ylabel('Puissance installée (MW)')
+ax.set_title('Relation puissance-débit-hauteur')
+ax.legend()
+
+# Légende des types
+from matplotlib.patches import Patch
+legend_elements = [Patch(facecolor='tab:blue', alpha=0.5, label='Réservoir'),
+                   Patch(facecolor='tab:orange', alpha=0.5, label='Fil de l\'eau')]
+ax.legend(handles=legend_elements, loc='upper left')
+
+# Panneau 2: Résidus log vs prédiction
+ax = axes[1]
+residuals_log = log_P - log_P_pred
+ax.scatter(log_P_pred, residuals_log, alpha=0.3, s=15)
+ax.axhline(0, color='black', linewidth=0.5)
+ax.set_xlabel('$\\log P$ prédit')
+ax.set_ylabel('Résidu (log)')
+ax.set_title('Résidus en échelle logarithmique')
+
+# Panneau 3: Coefficients vs théorie
+ax = axes[2]
+coef_names = ['$\\log(\\eta \\rho g)$', '$\\beta_Q$', '$\\beta_H$']
+true_coefs = [np.log(0.85 * rho * g / 1e6), 1.0, 1.0]
+estimated_coefs = theta_hydro
+
+x_pos = np.arange(3)
+width = 0.35
+bars1 = ax.bar(x_pos - width/2, true_coefs, width, label='Théorique', color='tab:green', alpha=0.7)
+bars2 = ax.bar(x_pos + width/2, estimated_coefs, width, label='Estimé (MCO)', color='tab:blue', alpha=0.7)
+
+ax.set_xticks(x_pos)
+ax.set_xticklabels(coef_names)
+ax.set_ylabel('Valeur du coefficient')
+ax.set_title('Coefficients: théorie vs estimation')
+ax.legend()
+ax.axhline(0, color='black', linewidth=0.5)
+
+plt.tight_layout()
+```
+
+La physique prédit $\beta_Q = \beta_H = 1$ (relation linéaire en log-log). Les coefficients estimés sont proches de 1, validant le modèle physique. L'ordonnée à l'origine permet d'estimer l'efficacité moyenne:
+
+$$
+\hat{\eta} = \frac{\exp(\hat{\theta}_0) \times 10^6}{\rho g} \approx 0.85
+$$
+
+```{admonition} Régression informée par la physique
+:class: tip
+
+Quand la théorie impose des contraintes (ici $\beta_Q = \beta_H = 1$), on peut utiliser la **régression contrainte** ou simplement vérifier que les estimés respectent la théorie. Des écarts significatifs peuvent révéler des erreurs de mesure, des variables omises, ou des phénomènes physiques non modélisés.
+```
 
 ## Exercices
 
