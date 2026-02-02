@@ -212,6 +212,11 @@ for bar, val in zip(bars, theta_ols[1:]):
 plt.tight_layout()
 ```
 
+```{margin}
+**Pourquoi `lstsq`?**
+La fonction `np.linalg.lstsq` résout le système par SVD plutôt que par inversion directe de $\mathbf{X}^\top \mathbf{X}$. C'est plus stable numériquement: l'inversion explicite élève au carré le nombre de conditionnement, amplifiant les erreurs d'arrondi. La bibliothèque LAPACK (Fortran) effectue le calcul en coulisse.
+```
+
 Les coefficients révèlent la physique du matériau:
 
 - **Ciment** ($\theta \approx +0.12$): effet positif attendu — plus de ciment augmente la résistance
@@ -1183,6 +1188,8 @@ Cette section présente deux applications supplémentaires de la régression lin
 ### Modélisation thermique d'un bâtiment (HVAC)
 
 La prédiction de la température intérieure d'un bâtiment est cruciale pour l'optimisation énergétique et le confort des occupants. Les données proviennent du Oak Ridge National Laboratory (ORNL), mesurées dans un bâtiment commercial expérimental sous différentes conditions de chauffage et climatisation.
+
+**Analogie avec un circuit RC.** Le comportement thermique d'un bâtiment est analogue à celui d'un circuit électrique résistance-condensateur (RC). La **résistance thermique** $R$ correspond à l'isolation: un mur bien isolé résiste au flux de chaleur comme une grande résistance électrique limite le courant. La **capacitance thermique** $C$ correspond à la masse thermique (béton, meubles, air): elle stocke la chaleur comme un condensateur stocke la charge. La différence de température entre l'intérieur et l'extérieur joue le rôle de la tension: elle « pousse » le flux de chaleur à travers l'enveloppe. La constante de temps $\tau = RC$ gouverne la vitesse de réponse du bâtiment aux changements de conditions extérieures. Un bâtiment massif avec bonne isolation (grand $RC$) réagit lentement; une construction légère mal isolée (petit $RC$) suit rapidement les fluctuations extérieures.
 
 Le modèle thermique simplifié d'un bâtiment s'écrit:
 

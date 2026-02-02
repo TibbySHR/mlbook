@@ -45,12 +45,7 @@ $$
 p(\boldsymbol{\theta} | \mathcal{D}) = \frac{p(\boldsymbol{\theta}) \, p(\mathcal{D} | \boldsymbol{\theta})}{p(\mathcal{D})}
 $$
 
-Chaque terme a un nom et un rôle précis:
-
-- $p(\boldsymbol{\theta} | \mathcal{D})$ est la **distribution a posteriori**: notre croyance sur $\boldsymbol{\theta}$ après avoir vu les données
-- $p(\boldsymbol{\theta})$ est la **distribution a priori**: notre croyance sur $\boldsymbol{\theta}$ avant d'observer les données
-- $p(\mathcal{D} | \boldsymbol{\theta})$ est la **vraisemblance**: la probabilité des données pour un choix de paramètres
-- $p(\mathcal{D}) = \int p(\boldsymbol{\theta}') p(\mathcal{D} | \boldsymbol{\theta}') d\boldsymbol{\theta}'$ est la **vraisemblance marginale**: une constante de normalisation
+Au numérateur, $p(\boldsymbol{\theta})$ est la *distribution a priori*: notre croyance sur $\boldsymbol{\theta}$ avant d'observer les données. Le terme $p(\mathcal{D} | \boldsymbol{\theta})$ est la *vraisemblance*: la probabilité des données pour un choix de paramètres donné. Au dénominateur, $p(\mathcal{D}) = \int p(\boldsymbol{\theta}') p(\mathcal{D} | \boldsymbol{\theta}') d\boldsymbol{\theta}'$ est la *vraisemblance marginale*, qui normalise l'ensemble pour obtenir une vraie distribution. Le résultat, $p(\boldsymbol{\theta} | \mathcal{D})$, est la *distribution a posteriori*: notre croyance sur $\boldsymbol{\theta}$ après avoir vu les données.
 
 L'a priori encode notre connaissance préalable. Pour une pièce de monnaie, nous pourrions croire que $\theta$ est probablement proche de 0,5. L'a posteriori combine cette croyance avec l'évidence des données.
 
@@ -68,15 +63,15 @@ Le problème: cette intégrale est rarement calculable analytiquement. Elle néc
 
 ### Utilité du modèle probabiliste
 
-Si nous finissons souvent par utiliser un estimateur ponctuel, pourquoi adopter le cadre probabiliste? Plusieurs raisons:
+Si nous finissons souvent par utiliser un estimateur ponctuel, pourquoi adopter le cadre probabiliste?
 
-1. **Justifier la fonction de perte**: La perte quadratique découle naturellement de l'hypothèse de bruit gaussien. La perte logarithmique vient du principe de maximum de vraisemblance. Le cadre probabiliste explique *pourquoi* ces choix sont raisonnables.
+D'abord, il justifie nos choix de fonctions de perte. La perte quadratique découle de l'hypothèse de bruit gaussien; la perte logarithmique vient du principe de maximum de vraisemblance. Sans le cadre probabiliste, ces choix sembleraient arbitraires.
 
-2. **Quantifier l'incertitude**: Au-delà de la prédiction ponctuelle $\hat{y} = f(\mathbf{x}; \hat{\boldsymbol{\theta}})$, nous pouvons donner un **intervalle de prédiction**. Sous un modèle gaussien, $y$ a environ 95% de chances de tomber dans $[f(\mathbf{x}) - 2\sigma, f(\mathbf{x}) + 2\sigma]$.
+Ensuite, il permet de quantifier l'incertitude. Au-delà de la prédiction ponctuelle $\hat{y} = f(\mathbf{x}; \hat{\boldsymbol{\theta}})$, nous pouvons donner un intervalle de prédiction. Sous un modèle gaussien, $y$ a environ 95% de chances de tomber dans $[f(\mathbf{x}) - 2\sigma, f(\mathbf{x}) + 2\sigma]$.
 
-3. **Comparer des modèles**: La vraisemblance marginale $p(\mathcal{D})$ permet de comparer des modèles de complexités différentes, pénalisant automatiquement les modèles trop complexes.
+Le cadre probabiliste offre aussi des outils pour comparer des modèles. La vraisemblance marginale $p(\mathcal{D})$ permet de comparer des modèles de complexités différentes, pénalisant automatiquement les modèles trop complexes.
 
-4. **Ouvrir la porte à l'inférence complète**: Quand les ressources le permettent (méthodes de Monte Carlo, inférence variationnelle), nous pouvons approximer la distribution prédictive complète plutôt que de nous limiter à un point.
+Enfin, quand les ressources le permettent, nous pouvons aller au-delà des estimateurs ponctuels et approximer la distribution prédictive complète par des méthodes de Monte Carlo ou l'inférence variationnelle.
 
 ## Maximum de vraisemblance: rappel et approfondissement
 
@@ -573,129 +568,439 @@ $$
 \hat{\boldsymbol{\theta}}_{\text{MAP}} = \arg\min_{\boldsymbol{\theta}} \left[ \text{LVN}(\boldsymbol{\theta}) + \frac{1}{2\sigma_\theta^2}\|\boldsymbol{\theta}\|_2^2 \right]
 $$
 
-C'est exactement Ridge, avec $\lambda = 1/(2\sigma_\theta^2)$. Cette correspondance nous donne une interprétation de l'hyperparamètre:
+C'est exactement Ridge, avec $\lambda = 1/(2\sigma_\theta^2)$. Cette correspondance donne une interprétation de l'hyperparamètre. Une grande valeur de $\lambda$ (petite variance $\sigma_\theta^2$) traduit une forte croyance que les paramètres sont proches de zéro. Une petite valeur de $\lambda$ (grande variance $\sigma_\theta^2$) correspond à un a priori peu informatif: on fait confiance aux données.
 
-- **Grande valeur de $\lambda$** (petite variance $\sigma_\theta^2$): forte croyance que les paramètres sont proches de zéro
-- **Petite valeur de $\lambda$** (grande variance $\sigma_\theta^2$): a priori peu informatif, on fait confiance aux données
+L'a priori gaussien sur les paramètres est parfois appelé *dégradation des poids* (*weight decay*) dans le contexte des réseaux de neurones, car il «tire» les paramètres vers zéro pendant l'entraînement.
 
-L'a priori gaussien sur les paramètres est parfois appelé **dégradation des poids** (*weight decay*) dans le contexte des réseaux de neurones, car il «tire» les paramètres vers zéro pendant l'entraînement.
+## Une troisième perspective: la théorie de l'information
 
-## Unification: deux langages pour un même problème
+La théorie de l'information offre un autre regard sur l'apprentissage. Elle permet de voir le maximum de vraisemblance comme la recherche d'une distribution «proche» des données, au sens d'une mesure de distance entre distributions.
 
-Les sections précédentes ont présenté deux approches pour l'apprentissage supervisé. La première, fondée sur la théorie de la décision, définit une fonction de perte et minimise le risque empirique. La seconde, probabiliste, modélise la distribution des données et estime les paramètres par maximum de vraisemblance ou maximum a posteriori.
+### Entropie et incertitude
 
-Ces deux approches semblent différentes, mais elles aboutissent aux mêmes algorithmes. En choisissant la **perte logarithmique** $\ell(y, \hat{y}) = -\log p(y | \hat{y})$, le risque empirique devient exactement la log-vraisemblance négative (à un facteur $1/N$ près). Minimiser l'un revient à minimiser l'autre. Sous bruit gaussien, cette perte se réduit à la perte quadratique; sous modèle de Bernoulli, à l'entropie croisée.
+Commençons par un exemple concret. Considérons une pièce de monnaie équilibrée: chaque lancer donne face ou pile avec probabilité 1/2. Avant le lancer, nous sommes dans l'incertitude totale—nous ne pouvons pas prédire le résultat. Comparons avec une pièce truquée qui donne face 99% du temps: notre incertitude est bien moindre, car nous pouvons prédire «face» avec confiance.
 
-De même, ajouter une régularisation $\ell_2$ au risque empirique revient à supposer un a priori gaussien sur les paramètres. Ridge n'est rien d'autre que l'estimation MAP avec cet a priori. Le coefficient $\lambda$ encode la force de notre croyance a priori: plus $\lambda$ est grand, plus nous «tirons» les paramètres vers zéro.
-
-Pourquoi alors utiliser deux langages? Parce qu'ils éclairent des aspects différents du problème. Le langage décisionnel (risque, perte, minimisation) est opérationnel: il dit comment construire un algorithme. Le langage probabiliste (vraisemblance, a priori, a posteriori) est interprétatif: il dit ce que nous supposons sur les données et pourquoi nos choix sont raisonnables. Ensemble, ils permettent de *concevoir* des algorithmes et de *comprendre* leur comportement.
-
-### Interprétation informationnelle
-
-La théorie de l'information offre une troisième perspective sur l'apprentissage, et révèle une connexion profonde entre le maximum de vraisemblance et la notion de distance entre distributions.
-
-#### Entropie et quantité d'information
-
-L'**entropie** d'une distribution discrète $p$ mesure l'incertitude moyenne ou la quantité d'information nécessaire pour décrire un tirage:
+L'**entropie** quantifie cette incertitude. Pour une distribution discrète $p$ sur des résultats $y$, elle est définie par:
 
 $$
 \mathbb{H}(p) = -\sum_y p(y) \log p(y)
 $$
 
-Une distribution concentrée (faible incertitude) a une entropie faible. Une distribution uniforme (incertitude maximale) a une entropie maximale. L'entropie est toujours positive ou nulle.
+où nous utilisons la convention $0 \log 0 = 0$.
 
-Pour une distribution continue, l'**entropie différentielle** est définie de manière analogue:
+#### Pourquoi le logarithme? Pourquoi les bits?
+
+Le choix du logarithme n'est pas arbitraire. Imaginons que nous voulions deviner un résultat en posant des questions binaires (oui/non). Pour une pièce équilibrée, une seule question suffit: «Est-ce face?». Pour un dé à 6 faces, il faut en moyenne $\log_2 6 \approx 2{,}58$ questions. L'entropie mesure exactement ce nombre minimal de questions binaires nécessaires en moyenne.
+
+La base du logarithme détermine l'unité de mesure:
+
+| Base | Unité | Usage |
+|------|-------|-------|
+| $\log_2$ | **bits** | Théorie de l'information, compression |
+| $\ln$ | **nats** | Apprentissage automatique, optimisation |
+| $\log_{10}$ | **hartleys** | Historique, télécommunications |
+
+En apprentissage automatique, nous utilisons souvent le logarithme naturel ($\ln$) car il simplifie les calculs de gradient. La conversion est simple: $\mathbb{H}_{\text{bits}} = \mathbb{H}_{\text{nats}} / \ln 2 \approx 1{,}44 \times \mathbb{H}_{\text{nats}}$. L'interprétation reste la même—seule l'échelle change.
+
+Calculons l'entropie de notre pièce équilibrée. Avec $p(\text{face}) = p(\text{pile}) = 1/2$:
 
 $$
-\mathbb{H}(p) = -\int p(y) \log p(y) \, dy
+\mathbb{H}(p) = -\frac{1}{2} \log_2 \frac{1}{2} - \frac{1}{2} \log_2 \frac{1}{2} = -\frac{1}{2} \times (-1) - \frac{1}{2} \times (-1) = 1 \text{ bit}
 $$
 
-Par exemple, une gaussienne $\mathcal{N}(\mu, \sigma^2)$ a une entropie $\frac{1}{2}\log(2\pi e \sigma^2)$: plus la variance est grande, plus l'incertitude est grande.
+Pour la pièce truquée avec $p(\text{face}) = 0{,}99$ et $p(\text{pile}) = 0{,}01$:
 
-#### La divergence de Kullback-Leibler
+$$
+\mathbb{H}(p) = -0{,}99 \log_2 0{,}99 - 0{,}01 \log_2 0{,}01 \approx 0{,}081 \text{ bits}
+$$
 
-La **divergence de Kullback-Leibler** (ou divergence KL) mesure combien une distribution $q$ diffère d'une distribution de référence $p$:
+L'entropie de la pièce truquée est bien plus faible: nous avons moins d'incertitude sur le résultat.
+
+```{code-cell} python
+:tags: [hide-input]
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+def entropy(p):
+    """Calcule l'entropie en bits d'une distribution discrète."""
+    p = np.array(p)
+    p = p[p > 0]  # ignorer les probabilités nulles
+    return -np.sum(p * np.log2(p))
+
+# Quatre distributions sur 4 résultats possibles
+distributions = [
+    ([0.25, 0.25, 0.25, 0.25], 'Uniforme'),
+    ([0.7, 0.1, 0.1, 0.1], 'Modérément concentrée'),
+    ([0.97, 0.01, 0.01, 0.01], 'Très concentrée'),
+    ([1.0, 0.0, 0.0, 0.0], 'Déterministe'),
+]
+
+fig, axes = plt.subplots(1, 4, figsize=(12, 3))
+x = np.arange(4)
+labels = ['A', 'B', 'C', 'D']
+
+for ax, (probs, title) in zip(axes, distributions):
+    H = entropy(probs)
+    bars = ax.bar(x, probs, color='steelblue', edgecolor='black', alpha=0.7)
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels)
+    ax.set_ylim(0, 1.1)
+    ax.set_xlabel('Résultat')
+    ax.set_ylabel('Probabilité')
+    ax.set_title(f'{title}\n$\\mathbb{{H}} = {H:.2f}$ bits')
+
+plt.tight_layout()
+```
+
+La figure montre quatre distributions sur les mêmes quatre résultats possibles. À gauche, la distribution uniforme maximise l'entropie: chaque résultat est également probable, donc l'incertitude est maximale. À droite, la distribution déterministe concentre toute la masse sur un seul résultat: l'entropie est nulle car il n'y a aucune incertitude.
+
+```{admonition} Vérification
+:class: tip
+
+Pour une pièce équilibrée ($p = 0{,}5$), vérifiez que $\mathbb{H} = 1$ bit. Pour une pièce truquée avec $p = 0{,}9$, calculez l'entropie. Vous devriez trouver environ $0{,}47$ bits.
+```
+
+Pour une distribution continue, l'**entropie différentielle** est définie de manière analogue par $\mathbb{H}(p) = -\int p(y) \log p(y) \, dy$. Une gaussienne $\mathcal{N}(\mu, \sigma^2)$ a une entropie $\frac{1}{2}\log(2\pi e \sigma^2)$, qui croît avec la variance: plus la distribution est étalée, plus l'incertitude est grande.
+
+### Mesurer la différence entre distributions
+
+L'entropie mesure l'incertitude d'une distribution. Mais en apprentissage, nous avons souvent deux distributions: la «vraie» distribution $p$ des données, et notre modèle $q$ qui tente de l'approximer. Comment mesurer à quel point $q$ diffère de $p$?
+
+Imaginons que nous voulions prédire la météo à Montréal. La vraie distribution $p$ pourrait être: soleil 40%, nuageux 35%, pluie 20%, neige 5%. Si notre modèle $q$ prédit: soleil 60%, nuageux 20%, pluie 15%, neige 5%, nous avons un décalage. Nous surestimons le soleil et sous-estimons les nuages. Mais comment quantifier ce décalage?
+
+La **divergence de Kullback-Leibler** (ou divergence KL) répond à cette question:
 
 $$
 D_{\text{KL}}(p \| q) = \sum_y p(y) \log \frac{p(y)}{q(y)} = \mathbb{E}_{y \sim p}\left[\log \frac{p(y)}{q(y)}\right]
 $$
 
-Cette quantité a plusieurs propriétés importantes:
-- **Non-négative**: $D_{\text{KL}}(p \| q) \geq 0$ toujours (inégalité de Gibbs)
-- **Nulle si et seulement si** $p = q$ (les distributions sont identiques)
-- **Non symétrique**: $D_{\text{KL}}(p \| q) \neq D_{\text{KL}}(q \| p)$ en général
+On peut l'interpréter ainsi: si les données suivent $p$, mais que nous utilisons $q$ pour faire des prédictions, la divergence KL mesure l'inefficacité de ce choix. Plus $q$ diffère de $p$, plus la divergence KL est grande.
 
-On peut réécrire la divergence KL en faisant apparaître l'entropie:
+Trois propriétés sont à retenir:
+- $D_{\text{KL}}(p \| q) \geq 0$ toujours (c'est l'inégalité de Gibbs)
+- $D_{\text{KL}}(p \| q) = 0$ si et seulement si $p = q$
+- La divergence KL n'est pas symétrique: $D_{\text{KL}}(p \| q) \neq D_{\text{KL}}(q \| p)$ en général
+
+Cette asymétrie est importante. Intuitivement, $D_{\text{KL}}(p \| q)$ mesure la surprise de quelqu'un qui croit en $q$ mais observe des données de $p$. Ce n'est pas la même chose que la surprise de quelqu'un qui croit en $p$ mais observe des données de $q$.
+
+```{code-cell} python
+:tags: [hide-input]
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+def kl_divergence(p, q):
+    """Calcule la divergence KL de p vers q (en bits)."""
+    p, q = np.array(p), np.array(q)
+    # Éviter log(0) en ne considérant que les p[i] > 0
+    mask = p > 0
+    return np.sum(p[mask] * np.log2(p[mask] / q[mask]))
+
+# Deux distributions sur 4 résultats
+p = np.array([0.4, 0.35, 0.2, 0.05])  # vraie distribution (météo)
+q = np.array([0.6, 0.2, 0.15, 0.05])  # modèle (surestime le soleil)
+
+kl_pq = kl_divergence(p, q)
+kl_qp = kl_divergence(q, p)
+
+fig, axes = plt.subplots(1, 3, figsize=(12, 3.5))
+x = np.arange(4)
+labels = ['Soleil', 'Nuageux', 'Pluie', 'Neige']
+width = 0.35
+
+# Gauche: les deux distributions
+ax = axes[0]
+ax.bar(x - width/2, p, width, label='Vraie distribution $p$', color='steelblue', alpha=0.8)
+ax.bar(x + width/2, q, width, label='Modèle $q$', color='coral', alpha=0.8)
+ax.set_xticks(x)
+ax.set_xticklabels(labels, rotation=15)
+ax.set_ylabel('Probabilité')
+ax.set_title('Comparaison de $p$ et $q$')
+ax.legend(fontsize=9)
+ax.set_ylim(0, 0.7)
+
+# Centre: contribution de chaque terme à KL(p||q)
+ax = axes[1]
+contributions = p * np.log2(p / q)
+colors = ['green' if c >= 0 else 'red' for c in contributions]
+ax.bar(x, contributions, color=colors, alpha=0.7, edgecolor='black')
+ax.axhline(0, color='black', linewidth=0.5)
+ax.set_xticks(x)
+ax.set_xticklabels(labels, rotation=15)
+ax.set_ylabel('Contribution (bits)')
+ax.set_title(f'$D_{{\\mathrm{{KL}}}}(p \\| q) = {kl_pq:.3f}$ bits')
+
+# Droite: asymétrie
+ax = axes[2]
+bars = ax.bar(['$D_{\\mathrm{KL}}(p \\| q)$', '$D_{\\mathrm{KL}}(q \\| p)$'], 
+              [kl_pq, kl_qp], color=['steelblue', 'coral'], alpha=0.7, edgecolor='black')
+ax.set_ylabel('Divergence KL (bits)')
+ax.set_title('Asymétrie de la divergence KL')
+for bar, val in zip(bars, [kl_pq, kl_qp]):
+    ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.005, 
+            f'{val:.3f}', ha='center', va='bottom', fontsize=10)
+
+plt.tight_layout()
+```
+
+La figure illustre la divergence KL entre deux distributions météo. Le panneau de gauche montre les deux distributions: la vraie $p$ et notre modèle $q$. Le panneau central décompose $D_{\text{KL}}(p \| q)$ par résultat: les barres positives indiquent où $p > q$ (le modèle sous-estime), les barres négatives où $p < q$ (le modèle surestime). Le panneau de droite montre l'asymétrie: $D_{\text{KL}}(p \| q) \neq D_{\text{KL}}(q \| p)$.
+
+### Entropie croisée
+
+La divergence KL se décompose naturellement en deux termes. Définissons d'abord l'**entropie croisée** entre $p$ et $q$:
 
 $$
-D_{\text{KL}}(p \| q) = -\mathbb{H}(p) + \mathbb{H}_{\text{ce}}(p, q)
+\mathbb{H}_{\text{ce}}(p, q) = -\sum_y p(y) \log q(y)
 $$
 
-où $\mathbb{H}_{\text{ce}}(p, q) = -\sum_y p(y) \log q(y)$ est l'**entropie croisée** entre $p$ et $q$.
+L'entropie croisée mesure la surprise moyenne quand on utilise $q$ pour prédire des événements qui suivent $p$. Si $q = p$, on retrouve l'entropie ordinaire $\mathbb{H}(p)$. Sinon, l'entropie croisée est plus grande que l'entropie: utiliser le «mauvais» modèle augmente la surprise moyenne.
 
-#### L'EMV minimise la divergence KL
+La relation avec la divergence KL est:
 
-La **distribution empirique** place une masse $1/N$ sur chaque observation:
+$$
+D_{\text{KL}}(p \| q) = \mathbb{H}_{\text{ce}}(p, q) - \mathbb{H}(p)
+$$
+
+Cette décomposition a une interprétation importante. L'entropie $\mathbb{H}(p)$ est *irréductible*: c'est l'incertitude intrinsèque des données. La divergence KL est *réductible*: en améliorant notre modèle $q$ pour qu'il se rapproche de $p$, nous pouvons la réduire à zéro. L'entropie croisée est leur somme.
+
+```{code-cell} python
+:tags: [hide-input]
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+def entropy(p):
+    p = np.array(p)
+    p = p[p > 0]
+    return -np.sum(p * np.log2(p))
+
+def cross_entropy(p, q):
+    p, q = np.array(p), np.array(q)
+    mask = p > 0
+    return -np.sum(p[mask] * np.log2(q[mask]))
+
+def kl_divergence(p, q):
+    return cross_entropy(p, q) - entropy(p)
+
+# Même distributions que précédemment
+p = np.array([0.4, 0.35, 0.2, 0.05])
+q = np.array([0.6, 0.2, 0.15, 0.05])
+
+H_p = entropy(p)
+H_ce = cross_entropy(p, q)
+KL = kl_divergence(p, q)
+
+fig, ax = plt.subplots(figsize=(8, 4))
+
+# Barres empilées montrant la décomposition
+bar_width = 0.5
+ax.bar([0], [H_p], bar_width, label=f'$\\mathbb{{H}}(p) = {H_p:.3f}$ (irréductible)', 
+       color='steelblue', alpha=0.8)
+ax.bar([0], [KL], bar_width, bottom=[H_p], 
+       label=f'$D_{{\\mathrm{{KL}}}}(p \\| q) = {KL:.3f}$ (réductible)', 
+       color='coral', alpha=0.8)
+
+# Ligne montrant l'entropie croisée totale
+ax.hlines(H_ce, -0.4, 0.4, colors='black', linestyles='--', linewidth=2)
+ax.text(0.5, H_ce, f'$\\mathbb{{H}}_{{\\mathrm{{ce}}}}(p, q) = {H_ce:.3f}$', 
+        va='center', fontsize=11)
+
+ax.set_xlim(-1, 2)
+ax.set_ylim(0, 2.5)
+ax.set_xticks([])
+ax.set_ylabel('Bits')
+ax.set_title('Décomposition de l\'entropie croisée')
+ax.legend(loc='upper right', fontsize=10)
+
+plt.tight_layout()
+```
+
+La figure montre la décomposition de l'entropie croisée. La partie bleue (entropie $\mathbb{H}(p)$) est incompressible: c'est l'incertitude des données elles-mêmes. La partie orange (divergence KL) représente le «gaspillage» dû à l'utilisation d'un modèle imparfait. En apprentissage, nous ne pouvons pas réduire $\mathbb{H}(p)$, mais nous pouvons minimiser la divergence KL en trouvant un meilleur modèle.
+
+### La distribution empirique
+
+Avant de relier ces concepts au maximum de vraisemblance, nous devons définir un objet central: la distribution empirique. C'est simplement la distribution construite à partir des données observées.
+
+Prenons un exemple concret. Supposons que nous lancions un dé (possiblement truqué) six fois et obtenions les résultats: 3, 1, 3, 5, 3, 2. La distribution empirique compte la fréquence de chaque résultat:
+
+| Résultat | Occurrences | Fréquence |
+|----------|-------------|-----------|
+| 1 | 1 | 1/6 |
+| 2 | 1 | 1/6 |
+| 3 | 3 | 3/6 = 0,5 |
+| 4 | 0 | 0 |
+| 5 | 1 | 1/6 |
+| 6 | 0 | 0 |
+
+Cette distribution empirique est notre meilleure estimation de la vraie distribution à partir de ces 6 observations. Bien sûr, avec si peu de données, elle est bruitée: le résultat 4 a une fréquence nulle, mais ce n'est probablement pas parce que le dé ne peut jamais donner 4.
+
+Formellement, la **distribution empirique** place une masse $1/N$ sur chaque observation:
 
 $$
 p_{\mathcal{D}}(y) = \frac{1}{N} \sum_{i=1}^N \delta(y - y_i)
 $$
 
-Considérons maintenant la divergence KL entre cette distribution empirique et notre modèle paramétrique $p(y | \boldsymbol{\theta})$:
+où $\delta$ est la fonction de Dirac. Pour une variable discrète, cela revient simplement à compter les fréquences: $p_{\mathcal{D}}(y) = \frac{\#\{i : y_i = y\}}{N}$.
+
+```{code-cell} python
+:tags: [hide-input]
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Vraie distribution (dé légèrement truqué, favorise le 3)
+p_true = np.array([0.15, 0.15, 0.25, 0.15, 0.15, 0.15])
+
+np.random.seed(42)
+
+fig, axes = plt.subplots(1, 3, figsize=(12, 3.5))
+sample_sizes = [20, 100, 1000]
+x = np.arange(1, 7)
+
+for ax, N in zip(axes, sample_sizes):
+    # Générer N échantillons de la vraie distribution
+    samples = np.random.choice(np.arange(1, 7), size=N, p=p_true)
+    
+    # Distribution empirique
+    counts = np.bincount(samples, minlength=7)[1:]  # ignorer l'index 0
+    p_empirical = counts / N
+    
+    # Tracer
+    width = 0.35
+    ax.bar(x - width/2, p_true, width, label='Vraie distribution $p$', 
+           color='steelblue', alpha=0.8)
+    ax.bar(x + width/2, p_empirical, width, label='Distribution empirique $\\hat{p}$', 
+           color='coral', alpha=0.8)
+    
+    # Calculer la divergence KL (avec lissage pour éviter log(0))
+    p_smooth = np.clip(p_empirical, 1e-10, 1)
+    kl = np.sum(p_true * np.log2(p_true / p_smooth))
+    
+    ax.set_xticks(x)
+    ax.set_xlabel('Face du dé')
+    ax.set_ylabel('Probabilité')
+    ax.set_title(f'$N = {N}$ observations\n$D_{{\\mathrm{{KL}}}}(p \\| \\hat{{p}}) \\approx {kl:.3f}$ bits')
+    ax.set_ylim(0, 0.35)
+    ax.legend(fontsize=8, loc='upper right')
+
+plt.tight_layout()
+```
+
+La figure montre comment la distribution empirique converge vers la vraie distribution quand le nombre d'observations $N$ augmente. Avec $N = 20$, la distribution empirique est bruitée et diffère notablement de la vraie. Avec $N = 1000$, les deux distributions sont presque identiques, et la divergence KL est proche de zéro.
+
+### Le maximum de vraisemblance minimise la divergence KL
+
+Nous pouvons maintenant faire le lien avec l'EMV. Notre objectif est de trouver un modèle paramétrique $p(y | \boldsymbol{\theta})$ qui se rapproche le plus possible des données. En termes de divergence KL, nous voulons minimiser:
 
 $$
-D_{\text{KL}}(p_{\mathcal{D}} \| p(\cdot | \boldsymbol{\theta})) = -\mathbb{H}(p_{\mathcal{D}}) + \mathbb{H}_{\text{ce}}(p_{\mathcal{D}}, p(\cdot | \boldsymbol{\theta}))
+D_{\text{KL}}(p_{\mathcal{D}} \| p(\cdot | \boldsymbol{\theta})) = \mathbb{H}_{\text{ce}}(p_{\mathcal{D}}, p(\cdot | \boldsymbol{\theta})) - \mathbb{H}(p_{\mathcal{D}})
 $$
 
-Le terme $\mathbb{H}(p_{\mathcal{D}})$ ne dépend pas de $\boldsymbol{\theta}$. Donc:
+Le terme $\mathbb{H}(p_{\mathcal{D}})$ est l'entropie de la distribution empirique. C'est une propriété des données observées, indépendante de $\boldsymbol{\theta}$. Pour minimiser la divergence KL, il suffit donc de minimiser l'entropie croisée $\mathbb{H}_{\text{ce}}(p_{\mathcal{D}}, p(\cdot | \boldsymbol{\theta}))$.
+
+Or cette entropie croisée avec la distribution empirique n'est autre que la log-vraisemblance négative moyenne:
 
 $$
-\arg\min_{\boldsymbol{\theta}} D_{\text{KL}}(p_{\mathcal{D}} \| p(\cdot|\boldsymbol{\theta})) = \arg\min_{\boldsymbol{\theta}} \mathbb{H}_{\text{ce}}(p_{\mathcal{D}}, p(\cdot|\boldsymbol{\theta}))
+\mathbb{H}_{\text{ce}}(p_{\mathcal{D}}, p(\cdot|\boldsymbol{\theta})) = -\sum_y p_{\mathcal{D}}(y) \log p(y|\boldsymbol{\theta}) = -\frac{1}{N} \sum_{i=1}^N \log p(y_i | \mathbf{x}_i; \boldsymbol{\theta}) = \frac{1}{N}\text{LVN}(\boldsymbol{\theta})
 $$
 
-L'entropie croisée avec la distribution empirique est exactement la log-vraisemblance négative:
+Le maximum de vraisemblance trouve donc les paramètres qui minimisent la divergence KL entre notre modèle et la distribution empirique des données.
+
+```{code-cell} python
+:tags: [hide-input]
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Exemple: ajuster un paramètre de Bernoulli
+# Données: 7 succès sur 10 essais
+N = 10
+k = 7  # nombre de succès
+
+# Distribution empirique: p(Y=1) = 7/10, p(Y=0) = 3/10
+p_empirical = np.array([1 - k/N, k/N])  # [p(0), p(1)]
+
+# Modèle: Bernoulli(theta)
+theta_range = np.linspace(0.01, 0.99, 200)
+
+# Calculer KL(p_empirique || p_theta) pour chaque theta
+def kl_bernoulli(p_emp, theta):
+    p_model = np.array([1 - theta, theta])
+    # Éviter log(0)
+    mask = p_emp > 0
+    return np.sum(p_emp[mask] * np.log(p_emp[mask] / p_model[mask]))
+
+kl_values = [kl_bernoulli(p_empirical, theta) for theta in theta_range]
+
+fig, axes = plt.subplots(1, 2, figsize=(11, 4))
+
+# Gauche: les distributions
+ax = axes[0]
+theta_mle = k / N
+x = np.array([0, 1])
+width = 0.25
+ax.bar(x - width, p_empirical, width, label='Distribution empirique', 
+       color='coral', alpha=0.8)
+ax.bar(x, [1 - 0.5, 0.5], width, label='Modèle $\\theta = 0.5$', 
+       color='lightgray', alpha=0.8)
+ax.bar(x + width, [1 - theta_mle, theta_mle], width, label=f'Modèle $\\theta = {theta_mle}$ (EMV)', 
+       color='steelblue', alpha=0.8)
+ax.set_xticks(x)
+ax.set_xticklabels(['$Y = 0$', '$Y = 1$'])
+ax.set_ylabel('Probabilité')
+ax.set_title('Distribution empirique vs modèles')
+ax.legend(fontsize=9)
+
+# Droite: KL en fonction de theta
+ax = axes[1]
+ax.plot(theta_range, kl_values, 'b-', linewidth=2)
+ax.axvline(theta_mle, color='red', linestyle='--', linewidth=2, 
+           label=f'EMV: $\\hat{{\\theta}} = {theta_mle}$')
+ax.set_xlabel('Paramètre $\\theta$')
+ax.set_ylabel('$D_{\\mathrm{KL}}(\\hat{p} \\| p_\\theta)$')
+ax.set_title('Divergence KL en fonction de $\\theta$')
+ax.legend()
+ax.set_xlim(0, 1)
+
+plt.tight_layout()
+```
+
+La figure illustre le lien entre EMV et divergence KL sur un exemple simple: ajuster un paramètre de Bernoulli à partir de 10 observations dont 7 sont des succès. Le panneau de gauche compare la distribution empirique (7/10 de succès) à deux modèles: $\theta = 0{,}5$ (pièce équilibrée) et $\theta = 0{,}7$ (l'EMV). Le panneau de droite montre que la divergence KL est minimale exactement quand $\theta$ égale la fréquence empirique des succès—c'est l'EMV.
+
+Géométriquement, le maximum de vraisemblance cherche, parmi toutes les distributions de notre famille paramétrique, celle qui est la plus «proche» de la distribution empirique au sens de la divergence KL.
+
+### Trois langages, un même algorithme
+
+Nous venons de montrer que minimiser la log-vraisemblance négative revient à minimiser la divergence KL avec la distribution empirique. Puisque $D_{\text{KL}}(p_{\mathcal{D}} \| q) = \mathbb{H}_{\text{ce}}(p_{\mathcal{D}}, q) - \mathbb{H}(p_{\mathcal{D}})$ et que l'entropie des données $\mathbb{H}(p_{\mathcal{D}})$ est fixe, minimiser la KL revient à minimiser l'entropie croisée entre la distribution empirique et notre modèle. Cette observation unifie régression et classification sous un même principe.
+
+Pour la régression, nous modélisons $p(y|\mathbf{x}; \boldsymbol{\theta}) = \mathcal{N}(y | f(\mathbf{x}; \boldsymbol{\theta}), \sigma^2)$. La log-vraisemblance d'une observation est $\log p(y|\mathbf{x}; \boldsymbol{\theta}) = -\frac{(y - f(\mathbf{x}; \boldsymbol{\theta}))^2}{2\sigma^2} + \text{cst}$. Minimiser la LVN—et donc la divergence KL—revient à minimiser la somme des erreurs quadratiques $\sum_i (y_i - f(\mathbf{x}_i; \boldsymbol{\theta}))^2$. La perte quadratique découle directement de l'hypothèse gaussienne.
+
+Pour la classification binaire, nous modélisons $p(y|\mathbf{x}; \boldsymbol{\theta}) = \text{Ber}(y | \sigma(f(\mathbf{x}; \boldsymbol{\theta})))$, où $\sigma$ est la sigmoïde. La log-vraisemblance est $y \log \sigma(f) + (1-y) \log(1 - \sigma(f))$. Minimiser la LVN donne l'entropie croisée binaire $-\sum_i [y_i \log \hat{p}_i + (1-y_i) \log(1 - \hat{p}_i)]$, où $\hat{p}_i = \sigma(f(\mathbf{x}_i; \boldsymbol{\theta}))$.
+
+Pour la classification multiclasse avec $C$ classes, nous modélisons $p(y|\mathbf{x}; \boldsymbol{\theta})$ par une distribution catégorielle dont les probabilités sont données par le softmax: $\pi_c(\mathbf{x}) = \exp(f_c(\mathbf{x})) / \sum_j \exp(f_j(\mathbf{x}))$. La log-vraisemblance d'une observation de classe $c$ est $\log \pi_c(\mathbf{x})$. En utilisant l'encodage one-hot $\mathbf{y} = [y_1, \ldots, y_C]^\top$ où $y_c = 1$ si l'exemple appartient à la classe $c$, minimiser la LVN donne l'entropie croisée multiclasse:
 
 $$
-\mathbb{H}_{\text{ce}}(p_{\mathcal{D}}, p(\cdot|\boldsymbol{\theta})) = -\frac{1}{N} \sum_{i=1}^N \log p(y_i | \mathbf{x}_i; \boldsymbol{\theta}) = \text{LVN}(\boldsymbol{\theta})
+-\sum_{i=1}^N \sum_{c=1}^C y_{ic} \log \pi_c(\mathbf{x}_i; \boldsymbol{\theta})
 $$
 
-Ainsi, **le maximum de vraisemblance trouve les paramètres qui minimisent la divergence KL entre notre modèle et la distribution empirique**. C'est une interprétation géométrique de l'EMV: nous cherchons le modèle paramétrique le plus «proche» des données observées, au sens de la divergence KL.
+Dans les trois cas, le même principe s'applique: spécifier un modèle probabiliste pour $p(y|\mathbf{x})$, puis minimiser la divergence KL avec les données. Le choix du modèle détermine la perte. L'hypothèse gaussienne mène à la perte quadratique. L'hypothèse de Bernoulli mène à l'entropie croisée binaire. L'hypothèse catégorielle mène à l'entropie croisée multiclasse avec softmax. Inversement, utiliser une de ces pertes revient implicitement à supposer le modèle probabiliste correspondant.
 
-#### Unification: régression et classification
-
-Cette perspective informationnelle unifie nos deux modèles principaux:
-
-| Problème | Modèle probabiliste | LVN à minimiser |
-|----------|---------------------|-----------------|
-| Régression | $p(y\mid\mathbf{x}; \boldsymbol{\theta}) = \mathcal{N}(y \mid f(\mathbf{x}; \boldsymbol{\theta}), \sigma^2)$ | $\frac{1}{2\sigma^2}\sum_i (y_i - f(\mathbf{x}_i; \boldsymbol{\theta}))^2 + \text{cst}$ |
-| Classification binaire | $p(y\mid\mathbf{x}; \boldsymbol{\theta}) = \text{Ber}(y \mid \sigma(\boldsymbol{\theta}^\top\mathbf{x}))$ | $-\sum_i [y_i \log \mu_i + (1-y_i)\log(1-\mu_i)]$ |
-
-Dans les deux cas:
-1. Nous spécifions un modèle probabiliste pour les observations
-2. La log-vraisemblance négative définit la fonction de perte
-3. Minimiser cette perte revient à minimiser la divergence KL avec la distribution empirique
-
-La perte quadratique n'est pas un choix arbitraire: elle découle de l'hypothèse que le bruit est gaussien. L'entropie croisée n'est pas arbitraire non plus: elle découle de l'hypothèse que les étiquettes suivent une distribution de Bernoulli (binaire) ou catégorielle (multiclasse).
-
-Cette unification révèle que **le choix de la fonction de perte encode notre hypothèse sur la distribution du bruit**. Changer de modèle probabiliste change la perte optimale. Inversement, choisir une perte particulière revient implicitement à supposer un certain modèle de bruit.
+Pourquoi maintenir trois langages—décisionnel, probabiliste, informationnel—s'ils convergent vers les mêmes algorithmes? Parce qu'ils répondent à des questions différentes. Le langage décisionnel est *opérationnel*: il dit comment construire un algorithme (définir une perte, minimiser). Le langage probabiliste est *interprétatif*: il explicite nos hypothèses sur les données et permet de quantifier l'incertitude. Le langage informationnel est *géométrique*: il montre que l'apprentissage consiste à trouver la distribution la plus proche des données dans un espace de modèles.
 
 ## Résumé
 
-Ce chapitre a développé le cadre probabiliste pour l'apprentissage supervisé:
+Ce chapitre a présenté le cadre probabiliste pour l'apprentissage supervisé.
 
-- Le **cadre bayésien** utilise le théorème de Bayes pour mettre à jour nos croyances sur les paramètres après avoir observé des données. L'a posteriori combine l'a priori (nos croyances initiales) et la vraisemblance (ce que les données nous disent).
+Nous avons d'abord introduit le cadre bayésien, qui traite les paramètres comme des variables aléatoires. Le théorème de Bayes permet de combiner nos croyances initiales (l'a priori) avec l'information des données (la vraisemblance) pour obtenir une distribution a posteriori sur les paramètres. Cette distribution capture notre incertitude après observation des données, mais son calcul exact est souvent coûteux.
 
-- Le **prédicteur de Bayes optimal** minimise le risque pour une perte donnée, en supposant la connaissance de la vraie distribution. Pour la perte quadratique, c'est la moyenne conditionnelle; pour la perte 0-1, c'est le mode conditionnel.
+Le maximum a posteriori (MAP) contourne cette difficulté en retenant uniquement le mode de la distribution a posteriori—la valeur des paramètres la plus probable. Avec un a priori gaussien centré en zéro, le MAP correspond exactement à la régression Ridge: le coefficient de régularisation $\lambda$ encode la force de notre croyance que les paramètres sont petits. Le maximum de vraisemblance (EMV) est le cas particulier où l'a priori est uniforme et n'influence pas l'estimation.
 
-- Le **maximum de vraisemblance** (EMV) trouve les paramètres qui rendent les données observées les plus probables. Sous bruit gaussien, l'EMV coïncide avec les moindres carrés.
+La théorie de l'information offre une interprétation géométrique de l'EMV: minimiser la log-vraisemblance négative revient à minimiser la divergence de Kullback-Leibler entre notre modèle et la distribution empirique des données. Cette perspective unifie régression et classification. Dans les deux cas, nous cherchons le modèle paramétrique le plus «proche» des observations: la perte quadratique découle de l'hypothèse de bruit gaussien, l'entropie croisée découle de l'hypothèse d'étiquettes suivant une distribution de Bernoulli ou catégorielle.
 
-- Le **maximum a posteriori** (MAP) incorpore un a priori sur les paramètres. Avec un a priori gaussien, le MAP correspond exactement à Ridge. Le coefficient de régularisation encode la force de l'a priori.
+Les perspectives décisionnelle, probabiliste et informationnelle sont complémentaires. La première guide la construction d'algorithmes, la deuxième explicite nos hypothèses et quantifie l'incertitude, la troisième offre une vision géométrique de l'apprentissage.
 
-- L'**interprétation informationnelle** révèle que l'EMV minimise la divergence KL entre notre modèle et la distribution empirique. Cette perspective unifie régression (bruit gaussien → perte quadratique) et classification (distribution de Bernoulli → entropie croisée).
-
-- Les trois perspectives (décisionnelle, probabiliste, informationnelle) sont complémentaires: la première est opérationnelle (comment construire l'algorithme), la deuxième est interprétative (ce que nous supposons sur les données), la troisième est géométrique (quelle distance minimisons-nous).
-
-Le chapitre suivant étend ces fondations aux **réseaux de neurones**, où la capacité d'apprendre des représentations non linéaires ouvre de nouvelles possibilités et de nouveaux défis.
+Le chapitre suivant étend ces fondations aux réseaux de neurones, où la capacité d'apprendre des représentations non linéaires ouvre de nouvelles possibilités.
 
 ## Exercices
 

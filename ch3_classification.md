@@ -258,6 +258,19 @@ $$
 \nabla_{\boldsymbol{\theta}} \text{LVN}(\boldsymbol{\theta}) = \frac{1}{N} \sum_{i=1}^N (\mu_i - y_i) \mathbf{x}_i
 $$
 
+```{admonition} Conventions de notation pour les dérivées
+:class: note dropdown
+
+Deux conventions coexistent pour les dérivées de fonctions vectorielles: la disposition *numérateur* et la disposition *dénominateur*. Pour le gradient d'un scalaire $f$ par rapport à un vecteur colonne $\boldsymbol{\theta} \in \mathbb{R}^d$:
+
+- **Convention numérateur**: $\nabla f$ est un vecteur ligne ($1 \times d$)
+- **Convention dénominateur**: $\nabla f$ est un vecteur colonne ($d \times 1$)
+
+Ce livre utilise la convention dénominateur: le gradient a la même forme que $\boldsymbol{\theta}$. Cette cohérence dimensionnelle simplifie l'écriture des mises à jour $\boldsymbol{\theta} \leftarrow \boldsymbol{\theta} - \eta \nabla f$.
+
+**Conseil pratique**: En cas de doute, vérifiez les dimensions. Si $\boldsymbol{\theta} \in \mathbb{R}^d$ et $f \in \mathbb{R}$, alors $\nabla_{\boldsymbol{\theta}} f$ doit être dans $\mathbb{R}^d$ pour que la soustraction ait un sens.
+```
+
 ```{admonition} Dérivation du gradient
 :class: tip dropdown
 
@@ -348,6 +361,14 @@ Pourquoi l'exponentielle? Elle garantit les deux contraintes:
 
 C'est la même idée que pour la sigmoïde: nous utilisons une transformation non linéaire pour projeter la sortie linéaire dans l'espace des paramètres valides de la distribution.
 
+**Stabilité numérique.** L'implémentation naïve $e^{a_c} / \sum_{c'} e^{a_{c'}}$ pose un problème: si les logits sont grands (par exemple $a_c = 1000$), l'exponentielle déborde vers l'infini. L'astuce consiste à soustraire le maximum avant d'exponencier:
+
+$$
+\text{softmax}(\mathbf{a})_c = \frac{e^{a_c - a_{\max}}}{\sum_{c'} e^{a_{c'} - a_{\max}}}
+$$
+
+où $a_{\max} = \max_c a_c$. Cette transformation ne change pas le résultat (le facteur $e^{-a_{\max}}$ s'annule entre numérateur et dénominateur) mais garantit que le plus grand exposant vaut 0, évitant tout débordement. C'est le cœur de l'astuce dite *log-sum-exp*.
+
 ```{code-cell} python
 :tags: [hide-input]
 
@@ -355,7 +376,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def softmax(a):
-    a_max = np.max(a)
+    a_max = np.max(a)  # Soustraire le max pour la stabilité
     exp_a = np.exp(a - a_max)
     return exp_a / np.sum(exp_a)
 
@@ -387,6 +408,11 @@ for bar, p in zip(bars, probs):
 plt.tight_layout()
 ```
 
+```{margin}
+**En pratique**
+Pour du code de production, préférez `scipy.special.softmax` qui gère automatiquement la stabilité numérique et les tableaux multidimensionnels. Notre implémentation manuelle illustre le principe.
+```
+
 ### Entropie croisée catégorielle
 
 Appliquons le maximum de vraisemblance à la distribution catégorielle, exactement comme nous l'avons fait pour Bernoulli. La vraisemblance d'une observation $(y, \mathbf{x})$ est la probabilité assignée à la vraie classe:
@@ -414,6 +440,54 @@ $$
 $$
 
 C'est simplement la moyenne du logarithme négatif de la probabilité assignée à la vraie classe. Comme pour le cas binaire, **l'entropie croisée n'est pas un choix arbitraire**: elle découle directement du maximum de vraisemblance appliqué au modèle catégoriel.
+
+### Calcul efficace: logsumexp suffit
+
+Une observation permet de simplifier considérablement l'implémentation. Développons la perte pour un exemple de classe $y$:
+
+$$
+-\log \mu_y = -\log \frac{e^{a_y}}{\sum_c e^{a_c}} = -a_y + \log \sum_c e^{a_c}
+$$
+
+Cette expression ne contient que le logit de la vraie classe $a_y$ et le log-sum-exp des logits. Nous n'avons jamais besoin de calculer les probabilités softmax elles-mêmes! La perte s'écrit directement:
+
+$$
+\text{LVN} = -a_y + \text{logsumexp}(\mathbf{a})
+$$
+
+où $\text{logsumexp}(\mathbf{a}) = a_{\max} + \log \sum_c e^{a_c - a_{\max}}$ se calcule de manière stable comme expliqué précédemment.
+
+Cette formulation est à la fois plus stable numériquement et plus efficace: pas de division, pas d'intermédiaires à stocker. C'est pourquoi les bibliothèques comme PyTorch combinent softmax et entropie croisée en une seule opération. La fonction `torch.nn.CrossEntropyLoss` prend en entrée les **logits** (scores bruts), pas les probabilités, et applique cette simplification en interne.
+
+```{code-cell} python
+:tags: [hide-input]
+
+import numpy as np
+
+def logsumexp(a):
+    """Log-sum-exp stable"""
+    a_max = np.max(a)
+    return a_max + np.log(np.sum(np.exp(a - a_max)))
+
+def cross_entropy_naive(logits, y):
+    """Version naïve: softmax puis log"""
+    exp_a = np.exp(logits - np.max(logits))
+    probs = exp_a / np.sum(exp_a)
+    return -np.log(probs[y])
+
+def cross_entropy_direct(logits, y):
+    """Version directe: logsumexp seulement"""
+    return -logits[y] + logsumexp(logits)
+
+# Test d'équivalence
+logits = np.array([2.0, 1.0, 0.5])
+y = 0  # vraie classe
+
+print(f"Via softmax:  {cross_entropy_naive(logits, y):.6f}")
+print(f"Via logsumexp: {cross_entropy_direct(logits, y):.6f}")
+```
+
+Les deux méthodes donnent le même résultat, mais la version directe est préférable en pratique.
 
 ### Cas binaire comme cas particulier
 
@@ -529,6 +603,31 @@ plt.tight_layout()
 Le taux d'apprentissage $\eta$ contrôle la vitesse de convergence et requiert un réglage soigneux. Un taux trop petit rend la progression très lente: l'algorithme fait de minuscules pas et peut nécessiter des milliers d'itérations pour converger. Un taux trop grand cause des oscillations autour du minimum, voire une divergence si les mises à jour dépassent systématiquement le minimum.
 
 Une stratégie pratique consiste à commencer avec un taux modéré puis à le réduire au cours de l'entraînement. Au début, de grands pas permettent de progresser rapidement vers la région du minimum; ensuite, de petits pas permettent de s'en approcher avec précision. La décroissance en racine carrée $\eta_t = \eta_0 / \sqrt{t+1}$ est un choix classique qui garantit la convergence théorique tout en conservant une vitesse raisonnable.
+
+### Méthodes du second ordre (optionnel IFT3395)
+
+La descente de gradient n'utilise que le gradient, c'est-à-dire les dérivées premières de la fonction objectif. Elle est dite méthode du **premier ordre**. On peut faire mieux en exploitant aussi la courbure locale, encodée dans la matrice **hessienne** $\mathbf{H}$ des dérivées secondes.
+
+La **méthode de Newton** remplace la mise à jour de la descente de gradient par:
+
+$$
+\boldsymbol{\theta}_{t+1} = \boldsymbol{\theta}_t - \mathbf{H}^{-1} \nabla \text{LVN}(\boldsymbol{\theta}_t)
+$$
+
+où $\mathbf{H} = \nabla^2 \text{LVN}(\boldsymbol{\theta}_t)$ est la hessienne évaluée au point courant. L'idée est d'approximer la fonction objectif par une quadratique locale et de sauter directement à son minimum.
+
+**Lien avec la recherche de racines.** La condition d'optimalité est $\nabla \text{LVN}(\boldsymbol{\theta}^*) = \mathbf{0}$. Newton cherche les zéros du gradient: c'est la méthode de Newton-Raphson appliquée à $g(\boldsymbol{\theta}) = \nabla \text{LVN}(\boldsymbol{\theta})$. Quand la fonction est quadratique, Newton converge en une seule itération.
+
+**Convergence quadratique.** Près du minimum, la descente de gradient a une convergence *linéaire*: l'erreur est multipliée par une constante $c < 1$ à chaque itération. Newton a une convergence *quadratique*: l'erreur est élevée au carré. Concrètement, si l'erreur est $10^{-3}$ à l'itération $t$, elle devient environ $10^{-6}$ à l'itération $t+1$. Cette convergence rapide est séduisante, mais elle a un coût.
+
+**Problème de passage à l'échelle.** La hessienne est une matrice $d \times d$. Pour un modèle avec $d = 10^9$ paramètres (un grand réseau de neurones), stocker $\mathbf{H}$ demanderait $10^{18}$ nombres, soit environ un exaoctet. L'inverser est encore plus coûteux: $O(d^3)$ opérations. La méthode de Newton pure est donc inapplicable aux modèles modernes de grande taille.
+
+**Alternatives pratiques.** Des méthodes intermédiaires contournent ce problème:
+
+- **L-BFGS** (*Limited-memory BFGS*): Approxime l'inverse de la hessienne à partir des derniers gradients, sans jamais former $\mathbf{H}$ explicitement. C'est le solveur par défaut de `LogisticRegression` dans scikit-learn.
+- **Newton-CG** (*Newton-Conjugate Gradient*): Résout le système $\mathbf{H} \mathbf{p} = -\nabla \text{LVN}$ par gradient conjugué, en utilisant uniquement des produits hessienne-vecteur $\mathbf{H}\mathbf{v}$, qui peuvent être calculés sans former $\mathbf{H}$.
+
+Ces méthodes offrent une convergence plus rapide que la descente de gradient simple, tout en restant applicables à des problèmes de taille raisonnable. Pour la régression logistique avec quelques milliers de caractéristiques, L-BFGS converge généralement en quelques dizaines d'itérations là où SGD en nécessiterait des centaines.
 
 ## Implémentation
 
