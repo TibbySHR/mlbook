@@ -667,8 +667,8 @@ Cette perspective informationnelle unifie nos deux modèles principaux:
 
 | Problème | Modèle probabiliste | LVN à minimiser |
 |----------|---------------------|-----------------|
-| Régression | $p(y|\mathbf{x}; \boldsymbol{\theta}) = \mathcal{N}(y | f(\mathbf{x}; \boldsymbol{\theta}), \sigma^2)$ | $\frac{1}{2\sigma^2}\sum_i (y_i - f(\mathbf{x}_i; \boldsymbol{\theta}))^2 + \text{cst}$ |
-| Classification binaire | $p(y|\mathbf{x}; \boldsymbol{\theta}) = \text{Ber}(y | \sigma(\boldsymbol{\theta}^\top\mathbf{x}))$ | $-\sum_i [y_i \log \mu_i + (1-y_i)\log(1-\mu_i)]$ |
+| Régression | $p(y\mid\mathbf{x}; \boldsymbol{\theta}) = \mathcal{N}(y \mid f(\mathbf{x}; \boldsymbol{\theta}), \sigma^2)$ | $\frac{1}{2\sigma^2}\sum_i (y_i - f(\mathbf{x}_i; \boldsymbol{\theta}))^2 + \text{cst}$ |
+| Classification binaire | $p(y\mid\mathbf{x}; \boldsymbol{\theta}) = \text{Ber}(y \mid \sigma(\boldsymbol{\theta}^\top\mathbf{x}))$ | $-\sum_i [y_i \log \mu_i + (1-y_i)\log(1-\mu_i)]$ |
 
 Dans les deux cas:
 1. Nous spécifions un modèle probabiliste pour les observations
