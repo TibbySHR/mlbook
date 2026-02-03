@@ -344,19 +344,21 @@ Le degré $k$ contrôle la **capacité** du modèle.
 
 ## Encodage cyclique : variables périodiques
 
-**Problème** : L'heure (0-23) a une discontinuité — 23h et 0h sont adjacentes mais numériquement éloignées.
+Avec l'heure brute (0-23), un modèle linéaire ne peut apprendre qu'une relation monotone. Or la consommation d'énergie est cyclique (haute le matin/soir, basse la nuit).
 
-**Solution** : Projeter sur un cercle avec sin/cos :
+De plus, 23h et 0h sont adjacentes mais numériquement distantes de 23.
+
+**Solution** : Projeter sur un cercle :
 
 $$\boxed{\phi(x) = \left(\sin\frac{2\pi x}{T}, \cos\frac{2\pi x}{T}\right)}$$
 
 | Variable | Période $T$ | Résultat |
 |----------|-------------|----------|
 | Heure | 24 | 0h → (0, 1), 12h → (0, -1) |
-| Jour semaine | 7 | Lundi ≈ Dimanche (proches sur le cercle) |
+| Jour semaine | 7 | Lundi ≈ Dimanche |
 | Mois | 12 | Janvier ≈ Décembre |
 
-**Deux composantes** nécessaires : $\sin$ seul ne distingue pas 6h de 18h.
+Deux composantes nécessaires : $\sin$ seul ne distingue pas 6h de 18h.
 
 ---
 
