@@ -157,7 +157,7 @@ L'erreur d'entraînement diminue avec le degré du polynôme. L'erreur de test d
 
 Les polynômes ne sont pas la seule expansion de caractéristiques utile. Considérons les variables périodiques comme l'heure de la journée, le jour de la semaine ou le mois de l'année. Ces variables posent un problème particulier lorsqu'on les utilise directement comme entrées d'un modèle linéaire.
 
-Prenons l'heure de la journée. Si nous utilisons la valeur brute (un entier de 0 à 23), le modèle linéaire ne peut apprendre qu'une relation monotone: soit la cible augmente avec l'heure, soit elle diminue. Or, la consommation d'énergie n'est ni monotone croissante ni décroissante — elle est élevée le matin et le soir, faible la nuit et en milieu de journée. Un modèle linéaire avec l'heure brute ne peut pas capturer ce comportement cyclique.
+Prenons l'heure de la journée. Si nous utilisons la valeur brute (un entier de 0 à 23), le modèle linéaire ne peut apprendre qu'une relation monotone: soit la cible augmente avec l'heure, soit elle diminue. Or, la consommation d'énergie n'est ni monotone croissante ni décroissante; elle est élevée le matin et le soir, faible la nuit et en milieu de journée. Un modèle linéaire avec l'heure brute ne peut pas capturer ce comportement cyclique.
 
 Le problème est encore plus grave à la frontière du cycle. L'heure 23 et l'heure 0 sont adjacentes (une heure d'écart), mais numériquement elles diffèrent de 23. Un modèle linéaire n'a aucun moyen de « savoir » que ces valeurs sont proches. Si nous entraînons un modèle à prédire la température et qu'il observe que 22h et 23h ont des températures similaires, il n'a aucune raison d'extrapoler cette similarité à 0h et 1h.
 
@@ -167,7 +167,9 @@ $$
 \phi_{\sin}(x) = \sin\left(\frac{2\pi x}{T}\right), \quad \phi_{\cos}(x) = \cos\left(\frac{2\pi x}{T}\right)
 $$
 
-où $T$ est la période (24 pour les heures, 7 pour les jours de la semaine, 12 pour les mois). Cette transformation a plusieurs propriétés importantes. Les valeurs adjacentes dans le cycle, y compris 23h et 0h, sont proches dans l'espace des caractéristiques. La représentation est continue et différentiable partout. Nous avons besoin de deux composantes (sin et cos) pour identifier de façon unique chaque point du cycle — une seule ne suffirait pas.
+où $T$ est la période (24 pour les heures, 7 pour les jours de la semaine, 12 pour les mois). Cette transformation a plusieurs propriétés importantes. Les valeurs adjacentes dans le cycle, y compris 23h et 0h, sont proches dans l'espace des caractéristiques. La représentation est continue et différentiable partout. Nous avons besoin de deux composantes (sin et cos) pour identifier de façon unique chaque point du cycle, car une seule ne suffirait pas.
+
+Pour comprendre l'avantage de cet encodage, examinons la distance entre heures consécutives. Avec l'encodage naïf, la « distance » est simplement la différence absolue entre les valeurs numériques: $|h_{i+1} - h_i|$. Avec l'encodage cyclique, chaque heure $h$ devient un point $(\cos(2\pi h/24), \sin(2\pi h/24))$ dans le plan, et la distance entre deux heures est la distance euclidienne entre ces points: $\sqrt{(\cos_{i+1} - \cos_i)^2 + (\sin_{i+1} - \sin_i)^2}$.
 
 ```{code-cell} python
 :tags: [hide-input]
@@ -239,7 +241,7 @@ ax.legend()
 plt.tight_layout()
 ```
 
-Le panneau de gauche montre le problème de l'encodage naïf: la distance entre 23h et 0h est de 23, alors qu'entre toutes les autres heures consécutives elle est de 1. Le panneau du centre illustre la projection sur le cercle: chaque heure occupe une position sur le cercle unitaire, et les heures adjacentes (y compris 23h et 0h) sont proches. Le panneau de droite confirme que la distance euclidienne entre heures consécutives est maintenant constante.
+Le panneau de gauche montre le problème de l'encodage naïf: la distance $|h_{i+1} - h_i|$ entre 23h et 0h est de 23, alors qu'entre toutes les autres heures consécutives elle est de 1. Cette discontinuité est problématique pour un modèle linéaire. Le panneau du centre illustre la projection sur le cercle unitaire: chaque heure occupe une position, et les heures adjacentes (y compris 23h et 0h) sont géométriquement proches. Le panneau de droite montre la distance euclidienne dans l'espace $(\cos, \sin)$ entre heures consécutives: elle est maintenant constante pour toutes les paires, y compris entre 23h et 0h.
 
 ```{code-cell} python
 :tags: [hide-input]
