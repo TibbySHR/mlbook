@@ -65,20 +65,30 @@ Ce projet teste votre **compréhension profonde**, pas seulement l'utilisation d
 
 ---
 
-## Structure et pondération
+## Évaluation : l'oral est la clé
 
-| Partie | Contenu | Poids |
-|--------|---------|-------|
-| 1 | Implémentation OLS | 10% |
-| 2 | Régression logistique + descente de gradient | 15% |
-| 3 | Ingénierie des caractéristiques | 15% |
-| 4 | Régression Ridge | 15% |
-| 5 | Sous-tâche de classification | 15% |
-| 6 | Modèle combiné | 10% |
-| 7 | Extension (choisir 1 option) | 10% |
-| **Kaggle** | Position au classement | **10%** |
+| Composante | Pondération | Description |
+|------------|-------------|-------------|
+| **Entrevue orale** | **60%** | Vérification de la compréhension |
+| Code soumis | 20% | Complétion des parties 1-7 |
+| Kaggle | 10% | Position au classement |
+| Rapport écrit | 10% | Analyse et réflexion |
 
-L'**entrevue orale** peut ajuster votre note de **±10%**.
+**Pourquoi 60% à l'oral?** Nous voulons évaluer votre **compréhension**, pas votre capacité à copier du code.
+
+---
+
+## Barème de l'entrevue orale (60%)
+
+| Critère | Points | Ce qu'on évalue |
+|---------|--------|-----------------|
+| Dérivation OLS au tableau | 15 | Solution analytique sans notes |
+| Explication descente de gradient | 10 | Règle de mise à jour, convergence |
+| Justification des choix | 15 | Caractéristiques, TimeSeriesSplit |
+| Questions théoriques | 10 | Ridge = MAP, entropie croisée |
+| Modifications en direct | 10 | Changer λ, prédire l'effet |
+
+**Vous devez pouvoir expliquer chaque ligne de code que vous soumettez.**
 
 ---
 
@@ -453,11 +463,41 @@ submission.to_csv('submission.csv', index=False)
 <!-- _class: lead -->
 
 # Entrevue orale
-## Préparation
+## 60% de la note finale
 
 ---
 
-<!-- footer: "" -->
+<!-- footer: "⚠️ L'entrevue orale vaut 60% de la note" -->
+
+## Pourquoi l'oral est-il si important?
+
+L'entrevue orale est la **composante principale** de l'évaluation.
+
+| Raison | Explication |
+|--------|-------------|
+| **Vérification** | S'assurer que vous comprenez votre code |
+| **Compréhension profonde** | Au-delà de la simple exécution |
+| **Compétence professionnelle** | Savoir expliquer son travail |
+
+**Ce qu'on évalue** : Votre capacité à dériver, expliquer et modifier.
+
+**Ce qu'on n'évalue pas** : La perfection du code ou le rang Kaggle.
+
+---
+
+## Barème détaillé de l'oral (60 points)
+
+| Critère | Points | Attentes |
+|---------|--------|----------|
+| Dérivation OLS au tableau | 15 | Sans notes, proprement |
+| Descente de gradient | 10 | Expliquer chaque terme |
+| Justification des choix | 15 | Pourquoi TimeSeriesSplit? Quelles caractéristiques? |
+| Questions théoriques | 10 | Ridge = MAP, entropie croisée |
+| Modifications en direct | 10 | Changer λ, prédire l'effet |
+
+**Durée** : ~15 minutes par étudiant.
+
+---
 
 ## Questions sur les fondamentaux
 
@@ -522,7 +562,21 @@ submission.to_csv('submission.csv', index=False)
 | Implémenter OLS et logistique à la main | Utiliser seulement sklearn |
 | Utiliser `TimeSeriesSplit` | Division aléatoire |
 | Comprendre le décalage de distribution | Paniquer si R² est négatif |
-| Préparer l'entrevue orale | Copier sans comprendre |
+| **Préparer l'entrevue orale** | **Copier sans comprendre** |
+
+---
+
+## Avertissement sur l'utilisation d'outils IA
+
+Les outils comme ChatGPT, Cursor, Copilot peuvent vous aider, **mais** :
+
+- Vous devez comprendre **chaque ligne** de code
+- L'entrevue orale révélera si vous comprenez ou non
+- **60% de la note** dépend de votre capacité à expliquer
+
+$$\boxed{\text{Code copié sans compréhension} \Rightarrow \text{échec à l'oral}}$$
+
+**Conseil** : Utilisez ces outils pour apprendre, pas pour éviter d'apprendre.
 
 ---
 
@@ -534,3 +588,5 @@ submission.to_csv('submission.csv', index=False)
 - Notebook : `exercises/projet_energie.ipynb`
 - Compétition Kaggle : lien dans le notebook
 - Chapitres 1-5 du livre
+
+**Rappel** : L'entrevue orale vaut **60%** de la note finale.
