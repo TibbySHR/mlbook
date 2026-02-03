@@ -116,6 +116,44 @@ $$\boxed{\texttt{clients\_connectes} : \text{nombre de clients connectés}}$$
 
 ---
 
+## Pourquoi encoder l'heure avec sin/cos?
+
+Avec l'heure brute (0-23), un modèle linéaire a deux problèmes :
+
+1. Il ne peut apprendre qu'une relation **monotone** (la cible augmente ou diminue avec l'heure)
+2. Les heures 23 et 0 sont **adjacentes** mais numériquement distantes de 23
+
+Or, la consommation d'énergie est **cyclique** : haute le matin et le soir, basse la nuit.
+
+| Encodage | Distance 22h→23h | Distance 23h→0h |
+|----------|------------------|-----------------|
+| Brut : $h$ | 1 | 23 |
+| Cyclique : $(\sin, \cos)$ | 0.26 | 0.26 |
+
+Un modèle linéaire avec l'heure brute ne peut pas capturer ce comportement.
+
+---
+
+## Encodage cyclique : la solution
+
+Projeter l'heure sur un cercle avec sin et cos :
+
+$$\boxed{\phi(h) = \left(\sin\frac{2\pi h}{24}, \cos\frac{2\pi h}{24}\right)}$$
+
+La distance entre heures consécutives est maintenant la distance euclidienne dans le plan :
+
+$$d(h_i, h_{i+1}) = \sqrt{(\sin_{i+1} - \sin_i)^2 + (\cos_{i+1} - \cos_i)^2}$$
+
+| Variable | Période $T$ | Formule |
+|----------|-------------|---------|
+| Heure | 24 | $\sin(2\pi h/24), \cos(2\pi h/24)$ |
+| Jour semaine | 7 | $\sin(2\pi j/7), \cos(2\pi j/7)$ |
+| Mois | 12 | $\sin(2\pi m/12), \cos(2\pi m/12)$ |
+
+Deux composantes nécessaires : $\sin$ seul ne distingue pas 6h de 18h.
+
+---
+
 ## Division temporelle — Ne pas mélanger!
 
 C'est une **série temporelle**. Une division aléatoire cause une **fuite d'information**.
@@ -204,27 +242,24 @@ $$\mathbf{X}^\top \mathbf{X} \boldsymbol{\beta} = \mathbf{X}^\top \mathbf{y}$$
 
 ---
 
-## Implémentation demandée
+## Ce que vous devez implémenter
+
+Deux fonctions à écrire :
 
 ```python
 def ols_fit(X, y):
-    """
-    X : (n, p) - caractéristiques SANS colonne de 1
-    y : (n,) - cible
-    Retourne: beta de forme (p+1,) avec intercept en premier
-    """
-    n = X.shape[0]
-    X_aug = np.column_stack([np.ones(n), X])  # Ajouter intercept
-    beta = np.linalg.solve(X_aug.T @ X_aug, X_aug.T @ y)
-    return beta
+    """Retourne beta de forme (p+1,) avec intercept en premier."""
+    # À vous de jouer!
 
 def ols_predict(X, beta):
-    n = X.shape[0]
-    X_aug = np.column_stack([np.ones(n), X])
-    return X_aug @ beta
+    """Retourne les prédictions."""
+    # À vous de jouer!
 ```
 
-**Vérification** : Vos coefficients doivent correspondre à `LinearRegression()`.
+**Indices** :
+- N'oubliez pas d'ajouter une colonne de 1 pour l'intercept
+- Utilisez `np.linalg.solve` plutôt que d'inverser directement
+- Vérifiez vos résultats avec `sklearn.linear_model.LinearRegression`
 
 ---
 
@@ -252,46 +287,33 @@ où $\boldsymbol{\sigma} = \sigma(\mathbf{X}\boldsymbol{\beta})$.
 
 ---
 
-## Stabilité numérique
+## Stabilité numérique : pièges à éviter
 
-**Problème 1** : $e^{-z}$ déborde pour $|z|$ grand.
+Deux problèmes classiques que vous devrez gérer :
 
-```python
-def sigmoid(z):
-    z = np.clip(z, -500, 500)  # Éviter le débordement
-    return 1 / (1 + np.exp(-z))
-```
+| Problème | Cause | Conséquence |
+|----------|-------|-------------|
+| $e^{-z}$ déborde | $\|z\|$ très grand | `inf` ou `nan` |
+| $\log(0)$ | probabilité = 0 ou 1 | `-inf` |
 
-**Problème 2** : $\log(0) = -\infty$
-
-```python
-def cross_entropy_loss(y_true, y_pred_proba):
-    eps = 1e-15
-    y_pred_proba = np.clip(y_pred_proba, eps, 1 - eps)
-    return -np.mean(y_true * np.log(y_pred_proba) + 
-                    (1 - y_true) * np.log(1 - y_pred_proba))
-```
+**Indice** : `np.clip` est votre ami pour borner les valeurs.
 
 ---
 
-## Descente de gradient
+## Ce que vous devez implémenter
 
 ```python
+def sigmoid(z):
+    """Fonction sigmoïde, stable numériquement."""
+
+def cross_entropy_loss(y_true, y_pred_proba):
+    """Perte d'entropie croisée binaire."""
+
+def logistic_gradient(X, y, beta):
+    """Gradient de la perte."""
+
 def logistic_fit_gd(X, y, lr=0.1, n_iter=1000):
-    n, p = X.shape
-    X_aug = np.column_stack([np.ones(n), X])
-    beta = np.zeros(p + 1)
-    losses = []
-    
-    for i in range(n_iter):
-        proba = sigmoid(X_aug @ beta)
-        loss = cross_entropy_loss(y, proba)
-        losses.append(loss)
-        
-        grad = (X_aug.T @ (proba - y)) / n
-        beta = beta - lr * grad
-    
-    return beta, losses
+    """Entraînement par descente de gradient."""
 ```
 
 **Conseil** : Normalisez les caractéristiques avec `StandardScaler`.
@@ -438,25 +460,26 @@ id,energie_kwh
 
 ## Générer la soumission
 
-Le fichier `test_kaggle` n'a **pas** la colonne `energie_kwh`.
+Trois fichiers de données sont fournis :
 
-```python
-# Charger le test Kaggle (sans cible)
-test_kaggle = pd.read_csv(BASE_URL + "energy_test.csv")
+| Fichier | Contient `energie_kwh`? | Usage |
+|---------|-------------------------|-------|
+| `energy_train.csv` | Oui | Entraînement |
+| `energy_test_avec_cible.csv` | Oui | Évaluation locale |
+| `energy_test.csv` | **Non** | Soumission Kaggle |
 
-# Appliquer les mêmes transformations
-test_kaggle_eng = creer_caracteristiques(test_kaggle)
-test_kaggle_eng['P_pointe'] = clf.predict_proba(X_kaggle_pointe)[:, 1]
+Le fichier pour Kaggle ne contient pas la cible : c'est ce que vous devez prédire!
 
-# Prédire
-X_kaggle = test_kaggle_eng[features_final].values
-y_pred = model_final.predict(X_kaggle)
+**Format de soumission** (`submission.csv`) :
 
-# Créer la soumission
-submission = pd.DataFrame({'id': range(len(test_kaggle)), 
-                           'energie_kwh': y_pred})
-submission.to_csv('submission.csv', index=False)
 ```
+id,energie_kwh
+0,123.45
+1,98.76
+...
+```
+
+Appliquez les mêmes transformations qu'à l'entraînement avant de prédire.
 
 ---
 

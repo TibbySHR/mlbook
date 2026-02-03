@@ -2348,7 +2348,7 @@ $$
 
 C'est le choix de paramètres sous lequel nos données $\mathcal{D}$ sont les plus "attendues".
 
-#### Du produit à la somme
+ #### Du produit à la somme
 
 En pratique, multiplier $N$ probabilités (souvent petites) pose des problèmes numériques: le résultat devient rapidement trop petit pour être représenté par un ordinateur. Le logarithme résout ce problème: il transforme le produit en somme et, comme c'est une fonction croissante, il ne change pas le maximiseur:
 

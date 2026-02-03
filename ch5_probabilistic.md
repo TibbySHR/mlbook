@@ -317,6 +317,10 @@ $$
 
 où $y_{ic} = \mathbf{1}[y_i = c]$. Cette quantité est l'**entropie croisée multiclasse**. Elle généralise l'entropie croisée binaire au cas où il y a plus de deux classes.
 
+```{margin} Implémentation en PyTorch
+En PyTorch, `CrossEntropyLoss` prend directement les **logits** (les scores $f_c(\mathbf{x})$ avant le softmax), pas les probabilités. La fonction calcule internement le log-softmax de manière numériquement stable. Évitez de calculer le softmax séparément puis de prendre le logarithme: c'est moins stable et plus lent.
+```
+
 Pour la classification binaire avec $C=2$, le softmax se réduit à la sigmoïde. En effet, si nous définissons $s = f_1(\mathbf{x}) - f_2(\mathbf{x})$, alors:
 
 $$
@@ -324,6 +328,36 @@ $$
 $$
 
 Le modèle binaire et le modèle multiclasse partagent donc la même structure probabiliste, avec la distribution catégorielle comme généralisation naturelle de la distribution de Bernoulli.
+
+### Stabilité numérique du softmax
+
+La définition mathématique du softmax est élégante, mais son calcul direct peut poser problème. L'exponentielle $\exp(z_c)$ croît très rapidement: $\exp(10) \approx 22\,000$, $\exp(100) \approx 10^{43}$, $\exp(1000)$ dépasse la capacité des nombres en virgule flottante. Quand un logit est grand, le calcul provoque un **débordement** (*overflow*) et retourne l'infini.
+
+```{margin} Précision réduite sur GPU
+Les GPU modernes utilisent souvent une précision réduite (float16, voire float8 ou float4) pour accélérer les calculs et réduire la consommation d'énergie. Ces formats ont une plage de valeurs encore plus limitée que le float64 des CPU, rendant la stabilité numérique encore plus critique.
+```
+
+Une astuce simple résout ce problème: soustraire le maximum des logits avant de calculer l'exponentielle.
+
+$$
+\text{softmax}(z_c) = \frac{\exp(z_c - z_{\max})}{\sum_{j=1}^C \exp(z_j - z_{\max})}
+$$
+
+où $z_{\max} = \max_j z_j$. Cette transformation est mathématiquement équivalente à la définition originale: le facteur $\exp(-z_{\max})$ apparaît au numérateur et au dénominateur et s'annule. Mais numériquement, elle garantit que le plus grand exposant vaut zéro, évitant tout débordement.
+
+```{admonition} Le paramètre de température
+:class: tip
+
+Le softmax peut être généralisé avec un paramètre de **température** $\tau > 0$:
+
+$$
+\text{softmax}_\tau(z)_c = \frac{\exp(z_c / \tau)}{\sum_{j=1}^C \exp(z_j / \tau)}
+$$
+
+Quand $\tau \to 0$, le softmax converge vers l'argmax: toute la masse se concentre sur la classe avec le plus grand logit (distribution déterministe). Quand $\tau \to \infty$, il converge vers la distribution uniforme (entropie maximale). Cette terminologie vient de la physique statistique, où la distribution de Boltzmann décrit l'énergie des particules en fonction de la température.
+
+En pratique, ce paramètre est exposé dans les API des grands modèles de langage: une température basse donne des réponses plus prévisibles, une température haute augmente la diversité et la créativité des sorties.
+```
 
 ## Maximum a posteriori
 
@@ -675,6 +709,10 @@ $$
 D_{\text{KL}}(p \| q) = \sum_y p(y) \log \frac{p(y)}{q(y)} = \mathbb{E}_{y \sim p}\left[\log \frac{p(y)}{q(y)}\right]
 $$
 
+```{margin} La divergence KL en pratique
+Cette notion n'est pas qu'une curiosité théorique. Elle est centrale dans l'entraînement des grands modèles de langage: lors du *fine-tuning* par renforcement (RLHF), une pénalité KL empêche le modèle de trop s'éloigner de sa version de base, préservant ses capacités tout en l'alignant sur les préférences humaines.
+```
+
 On peut l'interpréter ainsi: si les données suivent $p$, mais que nous utilisons $q$ pour faire des prédictions, la divergence KL mesure l'inefficacité de ce choix. Plus $q$ diffère de $p$, plus la divergence KL est grande.
 
 Trois propriétés sont à retenir:
@@ -891,21 +929,29 @@ La figure montre comment la distribution empirique converge vers la vraie distri
 
 ### Le maximum de vraisemblance minimise la divergence KL
 
-Nous pouvons maintenant faire le lien avec l'EMV. Notre objectif est de trouver un modèle paramétrique $p(y | \boldsymbol{\theta})$ qui se rapproche le plus possible des données. En termes de divergence KL, nous voulons minimiser:
+Nous pouvons maintenant faire le lien avec l'EMV. Mais avant d'écrire les équations, posons-nous une question simple: que signifie «apprendre un bon modèle»?
+
+Imaginons que nous voulions prédire la météo. Nous avons observé qu'à Montréal en novembre, il pleut environ 30% du temps. Un bon modèle devrait refléter cette réalité: si notre modèle prédit 30% de pluie, il sera utile pour planifier. S'il prédit 10% ou 80%, ses prédictions seront systématiquement décalées par rapport à ce qui se passe vraiment.
+
+Ce raisonnement révèle ce que nous cherchons réellement: un modèle dont les prédictions *ressemblent* à ce que nous observons. Si les données montrent 30% de pluie, nous voulons un modèle qui dit 30%. Si un dé tombe sur 6 dans 17% des lancers, nous voulons un modèle qui prédit 17% de chances pour cette face. En d'autres termes, nous voulons que notre modèle soit *proche* de la distribution empirique des données.
+
+La divergence KL formalise cette intuition. Elle mesure à quel point notre modèle $p(\cdot | \boldsymbol{\theta})$ diffère de ce que nous avons observé. Minimiser cette divergence, c'est chercher le modèle qui colle le mieux aux données.
+
+Mathématiquement, nous voulons minimiser:
 
 $$
 D_{\text{KL}}(p_{\mathcal{D}} \| p(\cdot | \boldsymbol{\theta})) = \mathbb{H}_{\text{ce}}(p_{\mathcal{D}}, p(\cdot | \boldsymbol{\theta})) - \mathbb{H}(p_{\mathcal{D}})
 $$
 
-Le terme $\mathbb{H}(p_{\mathcal{D}})$ est l'entropie de la distribution empirique. C'est une propriété des données observées, indépendante de $\boldsymbol{\theta}$. Pour minimiser la divergence KL, il suffit donc de minimiser l'entropie croisée $\mathbb{H}_{\text{ce}}(p_{\mathcal{D}}, p(\cdot | \boldsymbol{\theta}))$.
+Le premier terme, $\mathbb{H}(p_{\mathcal{D}})$, est l'entropie de la distribution empirique. C'est une propriété des données elles-mêmes: si nous avons observé 70% de succès et 30% d'échecs, cette répartition a une certaine incertitude intrinsèque, et nous n'y pouvons rien. Ce terme ne dépend pas de $\boldsymbol{\theta}$.
 
-Or cette entropie croisée avec la distribution empirique n'est autre que la log-vraisemblance négative moyenne:
+Pour minimiser la divergence KL, il suffit donc de minimiser le second terme: l'entropie croisée $\mathbb{H}_{\text{ce}}(p_{\mathcal{D}}, p(\cdot | \boldsymbol{\theta}))$. C'est là que se cache la surprise: cette entropie croisée n'est autre que la log-vraisemblance négative moyenne:
 
 $$
 \mathbb{H}_{\text{ce}}(p_{\mathcal{D}}, p(\cdot|\boldsymbol{\theta})) = -\sum_y p_{\mathcal{D}}(y) \log p(y|\boldsymbol{\theta}) = -\frac{1}{N} \sum_{i=1}^N \log p(y_i | \mathbf{x}_i; \boldsymbol{\theta}) = \frac{1}{N}\text{LVN}(\boldsymbol{\theta})
 $$
 
-Le maximum de vraisemblance trouve donc les paramètres qui minimisent la divergence KL entre notre modèle et la distribution empirique des données.
+Le maximum de vraisemblance trouve donc les paramètres qui minimisent la divergence KL entre notre modèle et la distribution empirique des données. Ce résultat est remarquable: en maximisant la vraisemblance—une quantité qui semble purement technique—nous faisons quelque chose de très intuitif. Nous cherchons le modèle qui *ressemble le plus* à ce que nous avons observé.
 
 ```{code-cell} python
 :tags: [hide-input]
@@ -968,7 +1014,7 @@ plt.tight_layout()
 
 La figure illustre le lien entre EMV et divergence KL sur un exemple simple: ajuster un paramètre de Bernoulli à partir de 10 observations dont 7 sont des succès. Le panneau de gauche compare la distribution empirique (7/10 de succès) à deux modèles: $\theta = 0{,}5$ (pièce équilibrée) et $\theta = 0{,}7$ (l'EMV). Le panneau de droite montre que la divergence KL est minimale exactement quand $\theta$ égale la fréquence empirique des succès—c'est l'EMV.
 
-Géométriquement, le maximum de vraisemblance cherche, parmi toutes les distributions de notre famille paramétrique, celle qui est la plus «proche» de la distribution empirique au sens de la divergence KL.
+On peut visualiser cette idée géométriquement. Imaginons un espace où chaque point représente une distribution de probabilité. La distribution empirique—ce que nous avons observé—est un point fixe dans cet espace. Notre famille de modèles $\{p(\cdot | \boldsymbol{\theta})\}$ trace une courbe (ou une surface) dans cet espace quand $\boldsymbol{\theta}$ varie. Le maximum de vraisemblance cherche le point sur cette courbe qui est le plus proche de la distribution empirique. La divergence KL joue le rôle d'une «distance» (bien qu'elle ne soit pas symétrique): plus elle est petite, plus notre modèle ressemble à ce que nous avons observé.
 
 ### Trois langages, un même algorithme
 

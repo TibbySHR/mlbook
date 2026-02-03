@@ -14,6 +14,7 @@ kernelspec:
 - Dériver l'entropie croisée à partir du maximum de vraisemblance
 - Calculer le gradient et comprendre la convexité de l'objectif
 - Généraliser au cas multiclasse avec la fonction softmax
+- Reconnaître le modèle de Bradley-Terry comme une régression logistique sur une matrice de conception particulière
 - Appliquer la descente de gradient stochastique pour l'optimisation
 - Interpréter géométriquement la frontière de décision linéaire
 ```
@@ -124,7 +125,7 @@ $$
 \frac{\text{cote après}}{\text{cote avant}} = e^{\theta_j}
 $$
 
-Le coefficient $\theta_j$ représente donc le **changement dans le log-odds** pour une augmentation unitaire de $x_j$, et $e^{\theta_j}$ est le **facteur multiplicatif sur la cote**.
+Le coefficient $\theta_j$ représente donc le changement dans le logarithme de cote pour une augmentation unitaire de $x_j$, et $e^{\theta_j}$ est le facteur multiplicatif sur la cote.
 
 ```{admonition} Exemple: prédiction d'admission
 :class: tip
@@ -498,6 +499,265 @@ $$
 $$
 
 En posant $a = a_1 - a_0$ (la différence de scores), on retrouve exactement le modèle binaire.
+
+## Préférences et le modèle de Bradley-Terry
+
+Le succès des grands modèles de langage repose en grande partie sur notre capacité à les aligner sur les préférences humaines. Un modèle pré-entraîné sur des téraoctets de texte sait prédire le mot suivant, mais cela ne suffit pas pour en faire un assistant utile qui répond selon nos attentes et nos valeurs. Pour y arriver, il faut pouvoir exprimer ce que nous préférons, puis transformer ces préférences en un signal d'optimisation.
+
+La notion de préférence est simple: étant donné deux réponses $A$ et $B$ à une même question, un annotateur humain indique laquelle est meilleure. On collecte ainsi un ensemble de comparaisons par paires qui forme un jeu de données supervisé. Le modèle de Bradley-Terry permet de convertir ces jugements qualitatifs en scores numériques, et donc en une fonction de récompense utilisable pour l'optimisation. Ce qui est remarquable, c'est que ce modèle n'est rien d'autre qu'une régression logistique sur une matrice de conception particulière. Maintenant que nous maîtrisons la régression logistique, nous pouvons comprendre exactement comment cela fonctionne.
+
+L'idée est d'attribuer un score $s_A$ à chaque réponse $A$ et de modéliser la probabilité que $A$ soit préférée à $B$ par
+
+$$
+P(A \succ B) = \sigma(s_A - s_B) = \frac{1}{1 + e^{-(s_A - s_B)}}
+$$
+
+où $\sigma$ est la fonction sigmoïde que nous connaissons bien. Pourquoi cette formulation? La sigmoïde transforme la différence de scores $s_A - s_B$ en une probabilité. Quand $A$ a un score beaucoup plus élevé que $B$, la différence est grande et positive, donc $\sigma(s_A - s_B)$ est proche de 1: $A$ gagne presque certainement. Quand les scores sont proches, la différence est près de zéro et $\sigma \approx 0{,}5$: le résultat est incertain, presque un pile ou face. Et quand $B$ domine, la différence est négative et la probabilité que $A$ gagne devient faible. La différence de scores contrôle donc à quel point le résultat est prévisible.
+
+Ces scores sont dits latents car nous ne les observons pas directement: nous ne voyons que les résultats des comparaisons, et nous devons inférer les scores à partir de ces observations.
+
+```{margin} Le système Elo aux échecs
+Le classement Elo, utilisé aux échecs depuis les années 1960, repose sur le même principe. La différence de scores Elo prédit la probabilité de victoire: 400 points d'écart correspondent à environ 91% de chances pour le joueur le mieux classé.
+```
+
+Cette formulation est exactement une régression logistique. Pour le voir, supposons que nous avons $K$ objets à comparer (des réponses, des joueurs d'échecs, des produits). Chaque objet $k$ possède un score $s_k$ que nous voulons estimer. Si nous observons le résultat d'une comparaison entre les objets $i$ et $j$, nous pouvons construire un vecteur $\mathbf{x}_{ij} \in \mathbb{R}^K$ qui vaut $+1$ à la position $i$, $-1$ à la position $j$, et $0$ partout ailleurs. Le produit scalaire avec le vecteur de scores donne alors $\mathbf{s}^\top \mathbf{x}_{ij} = s_i - s_j$, exactement la différence qui entre dans la sigmoïde.
+
+Prenons un exemple concret. Supposons quatre joueurs (ou quatre réponses) et cinq comparaisons observées:
+
+| Comparaison | Gagnant | $y$ |
+|-------------|---------|-----|
+| 0 vs 2 | 0 | 1 |
+| 1 vs 3 | 1 | 1 |
+| 0 vs 1 | 1 | 0 |
+| 2 vs 3 | 2 | 1 |
+| 1 vs 2 | 1 | 1 |
+
+La matrice de conception $\mathbf{X}$ et le vecteur cible $\mathbf{y}$ correspondants sont:
+
+$$
+\mathbf{X} = \begin{pmatrix}
+1 & 0 & -1 & 0 \\
+0 & 1 & 0 & -1 \\
+1 & -1 & 0 & 0 \\
+0 & 0 & 1 & -1 \\
+0 & 1 & -1 & 0
+\end{pmatrix}, \quad
+\mathbf{y} = \begin{pmatrix} 1 \\ 1 \\ 0 \\ 1 \\ 1 \end{pmatrix}
+$$
+
+Chaque ligne de $\mathbf{X}$ encode une comparaison: un $+1$ pour le premier objet comparé, un $-1$ pour le second, et des zéros ailleurs. L'étiquette $y = 1$ indique que le premier objet a gagné, $y = 0$ que le second a gagné.
+
+Une fois la régression logistique ajustée sur cette matrice, nous obtenons un vecteur de paramètres $\boldsymbol{\theta} \in \mathbb{R}^K$. Mais comment récupérer les scores des objets? La réponse est simple: les paramètres $\boldsymbol{\theta}$ sont exactement les scores $\mathbf{s}$. En effet, le modèle prédit $P(y=1|\mathbf{x}) = \sigma(\boldsymbol{\theta}^\top \mathbf{x})$. Pour une comparaison entre $i$ et $j$, le vecteur $\mathbf{x}$ a un $+1$ en position $i$ et un $-1$ en position $j$, donc $\boldsymbol{\theta}^\top \mathbf{x} = \theta_i - \theta_j$. En identifiant avec $s_i - s_j$, on voit que $\theta_k = s_k$ pour tout $k$. Les coefficients de la régression logistique nous donnent directement les scores de chaque objet.
+
+```{code-cell} python
+:tags: [hide-input]
+
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LogisticRegression
+
+np.random.seed(42)
+true_strengths = np.array([2.0, 1.0, 0.0, -1.0])
+n_players = len(true_strengths)
+
+# Générer des matchs et construire la matrice de conception
+n_matches = 200
+X = []
+y = []
+for _ in range(n_matches):
+    i, j = np.random.choice(n_players, 2, replace=False)
+    row = np.zeros(n_players)
+    row[i] = 1
+    row[j] = -1
+    X.append(row)
+    prob_i_wins = 1 / (1 + np.exp(-(true_strengths[i] - true_strengths[j])))
+    y.append(int(np.random.random() < prob_i_wins))
+
+X = np.array(X)
+y = np.array(y)
+
+# Régression logistique standard de scikit-learn
+model = LogisticRegression(fit_intercept=False, C=1e6)
+model.fit(X, y)
+s_est = model.coef_[0]
+s_est -= s_est.mean()  # Centrer (les scores sont définis à une constante près)
+
+# Visualisation
+fig, ax = plt.subplots(figsize=(8, 4))
+x_pos = np.arange(n_players)
+width = 0.35
+ax.bar(x_pos - width/2, true_strengths - true_strengths.mean(), width, 
+       label='Scores vrais', color='steelblue', alpha=0.7)
+ax.bar(x_pos + width/2, s_est, width, 
+       label='Scores estimés', color='coral', alpha=0.7)
+ax.set_xlabel('Joueur')
+ax.set_ylabel('Score (centré)')
+ax.set_title(f'Estimation des scores à partir de {n_matches} matchs')
+ax.set_xticks(x_pos)
+ax.set_xticklabels([f'Joueur {i}' for i in range(n_players)])
+ax.legend()
+ax.axhline(0, color='gray', linestyle='--', alpha=0.3)
+plt.tight_layout()
+```
+
+Le code utilise directement `LogisticRegression` de scikit-learn sur la matrice de conception que nous venons de décrire. Les scores estimés correspondent bien aux scores vrais utilisés pour générer les données. Remarquez que les scores sont définis à une constante additive près: ajouter 10 à tous les scores ne change pas les probabilités de préférence, car seule la différence $s_i - s_j$ intervient.
+
+Ce modèle, proposé par {cite:t}`bradley1952rank`, trouve des applications bien au-delà des échecs. Les moteurs de recherche l'utilisent pour ordonner les résultats selon les clics des utilisateurs: si un utilisateur clique sur le troisième résultat plutôt que sur le premier, cela révèle une préférence. Les systèmes de recommandation s'en servent pour comparer des produits. Et dans le contexte du RLHF, le score $s$ devient une fonction de récompense: étant donné une réponse générée par le modèle de langage, le score prédit sa qualité telle que jugée par des humains. Cette récompense guide ensuite l'optimisation du modèle pour qu'il produise des réponses de meilleure qualité.
+
+### Application: préférences acoustiques en salle de concert
+
+Appliquons ce modèle à des données réelles. Le jeu de données provient d'expériences d'acoustique menées à l'Université Technique du Danemark par A.C. Gade et analysées par {cite:t}`kousgaard1984sound`. Des auditeurs ont comparé des paires de champs sonores dans une salle de concert et indiqué lequel ils préféraient pour écouter de la musique. Chaque champ sonore est caractérisé par trois facteurs physiques: la présence ou non d'un son direct (ligne de vue libre ou obstruée vers la source), le niveau de réflexion (-26 dB ou -20 dB) et le niveau de réverbération (-24 dB ou -20 dB). Ces trois facteurs binaires donnent $2^3 = 8$ configurations possibles, nommées par leur code binaire: «000» pour la configuration sans son direct, faible réflexion et faible réverbération, jusqu'à «111» pour la configuration avec tous les facteurs au niveau élevé.
+
+```{code-cell} python
+:tags: [hide-input]
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LogisticRegression
+
+# Charger les données
+comparisons = pd.read_csv('data/sound_fields_comparisons.csv')
+design = pd.read_csv('data/sound_fields_design.csv', index_col=0)
+
+# Convertir l'index en chaînes avec zéros de tête
+design.index = [f'{int(x):03d}' for x in design.index]
+
+# Afficher un aperçu des données
+flute_preview = comparisons[comparisons['instrument'] == 'flute'][['field1', 'field2', 'win1', 'tie', 'win2']].head(10).copy()
+flute_preview['field1'] = flute_preview['field1'].apply(lambda x: f'{int(x):03d}')
+flute_preview['field2'] = flute_preview['field2'].apply(lambda x: f'{int(x):03d}')
+# Renommer les colonnes pour clarifier le contexte acoustique
+flute_preview.columns = ['Config. A', 'Config. B', 'A préféré', 'Égalité', 'B préféré']
+print("Comparaisons par paires de champs sonores (flûte):")
+print(flute_preview.to_string(index=False))
+```
+
+Les données contiennent 84 comparaisons: 28 paires possibles entre les 8 configurations acoustiques, répétées pour trois instruments (violon, violoncelle, flûte). Pour chaque paire, on enregistre combien d'auditeurs ont préféré la configuration A, combien n'ont pas exprimé de préférence (égalité), et combien ont préféré la configuration B. Pour simplifier, nous traitons les égalités en les comptant comme un demi-point pour chaque configuration.
+
+```{code-cell} python
+:tags: [hide-input]
+
+# Utiliser les données de la flûte
+flute_data = comparisons[comparisons['instrument'] == 'flute'].copy()
+
+# Convertir les noms de champs en chaînes avec zéros de tête (ex: 1 -> "001")
+flute_data['field1'] = flute_data['field1'].apply(lambda x: f'{int(x):03d}')
+flute_data['field2'] = flute_data['field2'].apply(lambda x: f'{int(x):03d}')
+
+# Les champs sonores
+fields = ['000', '001', '010', '011', '100', '101', '110', '111']
+n_fields = len(fields)
+field_to_idx = {f: i for i, f in enumerate(fields)}
+
+# Construire la matrice de conception et le vecteur cible
+# Chaque comparaison donne une observation binomiale
+X_rows = []
+y_wins = []
+y_total = []
+
+for _, row in flute_data.iterrows():
+    i = field_to_idx[row['field1']]
+    j = field_to_idx[row['field2']]
+    
+    # Vecteur de conception: +1 pour field1, -1 pour field2
+    x = np.zeros(n_fields)
+    x[i] = 1
+    x[j] = -1
+    X_rows.append(x)
+    
+    # Nombre de victoires pour field1 (avec demi-points pour les égalités)
+    y_wins.append(row['win1'] + row['tie'] / 2)
+    y_total.append(row['win1'] + row['tie'] + row['win2'])
+
+X = np.array(X_rows)
+y_wins = np.array(y_wins)
+y_total = np.array(y_total)
+
+# Pour la régression logistique, on répète chaque comparaison selon les comptes
+# Approche: créer des observations binaires à partir des comptes
+X_expanded = []
+y_expanded = []
+
+for idx in range(len(X_rows)):
+    n_win = int(round(y_wins[idx]))
+    n_loss = int(round(y_total[idx] - y_wins[idx]))
+    # Victoires pour field1
+    for _ in range(n_win):
+        X_expanded.append(X_rows[idx])
+        y_expanded.append(1)
+    # Victoires pour field2
+    for _ in range(n_loss):
+        X_expanded.append(X_rows[idx])
+        y_expanded.append(0)
+
+X_expanded = np.array(X_expanded)
+y_expanded = np.array(y_expanded)
+
+# Ajuster la régression logistique
+model = LogisticRegression(fit_intercept=False, C=1e6, max_iter=1000)
+model.fit(X_expanded, y_expanded)
+
+# Les coefficients sont les scores des champs sonores
+scores = model.coef_[0]
+scores = scores - scores.mean()  # Centrer
+
+# Créer un DataFrame pour l'affichage
+results = pd.DataFrame({
+    'Champ sonore': fields,
+    'Score estimé': scores,
+    'Son direct (a)': design['a'].values,
+    'Réflexion (b)': design['b'].values,
+    'Réverbération (c)': design['c'].values
+}).sort_values('Score estimé', ascending=False)
+
+print("\nScores estimés par le modèle de Bradley-Terry:")
+print(results.to_string(index=False))
+```
+
+Les scores estimés révèlent les préférences des auditeurs. Un score élevé indique un champ sonore apprécié; un score faible indique une configuration moins appréciée. La différence entre deux scores donne le logarithme de cote de préférence: si le champ «100» a un score de 0.8 et le champ «000» un score de -0.5, alors $\sigma(0.8 - (-0.5)) = \sigma(1.3) \approx 0.79$, soit environ 79% de chances que «100» soit préféré à «000».
+
+```{code-cell} python
+:tags: [hide-input]
+
+fig, axes = plt.subplots(1, 2, figsize=(12, 4))
+
+# Graphique 1: Scores par champ sonore
+ax1 = axes[0]
+colors = ['#2ecc71' if s > 0 else '#e74c3c' for s in scores]
+bars = ax1.barh(fields, scores, color=colors, alpha=0.7)
+ax1.axvline(0, color='gray', linestyle='--', alpha=0.5)
+ax1.set_xlabel('Score estimé')
+ax1.set_ylabel('Configuration du champ sonore')
+ax1.set_title('Qualité perçue des champs sonores (flûte)')
+
+# Annoter avec les facteurs physiques
+for idx, field in enumerate(fields):
+    a, b, c = design.loc[field, ['a', 'b', 'c']]
+    label = f"  a={a}, b={b}, c={c}"
+    ax1.annotate(label, (scores[idx], idx), fontsize=8, va='center')
+
+# Graphique 2: Effet des facteurs physiques
+ax2 = axes[1]
+
+# Calculer l'effet moyen de chaque facteur
+effect_a = scores[design['a'] == 1].mean() - scores[design['a'] == 0].mean()
+effect_b = scores[design['b'] == 1].mean() - scores[design['b'] == 0].mean()
+effect_c = scores[design['c'] == 1].mean() - scores[design['c'] == 0].mean()
+
+effects = [effect_a, effect_b, effect_c]
+labels = ['Son direct\n(a)', 'Réflexion\n(b)', 'Réverbération\n(c)']
+colors_eff = ['#3498db' if e > 0 else '#e67e22' for e in effects]
+
+ax2.bar(labels, effects, color=colors_eff, alpha=0.7)
+ax2.axhline(0, color='gray', linestyle='--', alpha=0.5)
+ax2.set_ylabel('Effet sur le score')
+ax2.set_title('Contribution des facteurs physiques')
+
+plt.tight_layout()
+```
+
+Le graphique de gauche montre le classement des huit configurations. Les configurations avec un son direct (a=1) tendent à être préférées. Le graphique de droite décompose cet effet: le facteur «son direct» a l'impact positif le plus marqué sur la qualité perçue, suivi du niveau de réflexion. Le niveau de réverbération a un effet plus modeste. Ces résultats sont cohérents avec l'intuition acoustique: un son direct clair, sans obstruction, améliore la perception de la qualité sonore dans une salle de concert.
 
 ## Optimisation par descente de gradient
 
@@ -917,6 +1177,8 @@ Ce chapitre a introduit la classification linéaire:
 - L'objectif est **convexe**, garantissant un unique minimum global.
 
 - La **fonction softmax** généralise la sigmoïde au cas multiclasse, avec l'**entropie croisée catégorielle** comme perte.
+
+- Le modèle de Bradley-Terry pour les préférences est une régression logistique sur une matrice de conception où chaque ligne encode une comparaison par paires. C'est le modèle au coeur du RLHF pour l'alignement des grands modèles de langage.
 
 - La **descente de gradient stochastique** (SGD) permet l'optimisation efficace, en utilisant des mini-lots pour estimer le gradient.
 

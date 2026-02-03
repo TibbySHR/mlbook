@@ -352,7 +352,7 @@ Le coefficient $\lambda$ contrôle ce compromis. Un $\lambda$ trop petit n'aide 
 
 L'expansion de caractéristiques semble être un simple changement de variables, mais elle cache une idée géométrique profonde. Pour comprendre pourquoi projeter les données dans un espace de dimension supérieure permet de capturer des relations non linéaires, examinons d'abord le cas de la régression, puis celui de la classification.
 
-### Le plan caché derrière la parabole
+### Régression polynomiale comme modèle linéaire
 
 Considérons une régression quadratique: $f(x) = \theta_0 + \theta_1 x + \theta_2 x^2$. Cette fonction est **non linéaire en $x$** (c'est une parabole), mais **linéaire dans les paramètres** $\boldsymbol{\theta} = (\theta_0, \theta_1, \theta_2)$. Que signifie cette distinction géométriquement?
 
@@ -417,7 +417,7 @@ Les fonctions de base $\{1, x, x^2\}$ sont les "ingrédients" du modèle. La ré
 
 Voici l'insight géométrique clé: dans l'espace $(x, x^2, y)$, le modèle $y = \theta_0 + \theta_1 x + \theta_2 x^2$ définit un **plan**. La parabole que nous voyons dans le graphique $(x, y)$ est simplement la **projection** de ce plan sur notre espace de visualisation.
 
-### De 1D à 2D: séparer l'inséparable
+### Exemple en 1D: données sur une droite
 
 Considérons des points sur une droite, répartis en deux classes: les points bleus au centre, les points orange aux extrémités. Aucun seuil unique ne peut séparer ces deux classes.
 
@@ -478,7 +478,7 @@ plt.tight_layout()
 
 Dans l'espace transformé, une simple droite horizontale sépare les deux classes. Cette droite correspond, dans l'espace original, à **deux seuils**: $x^2 < 0.6$, soit $|x| < \sqrt{0.6} \approx 0.77$. L'expansion de caractéristiques a transformé une frontière de décision non linéaire (un intervalle) en une frontière linéaire (une droite).
 
-### De 2D à 3D: soulever pour séparer
+### Exemple en 2D: cercles concentriques
 
 Passons à un exemple plus visuel. Considérons deux classes disposées en cercles concentriques: la classe bleue forme un disque central, la classe orange forme un anneau extérieur. Aucune droite ne peut séparer ces deux régions.
 

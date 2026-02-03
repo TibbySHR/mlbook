@@ -227,19 +227,70 @@ En apprentissage, nous ne pouvons pas réduire $\mathbb{H}(p)$ (irréductible), 
 
 ---
 
+## La distribution empirique
+
+Qu'est-ce que « les données » en termes de distribution?
+
+**Exemple:** Lancer un dé 6 fois → résultats: 3, 1, 3, 5, 3, 2
+
+| Face | 1 | 2 | 3 | 4 | 5 | 6 |
+|------|---|---|---|---|---|---|
+| Occurrences | 1 | 1 | 3 | 0 | 1 | 0 |
+| Fréquence | 1/6 | 1/6 | 1/2 | 0 | 1/6 | 0 |
+
+La **distribution empirique** $p_{\mathcal{D}}$ place une masse $1/N$ sur chaque observation :
+
+$$p_{\mathcal{D}}(y) = \frac{1}{N} \sum_{i=1}^N \mathbb{1}(y_i = y) = \frac{\#\{i : y_i = y\}}{N}$$
+
+C'est notre meilleure représentation des données sous forme de distribution.
+
+---
+
+## Convergence de la distribution empirique
+
+Avec plus de données, $p_{\mathcal{D}}$ converge vers la vraie distribution $p$ :
+
+| $N$ | Distribution empirique | Divergence KL |
+|-----|------------------------|---------------|
+| 20 | Bruitée, fluctuations | Élevée |
+| 100 | Moins variable | Modérée |
+| 1000 | Presque identique à $p$ | ≈ 0 |
+
+C'est la **loi des grands nombres** : $p_{\mathcal{D}}(y) \xrightarrow{N \to \infty} p(y)$
+
+---
+
 ## L'EMV minimise la divergence KL
 
-Soit $\hat{p}$ la distribution empirique des données (fréquences observées).
+**Objectif :** Trouver $p_{\boldsymbol{\theta}}$ proche de la distribution empirique $p_{\mathcal{D}}$.
 
-Minimiser la **log-vraisemblance négative** :
-$$\text{LVN}(\boldsymbol{\theta}) = -\frac{1}{N} \sum_{i=1}^N \log p(y_i | \mathbf{x}_i; \boldsymbol{\theta})$$
+$$D_{\text{KL}}(p_{\mathcal{D}} \| p_{\boldsymbol{\theta}}) = \underbrace{\mathbb{H}_{\text{ce}}(p_{\mathcal{D}}, p_{\boldsymbol{\theta}})}_{\text{dépend de } \boldsymbol{\theta}} - \underbrace{\mathbb{H}(p_{\mathcal{D}})}_{\text{constant}}$$
 
-équivaut à minimiser l'**entropie croisée** $\mathbb{H}_{\text{ce}}(\hat{p}, p_{\boldsymbol{\theta}})$.
+L'entropie croisée avec la distribution empirique est exactement la LVN :
 
-Puisque $\mathbb{H}(\hat{p})$ est constante, cela revient à minimiser :
-$$D_{\text{KL}}(\hat{p} \| p_{\boldsymbol{\theta}})$$
+$$\mathbb{H}_{\text{ce}}(p_{\mathcal{D}}, p_{\boldsymbol{\theta}}) = -\sum_y p_{\mathcal{D}}(y) \log p_{\boldsymbol{\theta}}(y) = -\frac{1}{N} \sum_{i=1}^N \log p(y_i \mid \boldsymbol{\theta})$$
 
-**Le maximum de vraisemblance cherche le modèle le plus « proche » des données au sens de la divergence KL.**
+$$\boxed{\text{Minimiser LVN} \iff \text{Minimiser } D_{\text{KL}}(p_{\mathcal{D}} \| p_{\boldsymbol{\theta}})}$$
+
+---
+
+## Interprétation géométrique
+
+Le maximum de vraisemblance cherche, parmi toutes les distributions de la famille $\{p_{\boldsymbol{\theta}}\}$, celle qui est la **plus proche** de $p_{\mathcal{D}}$ au sens de la divergence KL.
+
+```
+        Espace des distributions
+        
+     ●  ← distribution empirique p_D
+     |
+     |  ← distance KL minimale
+     ↓
+     ●  ← EMV: p_θ* le plus proche
+    / \
+   /   \  ← famille paramétrique {p_θ}
+```
+
+L'EMV projette les données sur notre famille de modèles.
 
 ---
 
