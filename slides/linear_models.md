@@ -342,6 +342,24 @@ Le degré $k$ contrôle la **capacité** du modèle.
 
 ---
 
+## Encodage cyclique : variables périodiques
+
+**Problème** : L'heure (0-23) a une discontinuité — 23h et 0h sont adjacentes mais numériquement éloignées.
+
+**Solution** : Projeter sur un cercle avec sin/cos :
+
+$$\boxed{\phi(x) = \left(\sin\frac{2\pi x}{T}, \cos\frac{2\pi x}{T}\right)}$$
+
+| Variable | Période $T$ | Résultat |
+|----------|-------------|----------|
+| Heure | 24 | 0h → (0, 1), 12h → (0, -1) |
+| Jour semaine | 7 | Lundi ≈ Dimanche (proches sur le cercle) |
+| Mois | 12 | Janvier ≈ Décembre |
+
+**Deux composantes** nécessaires : $\sin$ seul ne distingue pas 6h de 18h.
+
+---
+
 ## Intuition géométrique : séparer l'inséparable
 
 ![w:900](../_static/feature_expansion_3d.gif)

@@ -153,6 +153,135 @@ plt.tight_layout()
 
 L'erreur d'entraînement diminue avec le degré du polynôme. L'erreur de test diminue d'abord (quand le modèle gagne en expressivité), puis augmente (quand le modèle commence à mémoriser le bruit). Le meilleur modèle se trouve à l'intersection de ces deux tendances. La régularisation Ridge, vue précédemment, est une alternative au choix du degré: elle permet d'utiliser un modèle de haute capacité tout en contrôlant le surapprentissage.
 
+### Encodage cyclique des variables périodiques
+
+Les polynômes ne sont pas la seule expansion de caractéristiques utile. Considérons les variables **périodiques** comme l'heure de la journée, le jour de la semaine ou le mois de l'année. Ces variables posent un problème particulier: elles ont une **discontinuité artificielle**.
+
+Prenons l'heure: si nous utilisons directement la valeur numérique (0 à 23), le modèle voit une distance de 23 entre minuit (0h) et 23h, alors qu'en réalité ces deux heures sont adjacentes. Cette discontinuité peut nuire à la qualité des prédictions, surtout pour des phénomènes cycliques comme la consommation d'énergie ou le trafic routier.
+
+La solution est de projeter la variable sur un **cercle** à l'aide des fonctions sinus et cosinus:
+
+$$
+\phi_{\sin}(x) = \sin\left(\frac{2\pi x}{T}\right), \quad \phi_{\cos}(x) = \cos\left(\frac{2\pi x}{T}\right)
+$$
+
+où $T$ est la période (24 pour les heures, 7 pour les jours de la semaine, 12 pour les mois). Cette transformation garantit que:
+- Les valeurs adjacentes dans le cycle (comme 23h et 0h) sont proches dans l'espace des caractéristiques
+- La représentation est continue et différentiable
+- Nous avons besoin de **deux** composantes (sin et cos) pour identifier de façon unique chaque point du cycle
+
+```{code-cell} python
+:tags: [hide-input]
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+fig, axes = plt.subplots(1, 3, figsize=(12, 4))
+
+# Heures de la journée
+heures = np.arange(24)
+T = 24
+
+# Encodage naïf: distance entre heures consécutives
+ax = axes[0]
+distances_naif = []
+for h in range(24):
+    h_suivant = (h + 1) % 24
+    dist = abs(h_suivant - h) if h != 23 else abs(0 - 23)
+    distances_naif.append(dist)
+ax.bar(heures, distances_naif, color='steelblue', edgecolor='black')
+ax.set_xlabel('Heure')
+ax.set_ylabel('Distance à l\'heure suivante')
+ax.set_title('Encodage naïf: discontinuité à minuit')
+ax.set_xticks([0, 6, 12, 18, 23])
+ax.axhline(1, color='green', linestyle='--', alpha=0.7, label='Distance idéale')
+ax.legend()
+
+# Encodage cyclique: projection sur le cercle
+ax = axes[1]
+theta = 2 * np.pi * heures / T
+x_circle = np.cos(theta)
+y_circle = np.sin(theta)
+
+# Dessiner le cercle
+circle_theta = np.linspace(0, 2*np.pi, 100)
+ax.plot(np.cos(circle_theta), np.sin(circle_theta), 'k-', alpha=0.3)
+ax.scatter(x_circle, y_circle, c=heures, cmap='twilight', s=100, zorder=5)
+
+# Annoter quelques heures
+for h in [0, 6, 12, 18, 23]:
+    ax.annotate(f'{h}h', (x_circle[h]*1.15, y_circle[h]*1.15), ha='center', va='center')
+
+ax.set_xlim(-1.4, 1.4)
+ax.set_ylim(-1.4, 1.4)
+ax.set_aspect('equal')
+ax.set_xlabel(r'$\cos(2\pi h / 24)$')
+ax.set_ylabel(r'$\sin(2\pi h / 24)$')
+ax.set_title('Encodage cyclique: projection sur le cercle')
+ax.axhline(0, color='gray', linewidth=0.5)
+ax.axvline(0, color='gray', linewidth=0.5)
+
+# Distance euclidienne entre heures consécutives (encodage cyclique)
+ax = axes[2]
+distances_cyclique = []
+for h in range(24):
+    h_suivant = (h + 1) % 24
+    dist = np.sqrt((x_circle[h_suivant] - x_circle[h])**2 + 
+                   (y_circle[h_suivant] - y_circle[h])**2)
+    distances_cyclique.append(dist)
+ax.bar(heures, distances_cyclique, color='coral', edgecolor='black')
+ax.set_xlabel('Heure')
+ax.set_ylabel('Distance euclidienne')
+ax.set_title('Encodage cyclique: distances uniformes')
+ax.set_xticks([0, 6, 12, 18, 23])
+ax.axhline(distances_cyclique[0], color='green', linestyle='--', alpha=0.7, label='Distance constante')
+ax.legend()
+
+plt.tight_layout()
+```
+
+Le panneau de gauche montre le problème de l'encodage naïf: la distance entre 23h et 0h est de 23, alors qu'entre toutes les autres heures consécutives elle est de 1. Le panneau du centre illustre la projection sur le cercle: chaque heure occupe une position sur le cercle unitaire, et les heures adjacentes (y compris 23h et 0h) sont proches. Le panneau de droite confirme que la distance euclidienne entre heures consécutives est maintenant **constante**.
+
+Voici comment appliquer cet encodage en pratique:
+
+```{code-cell} python
+# Encodage cyclique pour différentes variables temporelles
+def encodage_cyclique(valeurs, periode):
+    """
+    Transforme une variable périodique en deux composantes (sin, cos).
+    
+    Paramètres:
+        valeurs: array de valeurs (ex: heures 0-23)
+        periode: la période du cycle (ex: 24 pour les heures)
+    
+    Retourne:
+        (composante_sin, composante_cos)
+    """
+    angle = 2 * np.pi * valeurs / periode
+    return np.sin(angle), np.cos(angle)
+
+# Exemple d'utilisation
+heures = np.array([0, 6, 12, 18, 23])
+heure_sin, heure_cos = encodage_cyclique(heures, periode=24)
+
+print("Heure | sin | cos")
+print("-" * 25)
+for h, s, c in zip(heures, heure_sin, heure_cos):
+    print(f"  {h:2d}  | {s:+.2f} | {c:+.2f}")
+```
+
+| Variable | Période $T$ | Exemple |
+|----------|-------------|---------|
+| Heure du jour | 24 | 0h $\to$ (0, 1), 12h $\to$ (0, -1) |
+| Jour de la semaine | 7 | Lundi $\to$ (0.78, 0.62), Dimanche $\to$ (-0.78, 0.62) |
+| Mois de l'année | 12 | Janvier $\to$ (0.5, 0.87), Juillet $\to$ (-0.5, -0.87) |
+
+```{admonition} Pourquoi deux composantes?
+:class: tip
+
+Une seule composante (par exemple, juste $\sin$) ne suffit pas. Le sinus seul ne distingue pas 6h de 18h (tous deux ont $\sin = \pm 1$). Avec les deux composantes, chaque point du cycle a une représentation **unique** dans le plan $(cos, sin)$.
+```
+
 ## Décomposition biais-variance
 
 Ce compromis peut être formalisé mathématiquement. Supposons que les données suivent le modèle $y = f^*(\mathbf{x}) + \epsilon$, où $f^*$ est la vraie fonction (le prédicteur de Bayes optimal pour la perte quadratique), et $\epsilon$ est un bruit de moyenne nulle et de variance $\sigma^2$.
