@@ -8,7 +8,7 @@ math: mathjax
 <!-- _class: lead -->
 
 # Projet: Prédiction de la demande énergétique
-## Présentation et consignes
+## Consignes et méthodologie
 
 *Pierre-Luc Bacon*
 IFT3395/IFT6390 – Fondements de l'apprentissage machine
@@ -17,12 +17,11 @@ IFT3395/IFT6390 – Fondements de l'apprentissage machine
 
 ## Plan de la présentation
 
-1. **Contexte et objectifs** : Données Hydro-Québec et compétences visées
-2. **Structure et évaluation** : Pondération et entrevue orale
-3. **Les données** : Variables, division temporelle, décalage de distribution
-4. **Partie 1-2** : Implémentations OLS et régression logistique
-5. **Partie 3-6** : Caractéristiques, Ridge, classification, modèle combiné
-6. **Kaggle et entrevue** : Soumission et préparation
+1. **Contexte et objectifs** : données Hydro-Québec, compétences visées
+2. **Les données** : variables, division temporelle, décalage de distribution
+3. **Implémentations** : OLS et régression logistique à partir de zéro
+4. **Modélisation** : caractéristiques, Ridge, classification, modèle combiné
+5. **Évaluation** : Kaggle et entrevue orale
 
 ---
 
@@ -42,14 +41,13 @@ Les données proviennent du portail de données ouvertes d'**Hydro-Québec** :
 - Programme de gestion de la demande en période de pointe
 - Données météorologiques intégrées
 
-**Votre mission** : Prédire la consommation énergétique (en kWh) en utilisant **uniquement** les méthodes vues dans les chapitres 1 à 5.
+**Votre mission** : Prédire la consommation énergétique (kWh) en utilisant **uniquement** les méthodes des chapitres 1 à 5.
 
 | Interdit | Autorisé |
 |----------|----------|
 | Arbres, forêts aléatoires | Régression linéaire (OLS) |
 | Réseaux de neurones | Régression Ridge |
 | XGBoost, LightGBM | Régression logistique |
-| Tout ce qui n'est pas ch. 1-5 | Descente de gradient |
 
 ---
 
@@ -63,18 +61,11 @@ Les données proviennent du portail de données ouvertes d'**Hydro-Québec** :
 4. **Construire un modèle à deux étages** : classification → régression
 5. **Utiliser les probabilités prédites** comme caractéristiques
 
-Ce projet teste votre **compréhension profonde**, pas juste l'utilisation de scikit-learn.
+Ce projet teste votre **compréhension profonde**, pas seulement l'utilisation de sklearn.
 
 ---
 
-<!-- _class: lead -->
-
-# Structure et évaluation
-## Comment vous serez notés
-
----
-
-## Pondération du projet
+## Structure et pondération
 
 | Partie | Contenu | Poids |
 |--------|---------|-------|
@@ -87,25 +78,7 @@ Ce projet teste votre **compréhension profonde**, pas juste l'utilisation de sc
 | 7 | Extension (choisir 1 option) | 10% |
 | **Kaggle** | Position au classement | **10%** |
 
-⚠️ L'**entrevue orale** peut ajuster votre note de **±10%**.
-
----
-
-## L'entrevue orale : ce qui compte vraiment
-
-L'entrevue n'est pas un interrogatoire, c'est une **conversation** sur votre travail.
-
-**Ce qu'on évalue** :
-- Votre **compréhension** des méthodes utilisées
-- Votre capacité à **expliquer** vos choix
-- Votre capacité à **dériver** les formules de base
-
-**Exemples de questions** :
-- « Dérivez la solution OLS sur le tableau. »
-- « Pourquoi Ridge aide-t-il avec des caractéristiques corrélées? »
-- « Votre classifieur donne P=0,7. Qu'est-ce que cela signifie? »
-
-On ne vous piégera pas. Préparez-vous simplement à **expliquer votre code**.
+L'**entrevue orale** peut ajuster votre note de **±10%**.
 
 ---
 
@@ -116,25 +89,24 @@ On ne vous piégera pas. Préparez-vous simplement à **expliquer votre code**.
 
 ---
 
-## Description des variables
+<!-- footer: "📖 Chapitre 4 : Généralisation" -->
 
-**Variables météorologiques** :
-- `temperature_ext` : Température extérieure (°C)
-- `humidite`, `vitesse_vent`, `neige`, `irradiance_solaire`
+## Variables disponibles
 
-**Variables temporelles** :
-- `heure`, `mois`, `jour`, `jour_semaine`
-- `heure_sin`, `heure_cos`, `mois_sin`, `mois_cos` (encodage cyclique)
-- `est_weekend`, `est_ferie`
+**Météorologiques** : `temperature_ext`, `humidite`, `vitesse_vent`, `neige`, `irradiance_solaire`
 
-**Variable importante** ⚠️ :
-- `clients_connectes` : Nombre de clients connectés (très prédictif!)
+**Temporelles** : `heure`, `mois`, `jour`, `jour_semaine`
+- Encodage cyclique : `heure_sin`, `heure_cos`, `mois_sin`, `mois_cos`
+- Indicateurs : `est_weekend`, `est_ferie`
 
-**Variable cible** : `energie_kwh`
+**Variable importante** :
+$$\boxed{\texttt{clients\_connectes} : \text{nombre de clients connectés}}$$
+
+**Variable cible** : `energie_kwh` (consommation en kWh)
 
 ---
 
-## ⚠️ Division temporelle — Ne pas mélanger!
+## Division temporelle — Ne pas mélanger!
 
 C'est une **série temporelle**. Une division aléatoire cause une **fuite d'information**.
 
@@ -144,31 +116,12 @@ Janvier 2022                                    Juillet 2024
                                                  1er fév 2024
 ```
 
-**Interdit** :
-- `train_test_split(X, y, random_state=42)` ❌
-- Validation croisée standard (`KFold`) ❌
+| Interdit | Correct |
+|----------|---------|
+| `train_test_split(random_state=42)` | Division chronologique |
+| `KFold` standard | `TimeSeriesSplit` |
 
-**Correct** :
-- Division chronologique ✅
-- `TimeSeriesSplit` pour la validation croisée ✅
-
----
-
-## ⚠️ Décalage de distribution
-
-Les données d'entraînement et de test couvrent des **saisons différentes**.
-
-| Ensemble | Période | Consommation moyenne |
-|----------|---------|---------------------|
-| Train | Janvier 2022 – Janvier 2024 | **216 kWh** (hiver) |
-| Test | Février 2024 – Juillet 2024 | **84 kWh** (printemps/été) |
-
-**Conséquences** :
-- Le R² sur le test peut être négatif (le modèle fait pire que la moyenne)
-- C'est un défi **réaliste** : le modèle doit généraliser à travers les saisons
-- Utilisez des caractéristiques qui **généralisent** (ex: `clients_connectes`)
-
-Ne paniquez pas si votre R² est bas. Concentrez-vous sur la **méthodologie**.
+Le futur ne peut pas prédire le passé!
 
 ---
 
@@ -177,7 +130,7 @@ Ne paniquez pas si votre R² est bas. Concentrez-vous sur la **méthodologie**.
 La validation croisée standard mélange passé et futur :
 
 ```
-Standard KFold (INTERDIT pour séries temporelles):
+KFold standard (INTERDIT):
 Fold 1: [Test] [Train] [Train] [Train] [Train]  ← Utilise le futur!
 Fold 2: [Train] [Test] [Train] [Train] [Train]  ← Utilise le futur!
 ```
@@ -193,9 +146,26 @@ Fold 3: [Train] [Train] [Train] [Test]
 
 ```python
 from sklearn.model_selection import TimeSeriesSplit
-tscv = TimeSeriesSplit(n_splits=5)
-model = RidgeCV(alphas=[0.1, 1, 10, 100], cv=tscv)
+model = RidgeCV(alphas=[0.1, 1, 10], cv=TimeSeriesSplit(n_splits=5))
 ```
+
+---
+
+## Décalage de distribution
+
+Les données d'entraînement et de test couvrent des **saisons différentes**.
+
+| Ensemble | Période | Consommation moyenne |
+|----------|---------|---------------------|
+| Train | Janvier 2022 – Janvier 2024 | **216 kWh** (hiver) |
+| Test | Février 2024 – Juillet 2024 | **84 kWh** (printemps/été) |
+
+**Conséquences** :
+- Le R² sur le test peut être négatif
+- C'est un défi **réaliste** : généraliser à travers les saisons
+- Utilisez des caractéristiques qui **généralisent** (ex: `clients_connectes`)
+
+Ne paniquez pas si votre R² est bas. Concentrez-vous sur la **méthodologie**.
 
 ---
 
@@ -205,6 +175,8 @@ model = RidgeCV(alphas=[0.1, 1, 10, 100], cv=tscv)
 ## La solution analytique des moindres carrés
 
 ---
+
+<!-- footer: "📖 Chapitre 2 : Régression linéaire" -->
 
 ## Rappel : la solution OLS
 
@@ -216,20 +188,13 @@ $$\min_{\boldsymbol{\beta}} \|\mathbf{y} - \mathbf{X}\boldsymbol{\beta}\|^2$$
 
 $$\boxed{\hat{\boldsymbol{\beta}} = (\mathbf{X}^\top \mathbf{X})^{-1} \mathbf{X}^\top \mathbf{y}}$$
 
-En pratique, **ne pas inverser directement** — résoudre le système :
+En pratique, **ne pas inverser directement**. Résoudre le système :
 
 $$\mathbf{X}^\top \mathbf{X} \boldsymbol{\beta} = \mathbf{X}^\top \mathbf{y}$$
 
-```python
-# Stable numériquement
-beta = np.linalg.solve(X.T @ X, X.T @ y)
-```
-
 ---
 
-## Ce qu'on vous demande
-
-Implémenter deux fonctions :
+## Implémentation demandée
 
 ```python
 def ols_fit(X, y):
@@ -238,13 +203,15 @@ def ols_fit(X, y):
     y : (n,) - cible
     Retourne: beta de forme (p+1,) avec intercept en premier
     """
-    # 1. Ajouter une colonne de 1 pour l'intercept
-    # 2. Résoudre X^T X beta = X^T y
-    pass
+    n = X.shape[0]
+    X_aug = np.column_stack([np.ones(n), X])  # Ajouter intercept
+    beta = np.linalg.solve(X_aug.T @ X_aug, X_aug.T @ y)
+    return beta
 
 def ols_predict(X, beta):
-    """Retourne X_aug @ beta"""
-    pass
+    n = X.shape[0]
+    X_aug = np.column_stack([np.ones(n), X])
+    return X_aug @ beta
 ```
 
 **Vérification** : Vos coefficients doivent correspondre à `LinearRegression()`.
@@ -254,9 +221,11 @@ def ols_predict(X, beta):
 <!-- _class: lead -->
 
 # Partie 2 : Régression logistique
-## Implémentation avec descente de gradient
+## Descente de gradient
 
 ---
+
+<!-- footer: "📖 Chapitre 3 : Classification" -->
 
 ## Rappels : régression logistique
 
@@ -266,16 +235,16 @@ $$\sigma(z) = \frac{1}{1 + e^{-z}}$$
 **Perte d'entropie croisée binaire** :
 $$\mathcal{L} = -\frac{1}{n} \sum_{i=1}^{n} \left[ y_i \log(p_i) + (1-y_i) \log(1-p_i) \right]$$
 
-où $p_i = \sigma(\mathbf{x}_i^\top \boldsymbol{\beta})$.
-
 **Gradient** :
-$$\nabla \mathcal{L} = \frac{1}{n} \mathbf{X}^\top (\boldsymbol{\sigma} - \mathbf{y})$$
+$$\boxed{\nabla \mathcal{L} = \frac{1}{n} \mathbf{X}^\top (\boldsymbol{\sigma} - \mathbf{y})}$$
+
+où $\boldsymbol{\sigma} = \sigma(\mathbf{X}\boldsymbol{\beta})$.
 
 ---
 
-## Stabilité numérique — Attention!
+## Stabilité numérique
 
-**Problème** : $e^{-z}$ déborde pour $z$ très négatif ou très positif.
+**Problème 1** : $e^{-z}$ déborde pour $|z|$ grand.
 
 ```python
 def sigmoid(z):
@@ -283,7 +252,7 @@ def sigmoid(z):
     return 1 / (1 + np.exp(-z))
 ```
 
-**Problème** : $\log(0) = -\infty$
+**Problème 2** : $\log(0) = -\infty$
 
 ```python
 def cross_entropy_loss(y_true, y_pred_proba):
@@ -300,7 +269,7 @@ def cross_entropy_loss(y_true, y_pred_proba):
 ```python
 def logistic_fit_gd(X, y, lr=0.1, n_iter=1000):
     n, p = X.shape
-    X_aug = np.column_stack([np.ones(n), X])  # Ajouter intercept
+    X_aug = np.column_stack([np.ones(n), X])
     beta = np.zeros(p + 1)
     losses = []
     
@@ -315,34 +284,38 @@ def logistic_fit_gd(X, y, lr=0.1, n_iter=1000):
     return beta, losses
 ```
 
-**Conseil** : Normalisez les caractéristiques avec `StandardScaler` avant!
+**Conseil** : Normalisez les caractéristiques avec `StandardScaler`.
 
 ---
 
-## Courbe de convergence
+## Vérifier la convergence
 
-Tracez la perte en fonction des itérations pour vérifier la convergence :
+Tracez la perte en fonction des itérations :
 
 ```python
 plt.plot(losses)
 plt.xlabel('Itération')
 plt.ylabel('Perte (entropie croisée)')
-plt.title('Convergence de la descente de gradient')
 ```
 
 **Questions à vous poser** :
-- La perte diminue-t-elle?
-- Converge-t-elle vers un plateau?
-- Si elle oscille : réduisez le taux d'apprentissage
+
+| Observation | Action |
+|-------------|--------|
+| Perte diminue et se stabilise | Convergence OK |
+| Perte oscille | Réduire le taux d'apprentissage |
+| Perte ne diminue pas | Vérifier le gradient |
 
 ---
 
 <!-- _class: lead -->
 
-# Parties 3-6 : Le reste du projet
-## Caractéristiques, Ridge, classification, modèle combiné
+# Parties 3-6 : Modélisation
+## Caractéristiques, Ridge, classification
 
 ---
+
+<!-- footer: "📖 Chapitres 2-5" -->
 
 ## Partie 3 : Ingénierie des caractéristiques
 
@@ -352,35 +325,33 @@ Créez **au moins 3 nouvelles caractéristiques** :
 
 | Type | Exemple |
 |------|---------|
-| Retards (lags) | `df['energie_kwh'].shift(1)`, `shift(24)` |
+| Retards | `df['energie_kwh'].shift(1)`, `shift(24)` |
 | Moyennes mobiles | `df['energie_kwh'].rolling(6).mean()` |
 | Interactions | `df['temperature_ext'] * df['heure_cos']` |
 | Transformations | `np.maximum(18 - df['temperature_ext'], 0)` |
 
-⚠️ Les retards créent des `NaN` — supprimez-les avec `dropna()`.
+Les retards créent des `NaN` — supprimez-les avec `dropna()`.
 
 ---
 
 ## Partie 4 : Régression Ridge
 
-Ridge ajoute une pénalité L2 aux coefficients :
+Ridge ajoute une pénalité L2 :
 
-$$\min_{\boldsymbol{\beta}} \|\mathbf{y} - \mathbf{X}\boldsymbol{\beta}\|^2 + \lambda \|\boldsymbol{\beta}\|^2$$
+$$\boxed{\min_{\boldsymbol{\beta}} \|\mathbf{y} - \mathbf{X}\boldsymbol{\beta}\|^2 + \lambda \|\boldsymbol{\beta}\|^2}$$
 
 **Ce qu'on vous demande** :
 1. Entraîner Ridge avec `RidgeCV` et `TimeSeriesSplit`
-2. Comparer les performances avec OLS
-3. Analyser comment les coefficients changent
+2. Comparer avec OLS
+3. Analyser les coefficients
 
-**Questions pour l'oral** :
-- Pourquoi Ridge aide-t-il avec des caractéristiques corrélées?
-- Comment interpréter Ridge comme estimation MAP?
+**Question orale** : Pourquoi Ridge aide-t-il avec des caractéristiques corrélées?
 
 ---
 
 ## Partie 5 : Classification des événements de pointe
 
-Entraînez un classifieur pour prédire `evenement_pointe`, puis utilisez **la probabilité** comme caractéristique.
+Entraînez un classifieur pour `evenement_pointe`, puis utilisez **la probabilité** :
 
 ```python
 clf = LogisticRegression(max_iter=1000)
@@ -392,51 +363,55 @@ train_eng['P_pointe'] = clf.predict_proba(X_train)[:, 1]
 
 **Question clé** : Pourquoi `P(pointe)` plutôt qu'un indicateur 0/1?
 
-→ La probabilité contient plus d'information. Un P=0,7 n'est pas traité comme un P=0,99.
+→ La probabilité contient plus d'information. P=0,7 ≠ P=0,99.
 
 ---
 
 ## Partie 6 : Modèle combiné
 
 Assemblez tout :
-1. Caractéristiques de base + vos nouvelles caractéristiques
-2. Ajoutez `P_pointe` comme caractéristique supplémentaire
-3. Entraînez Ridge final
 
 ```python
 features_final = features_disponibles + ['P_pointe']
-model_final = RidgeCV(alphas=[0.1, 1, 10, 100], cv=tscv)
+
+model_final = RidgeCV(
+    alphas=[0.1, 1, 10, 100], 
+    cv=TimeSeriesSplit(n_splits=5)
+)
 model_final.fit(X_train_final, y_train_final)
 ```
 
-**Mesurez l'amélioration** apportée par P_pointe.
+**Mesurez l'amélioration** apportée par `P_pointe`.
 
 ---
 
-## Partie 7 : Extension (choisir UNE option)
+## Partie 7 : Extension
+
+Choisissez **UNE** option :
 
 | Option | Description |
 |--------|-------------|
 | **A** | Ajouter des données météo externes (`meteostat`) |
-| **B** | Classification multiclasse (faible/moyenne/élevée) avec softmax |
-| **C** | Analyse d'erreur approfondie : quand le modèle échoue-t-il? |
+| **B** | Classification multiclasse (faible/moyenne/élevée) |
+| **C** | Analyse d'erreur : quand le modèle échoue-t-il? |
 
-Cette partie montre votre **initiative** et votre **curiosité**.
+Cette partie montre votre **initiative**.
 
 ---
 
 <!-- _class: lead -->
 
 # Compétition Kaggle
-## Soumission et classement
+## Soumission et évaluation
 
 ---
 
+<!-- footer: "📖 Projet: Prédiction de la demande énergétique" -->
+
 ## La compétition Kaggle
 
-**Lien** : Disponible dans le notebook (invitation privée)
-
 **Métrique** : RMSE (Root Mean Squared Error)
+
 $$\text{RMSE} = \sqrt{\frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2}$$
 
 **Format de soumission** :
@@ -444,7 +419,6 @@ $$\text{RMSE} = \sqrt{\frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2}$$
 id,energie_kwh
 0,245.5
 1,312.8
-2,189.3
 ...
 ```
 
@@ -452,7 +426,7 @@ id,energie_kwh
 
 ---
 
-## Conseil pour la soumission
+## Générer la soumission
 
 Le fichier `test_kaggle` n'a **pas** la colonne `energie_kwh`.
 
@@ -466,13 +440,11 @@ test_kaggle_eng['P_pointe'] = clf.predict_proba(X_kaggle_pointe)[:, 1]
 
 # Prédire
 X_kaggle = test_kaggle_eng[features_final].values
-y_pred_kaggle = model_final.predict(X_kaggle)
+y_pred = model_final.predict(X_kaggle)
 
 # Créer la soumission
-submission = pd.DataFrame({
-    'id': range(len(test_kaggle)),
-    'energie_kwh': y_pred_kaggle
-})
+submission = pd.DataFrame({'id': range(len(test_kaggle)), 
+                           'energie_kwh': y_pred})
 submission.to_csv('submission.csv', index=False)
 ```
 
@@ -480,10 +452,12 @@ submission.to_csv('submission.csv', index=False)
 
 <!-- _class: lead -->
 
-# Préparation à l'entrevue orale
-## Les questions auxquelles vous devez pouvoir répondre
+# Entrevue orale
+## Préparation
 
 ---
+
+<!-- footer: "" -->
 
 ## Questions sur les fondamentaux
 
@@ -493,11 +467,10 @@ submission.to_csv('submission.csv', index=False)
 
 2. **Pourquoi une division temporelle?**
    - Éviter la fuite d'information
-   - Le futur ne peut pas prédire le passé
 
 3. **Que voyez-vous dans vos résidus?**
-   - Sont-ils centrés autour de 0?
-   - Y a-t-il des motifs (hétéroscédasticité)?
+   - Centrés autour de 0?
+   - Motifs (hétéroscédasticité)?
 
 ---
 
@@ -505,31 +478,27 @@ submission.to_csv('submission.csv', index=False)
 
 4. **Pourquoi Ridge aide-t-il avec des caractéristiques corrélées?**
    - Instabilité des estimateurs OLS
-   - Ridge « partage » le poids entre caractéristiques corrélées
+   - Ridge « partage » le poids
 
 5. **Comment avez-vous choisi λ?**
-   - Validation croisée (`RidgeCV`)
-   - Avec `TimeSeriesSplit`
+   - Validation croisée avec `TimeSeriesSplit`
 
 6. **Quel coefficient a été le plus réduit? Pourquoi?**
-   - Analyser le tableau de comparaison OLS vs Ridge
-   - Les coefficients instables sont les plus réduits
+   - Les coefficients instables sont réduits
 
 ---
 
-## Questions sur la classification
+## Questions sur la classification et la théorie
 
 7. **Votre classifieur donne P=0,7. Qu'est-ce que cela signifie?**
-   - 70% de probabilité d'événement de pointe
-   - Pas une certitude!
+   - 70% de probabilité, pas une certitude
 
-8. **Pourquoi utiliser P(pointe) plutôt qu'un indicateur 0/1?**
+8. **Pourquoi P(pointe) plutôt qu'un indicateur 0/1?**
    - Plus d'information (incertitude préservée)
-   - Permet des décisions graduées
 
 9. **Expliquez Ridge comme estimation MAP.**
    - Prior gaussien sur les coefficients
-   - λ contrôle la variance du prior
+   - $\lambda$ contrôle la variance du prior
 
 ---
 
@@ -538,12 +507,11 @@ submission.to_csv('submission.csv', index=False)
 10. **Parcourez votre modèle complet étape par étape.**
     - Chargement → Caractéristiques → Classification → Régression
 
-11. **Quelle amélioration de R² était la plus importante?**
+11. **Quelle amélioration était la plus importante?**
     - Comparer les différentes étapes
-    - Identifier la contribution de chaque partie
 
 12. **Modifiez ce seuil en direct — que prédisez-vous?**
-    - Montrer que vous comprenez l'impact des hyperparamètres
+    - Montrer la compréhension des hyperparamètres
 
 ---
 
@@ -552,15 +520,17 @@ submission.to_csv('submission.csv', index=False)
 | À faire | À ne pas faire |
 |---------|----------------|
 | Implémenter OLS et logistique à la main | Utiliser seulement sklearn |
-| Utiliser `TimeSeriesSplit` | Utiliser `train_test_split` aléatoire |
+| Utiliser `TimeSeriesSplit` | Division aléatoire |
 | Comprendre le décalage de distribution | Paniquer si R² est négatif |
-| Préparer l'entrevue orale | Copier du code sans comprendre |
-| Documenter vos choix | Soumettre sans vérifier le format |
-
-**Bon projet!** 🎯
+| Préparer l'entrevue orale | Copier sans comprendre |
 
 ---
 
 <!-- _class: lead -->
 
 # Questions?
+
+**Ressources** :
+- Notebook : `exercises/projet_energie.ipynb`
+- Compétition Kaggle : lien dans le notebook
+- Chapitres 1-5 du livre
