@@ -43,6 +43,7 @@ project:
         - file: exercises/tp0_knn.ipynb
         - file: exercises/tp1_learning_problem.ipynb
         - file: exercises/tp2_logistic_regression.ipynb
+        - file: exercises/projet_energie.ipynb
     # - title: "Présentations"
     #   children:
     #     - file: slides/linear_models.md
