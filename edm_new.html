@@ -103,7 +103,6 @@
             padding-bottom:18px;
         }
         #templateHeader,#templateBody,#templateFooter{
-            padding-right:18px;
             padding-left:18px;
         }
         body,#bodyTable{
@@ -190,7 +189,7 @@
             border-top:0;
             border-bottom:0;
             padding-top:0;
-            padding-right:5px;
+        
             padding-bottom:0;
         }
         #templateHeader,#templateHeader p{
@@ -219,8 +218,8 @@
         #templateBody,#templateBody p{
             color:black;
             font-family:Helvetica;
-            font-size:8px;
-            line-height:normal;
+            font-size:12px;
+            line-height:16px;
             text-align:left;
             padding-left:18px;
         }
@@ -233,13 +232,18 @@
             background-color:#FAFAFA;
             background-image:none;
             background-repeat:no-repeat;
-            background-position:center;
-            background-size:cover;
+           
+          
             border-top:0;
             border-bottom:0;
             padding-top:36px;
             padding-bottom:9px;
+
         }
+
+         #templateFooter.a:visited{
+            color:purple;
+         }
         #socialBar{
             background-color:#333333;
             border:0;
@@ -336,22 +340,14 @@
             font-size:14px !important;
             line-height:150% !important;
         }
-        #templateHeader,#templateHeader p{
-            font-size:16px !important;
-            line-height:150% !important;
-        }
+       
         #templateBody,#templateBody p{
             font-size:16px !important;
             line-height:150% !important;
         }
-        #templateFooter,#templateFooter p{
-            font-size:14px !important;
-            line-height:150% !important;
-        }
-        #socialBar,#socialBar p{
-            font-size:14px !important;
-            line-height:150% !important;
-        }
+
+       
+     
         #utilityBar,#utilityBar p{
             font-size:14px !important;
             line-height:150% !important;
@@ -387,55 +383,6 @@
 
                     <table border="0" cellpadding="0" cellspacing="0" width="100%" class="templateContainer">
 
-                        <!-- BEGIN PREHEADER // -->
-                        <tr>
-                            <td valign="top" id="templatePreheader">
-
-                                <!-- BEGIN MODULE: STANDARD PREHEADER // -->
-                                <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                                    <tr>
-                                        <td valign="top">
-                                            <!--[if mso]>
-                                            <table align="left" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
-                                            <tr>
-                                            <td valign="top" width="384" style="width:384px;">
-                                            <![endif]-->
-                                            <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:384px;" width="100%" class="columnContainer">
-                                                <tr>
-                                                    <td valign="top">
-                                                        <div mc:edit="preheader_leftcol_content">
-                                                            <p>Use this area to offer a short preview of your email's content.</p>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                            <!--[if mso]>
-                                            </td>
-                                            <td valign="top" width="180" style="width:180px;">
-                                            <![endif]-->
-                                            <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:180px;" width="100%" class="columnContainer">
-                                                <tr>
-                                                    <td valign="top">
-                                                        <div mc:edit="preheader_rightcol_content">
-                                                            <p><a href="*|ARCHIVE|*" target="_blank">View email in your browser</a></p>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                            <!--[if mso]>
-                                            </td>
-                                            </tr>
-                                            </table>
-                                            <![endif]-->
-                                        </td>
-                                    </tr>
-                                </table>
-                                <!-- // END MODULE: STANDARD PREHEADER -->
-
-                            </td>
-                        </tr>
-                        <!-- // END PREHEADER -->
-
                         <!-- BEGIN HEADER // -->
                         <tr>
                             <td valign="top" id="templateHeader">
@@ -443,7 +390,7 @@
                                 <!-- BEGIN MODULE: HEADER IMAGE // -->
                                 <!-- HEADER -->
                                 <table width="100%" role="presentation" cellpadding="0" cellspacing="0" border="0">
-                                    <tr>
+                                    <tr style="padding-right:0;">
 
                                         <!-- LOGO -->
                                         <td width="200" valign="top" style="padding:20px 10px 0 15px;">
@@ -452,18 +399,18 @@
 
                                         <!-- TEXT -->
                                         <td width="360" valign="top" style="padding:20px 0 0 0;font-family:Helvetica, Arial, sans-serif;color:#000000;">
-                                            <div style="font-size:11px;line-height:12px;font-weight:400;">
+                                            <div style="font-size:12px;line-height:14px;font-weight:400;">
                                                 News, insight and events
                                             </div>
 
-                                            <div style="font-size:11px;line-height:12px;font-weight:700;">
+                                            <div style="font-size:12px;line-height:14px;font-weight:700;">
                                                 June 2026
                                             </div>
                                         </td>
 
                                         <!-- RIGHT TAG IMAGE -->
-                                        <td width="10" valign="top" align="right" style="padding:0 0 5px 5px;margin:0;font-size:0;line-height:0;">
-                                            <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/7363c63b-4968-f9e6-0084-3ec2408f5868.png" width="10" alt="Brand tag" style="display:block;border:0;height:5px;">
+                                        <td width="30" valign="top" align="right" style="padding:0 0 5px 15px;margin:0;">
+                                            <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/7363c63b-4968-f9e6-0084-3ec2408f5868.png" width="10" alt="Brand tag" style="width:10px;display:block;">
                                         </td>
 
                                     </tr>
@@ -497,7 +444,7 @@
                                         </tr>
                                     </table>
 
-                                    <p style="margin-bottom:15px;">
+                                    <p style="margin-bottom:15px; font-size:14px;padding-right:25px;">
                                         In our knowledge database #plus, we provide compact and understandable information on the topics of smart buildings and building security.
                                     </p>
 
@@ -566,68 +513,42 @@
 
                                     <h3 style="margin:0;color: lightgray;">Issue 02</h3>
 
-                                    <p style="margin-bottom:15px;">
+                                    <p style="margin-bottom:15px; font-size:14px;padding-right:25px;">
                                         In our knowledge database #plus, we provide compact and understandable information on the topics of smart buildings and building security.
                                     </p>
 
                                 </div>
 
-                                <table role="presentation" width="100%" cellpadding="10" cellspacing="10" border="0">
-                                    <tr>
-                                        <td style="border-top:1px solid black; font-size:0; line-height:0;">
-                                            &nbsp;
-                                        </td>
-                                    </tr>
-                                </table>
 
-                                <table role="presentation" cellpadding="0" cellspacing="0" border="0">
-                                    <tr>
-                                        <td height="8" style="font-size:8px; line-height:8px;">&nbsp;</td>
-                                    </tr>
-                                </table>
 
                                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                     <tr>
-                                        <td align="center" style="padding:0; margin:0;">
-                                            <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/fc575666-d050-b794-2653-60745c82e171.jpg" width="540" alt="" style="display:block; width:90%; max-width:600px; height:auto; border:0; margin:10px auto; padding:0;">
+                                        <td align="center" style="padding-left:18px;padding-right:25px; margin:0;">
+                                            <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/fc575666-d050-b794-2653-60745c82e171.jpg" width="600" alt="" style="display:block; width:100%; max-width:600px; height:auto; border:0; margin:10px auto; padding:0;">
                                         </td>
                                     </tr>
                                 </table>
 
-                                <table role="presentation" cellpadding="0" cellspacing="0" border="0">
-                                    <tr>
-                                        <td height="8" style="font-size:8px; line-height:12px;">&nbsp;</td>
-                                    </tr>
-                                </table>
-
-                                <!--border line -->
-                                <table role="presentation" width="100%" cellpadding="10" cellspacing="10" border="0">
-                                    <tr>
-                                        <td style="border-top:1px solid black; font-size:0; line-height:0;">
-                                            &nbsp;
-                                        </td>
-                                    </tr>
-                                </table>
 
                                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
 
                                     <!-- RED LABEL -->
                                     <tr>
-                                        <td style="font-family:Helvetica, Arial, sans-serif; font-size:12px; line-height:14px; color:#D10000; font-weight:bold; padding:0 0 4px 18px;">
+                                        <td style="font-family:Helvetica, Arial, sans-serif; font-size:14px; line-height:14px; color:#D10000; font-weight:bold; padding:15px 0 4px 18px;">
                                             Product news
                                         </td>
                                     </tr>
 
                                     <!-- TITLE -->
                                     <tr>
-                                        <td style="font-family:Helvetica, Arial, sans-serif; font-size:28px; line-height:24px; font-weight:bold; color:#000000; padding-left:18px;padding-right:18px;">
+                                        <td style="font-family:Helvetica, Arial, sans-serif; font-size:30px; line-height:30px; font-weight:bold; color:#000000; padding-left:18px;">
                                             All about the door
                                         </td>
                                     </tr>
 
                                     <!-- BODY -->
                                     <tr>
-                                        <td style="font-family:Helvetica, Arial, sans-serif; font-size:12px; line-height:20px; color:#333333;padding-left:18px;padding-right:18px;">
+                                        <td style="font-family:Helvetica, Arial, sans-serif; font-size:14px; line-height:20px; color:#333333;padding-left:18px;padding-right:18px;">
                                             <br>
                                             Dear Mr. Zimmermann,<br><br>
 
@@ -659,42 +580,36 @@
                                                 <tr>
 
                                                     <!-- LEFT -->
-                                                    <td width="250" valign="top" class="twoColumn">
+                                                    <td width="280" valign="top" class="twoColumn">
 
-                                                        <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/a73347a1-5e2e-4a45-a529-00a0e2d97b6b.jpg" width="230" alt="" style="display:block;width:230px;height:auto;border:0;">
+                                                        <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/a73347a1-5e2e-4a45-a529-00a0e2d97b6b.jpg" width="250" alt="" style="display:block;width:240px;height:auto;border:0;">
 
                                                         <br>
 
-                                                        <table role="presentation" width="95%" cellpadding="0" cellspacing="0" border="0">
-                                                            <tr>
-                                                                <td style="border-top:1px solid black; font-size:0; line-height:0;">
-                                                                    &nbsp;
-                                                                </td>
-                                                            </tr>
-                                                        </table>
+                                                    
 
                                                         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
 
-                                                            <tr>
-                                                                <td style="padding-top:14px;font-family:Helvetica, Arial, sans-serif;font-size:16px;line-height:16px;font-weight:bold;color:#000000;">
+                                                            <tr >
+                                                                <td style="width:240px;padding-top:14px;font-family:Helvetica, Arial, sans-serif;font-size:20px;line-height:20px;font-weight:bold;color:#000000;">
                                                                     Flat rocker arm with BTS 80 system: the special solution for unusual 1- and 2-leaf doors
                                                                 </td>
                                                             </tr>
 
                                                             <tr>
-                                                                <td style="padding-top:12px;font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:12px;color:#000000;">
+                                                                <td style="padding-top:20px;font-family:Helvetica, Arial, sans-serif;font-size:14px;line-height:14px;color:#000000;">
                                                                     dormakaba India has released a new digital door lock brochure, showcasing the range and features of our digital door locks.
                                                                 </td>
                                                             </tr>
 
                                                             <tr>
-                                                                <td style="padding-top:16px;font-family:Helvetica, Arial, sans-serif;font-size:10px;line-height:30px;color:#666666;">
+                                                                <td style="padding-top:16px;font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:30px;color:#666666;">
                                                                     Contact
                                                                 </td>
                                                             </tr>
 
                                                             <tr>
-                                                                <td style="padding-top:4px;font-family:Helvetica, Arial, sans-serif;font-weight:bold;font-size:10px;line-height:18px;">
+                                                                <td style="padding-top:4px;font-family:Helvetica, Arial, sans-serif;font-weight:bold;font-size:12px;line-height:18px;">
                                                                     <a href="mailto:jenni.naegele@dormakaba.com" style="color:#cc0000;text-decoration:underline;">
                                                                         jenni.naegele@dormakaba.com
                                                                     </a>
@@ -702,15 +617,22 @@
                                                             </tr>
 
                                                             <tr>
-                                                                <td style="padding-top:18px;font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:20px;font-weight:bold;">
+                                                                <td style="width:150px;padding-top:18px;">
                                                                     <a href="#" style="color:#000000;text-decoration:none;">
-                                                                        Product info BTS / RTS accessories →
+                                                                      <p style="padding-left:0;font-weight:bold;font-family:Helvetica, Arial, sans-serif;font-size:14px;line-height:20px;">  Product info BTS / <br> RTS accessories </p>
                                                                     </a>
+                                                                </td>
+
+                                                                <td >
+                                                                    <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/3b4c2066-1b25-c3ff-5226-c2c11b62f81f.png"
+                                                                        width="10"
+                                                                        style="display:block;border:0;"
+                                                                        alt="">
                                                                 </td>
                                                             </tr>
 
                                                             <tr>
-                                                                <td style="padding-top:18px;">
+                                                                <td style="padding:0;">
                                                                     <a href="#" style="display:inline-block;background:darkblue;color:#ffffff;text-decoration:none;font-family:Helvetica, Arial, sans-serif;font-size:13px;font-weight:bold;padding:10px 18px;">
                                                                         Learn more
                                                                     </a>
@@ -722,45 +644,40 @@
                                                     </td>
 
                                                     <!-- GUTTER -->
-                                                    <td width="50" class="gutter">&nbsp;</td>
+                                                    <td width="30" class="gutter">&nbsp;</td>
 
                                                     <!-- RIGHT -->
-                                                    <td width="250" valign="top" class="twoColumn">
+                                        
+                                                    <td width="280" valign="top" class="twoColumn">
 
-                                                        <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/a73347a1-5e2e-4a45-a529-00a0e2d97b6b.jpg" width="230" alt="" style="display:block;width:230px;height:auto;border:0;">
+                                                        <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/a73347a1-5e2e-4a45-a529-00a0e2d97b6b.jpg" width="250" alt="" style="display:block;width:240px;height:auto;border:0;">
 
                                                         <br>
 
-                                                        <table role="presentation" width="95%" cellpadding="0" cellspacing="0" border="0">
-                                                            <tr>
-                                                                <td style="border-top:1px solid black; font-size:0; line-height:0;">
-                                                                    &nbsp;
-                                                                </td>
-                                                            </tr>
-                                                        </table>
+                                                    
 
                                                         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
 
                                                             <tr>
-                                                                <td style="padding-top:14px;font-family:Helvetica, Arial, sans-serif;font-size:16px;line-height:16px;font-weight:bold;color:#000000;">
+                                                                <td style="width:240px;padding-top:14px;font-family:Helvetica, Arial, sans-serif;font-size:20px;line-height:20px;font-weight:bold;color:#000000;">
                                                                     Flat rocker arm with BTS 80 system: the special solution for unusual 1- and 2-leaf doors
                                                                 </td>
                                                             </tr>
 
                                                             <tr>
-                                                                <td style="padding-top:12px;font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:12px;color:#000000;">
+                                                                <td style="padding-top:20px;font-family:Helvetica, Arial, sans-serif;font-size:14px;line-height:14px;color:#000000;">
                                                                     dormakaba India has released a new digital door lock brochure, showcasing the range and features of our digital door locks.
                                                                 </td>
                                                             </tr>
 
                                                             <tr>
-                                                                <td style="padding-top:16px;font-family:Helvetica, Arial, sans-serif;font-size:10px;line-height:30px;color:#666666;">
+                                                                <td style="padding-top:16px;font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:30px;color:#666666;">
                                                                     Contact
                                                                 </td>
                                                             </tr>
 
                                                             <tr>
-                                                                <td style="padding-top:4px;font-family:Helvetica, Arial, sans-serif;font-weight:bold;font-size:10px;line-height:18px;">
+                                                                <td style="padding-top:4px;font-family:Helvetica, Arial, sans-serif;font-weight:bold;font-size:12px;line-height:18px;">
                                                                     <a href="mailto:jenni.naegele@dormakaba.com" style="color:#cc0000;text-decoration:underline;">
                                                                         jenni.naegele@dormakaba.com
                                                                     </a>
@@ -768,15 +685,22 @@
                                                             </tr>
 
                                                             <tr>
-                                                                <td style="padding-top:18px;font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:20px;font-weight:bold;">
+                                                                <td style="width:150px;padding-top:18px;">
                                                                     <a href="#" style="color:#000000;text-decoration:none;">
-                                                                        Product info BTS / RTS accessories →
+                                                                      <p style="padding-left:0;padding-right:0;font-weight:bold;font-family:Helvetica, Arial, sans-serif;font-size:14px;line-height:20px;">  Product info BTS / <br> RTS accessories </p>
                                                                     </a>
+                                                                </td>
+
+                                                                <td align="left">
+                                                                    <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/3b4c2066-1b25-c3ff-5226-c2c11b62f81f.png"
+                                                                        width="10"
+                                                                        style="display:block;border:0;padding:0;"
+                                                                        alt="">
                                                                 </td>
                                                             </tr>
 
                                                             <tr>
-                                                                <td style="padding-top:18px;">
+                                                                <td style="padding:0;">
                                                                     <a href="#" style="display:inline-block;background:darkblue;color:#ffffff;text-decoration:none;font-family:Helvetica, Arial, sans-serif;font-size:13px;font-weight:bold;padding:10px 18px;">
                                                                         Learn more
                                                                     </a>
@@ -786,6 +710,7 @@
                                                         </table>
 
                                                     </td>
+
 
                                                 </tr>
                                             </table>
@@ -819,45 +744,42 @@
                                                 </tr>
                                             </table>
 
-                                            <!-- 2 COLUMNS -->
+
+                                            <!-- 2 Columns -->
                                             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                                 <tr>
 
                                                     <!-- LEFT -->
-                                                    <td width="250" valign="top" style="padding:0;" class="twoColumn">
+                                                    <td width="280" valign="top" class="twoColumn">
 
-                                                        <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/a73347a1-5e2e-4a45-a529-00a0e2d97b6b.jpg" width="230" alt="" style="display:block;width:230px;height:auto;border:0;">
+                                                        <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/a73347a1-5e2e-4a45-a529-00a0e2d97b6b.jpg" width="250" alt="" style="display:block;width:240px;height:auto;border:0;">
 
                                                         <br>
 
-                                                        <table role="presentation" width="95%" cellpadding="0" cellspacing="0" border="0">
-                                                            <tr>
-                                                                <td style="border-top:1px solid black;font-size:0;line-height:0;">&nbsp;</td>
-                                                            </tr>
-                                                        </table>
+                                                    
 
                                                         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
 
-                                                            <tr>
-                                                                <td style="padding-top:14px;font-family:Helvetica, Arial, sans-serif;font-size:16px;line-height:16px;font-weight:bold;color:#000000;">
+                                                            <tr >
+                                                                <td style="width:240px;padding-top:14px;font-family:Helvetica, Arial, sans-serif;font-size:20px;line-height:20px;font-weight:bold;color:#000000;">
                                                                     Flat rocker arm with BTS 80 system: the special solution for unusual 1- and 2-leaf doors
                                                                 </td>
                                                             </tr>
 
                                                             <tr>
-                                                                <td style="padding-top:12px;font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:12px;color:#000000;">
+                                                                <td style="padding-top:20px;font-family:Helvetica, Arial, sans-serif;font-size:14px;line-height:14px;color:#000000;">
                                                                     dormakaba India has released a new digital door lock brochure, showcasing the range and features of our digital door locks.
                                                                 </td>
                                                             </tr>
 
                                                             <tr>
-                                                                <td style="padding-top:16px;font-family:Helvetica, Arial, sans-serif;font-size:10px;line-height:30px;color:#666666;">
+                                                                <td style="padding-top:16px;font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:30px;color:#666666;">
                                                                     Contact
                                                                 </td>
                                                             </tr>
 
                                                             <tr>
-                                                                <td style="padding-top:4px;font-family:Helvetica, Arial, sans-serif;font-weight:bold;font-size:10px;line-height:18px;">
+                                                                <td style="padding-top:4px;font-family:Helvetica, Arial, sans-serif;font-weight:bold;font-size:12px;line-height:18px;">
                                                                     <a href="mailto:jenni.naegele@dormakaba.com" style="color:#cc0000;text-decoration:underline;">
                                                                         jenni.naegele@dormakaba.com
                                                                     </a>
@@ -865,15 +787,22 @@
                                                             </tr>
 
                                                             <tr>
-                                                                <td style="padding-top:18px;font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:20px;font-weight:bold;">
+                                                                <td style="width:150px;padding-top:18px;">
                                                                     <a href="#" style="color:#000000;text-decoration:none;">
-                                                                        Product info BTS / RTS accessories →
+                                                                      <p style="padding-left:0;font-weight:bold;font-family:Helvetica, Arial, sans-serif;font-size:14px;line-height:20px;">  Product info BTS / <br> RTS accessories </p>
                                                                     </a>
+                                                                </td>
+
+                                                                <td >
+                                                                    <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/3b4c2066-1b25-c3ff-5226-c2c11b62f81f.png"
+                                                                        width="10"
+                                                                        style="display:block;border:0;"
+                                                                        alt="">
                                                                 </td>
                                                             </tr>
 
                                                             <tr>
-                                                                <td style="padding-top:18px;">
+                                                                <td style="padding:0;">
                                                                     <a href="#" style="display:inline-block;background:darkblue;color:#ffffff;text-decoration:none;font-family:Helvetica, Arial, sans-serif;font-size:13px;font-weight:bold;padding:10px 18px;">
                                                                         Learn more
                                                                     </a>
@@ -885,43 +814,40 @@
                                                     </td>
 
                                                     <!-- GUTTER -->
-                                                    <td width="50" style="font-size:0;line-height:0;" class="gutter">&nbsp;</td>
+                                                    <td width="30" class="gutter">&nbsp;</td>
 
                                                     <!-- RIGHT -->
-                                                    <td width="250" valign="top" style="padding:0;" class="twoColumn">
+                                        
+                                                    <td width="280" valign="top" class="twoColumn">
 
-                                                        <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/a73347a1-5e2e-4a45-a529-00a0e2d97b6b.jpg" width="230" alt="" style="display:block;width:230px;height:auto;border:0;">
+                                                        <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/a73347a1-5e2e-4a45-a529-00a0e2d97b6b.jpg" width="250" alt="" style="display:block;width:240px;height:auto;border:0;">
 
                                                         <br>
 
-                                                        <table role="presentation" width="95%" cellpadding="0" cellspacing="0" border="0">
-                                                            <tr>
-                                                                <td style="border-top:1px solid black;font-size:0;line-height:0;">&nbsp;</td>
-                                                            </tr>
-                                                        </table>
+                                                    
 
                                                         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
 
                                                             <tr>
-                                                                <td style="padding-top:14px;font-family:Helvetica, Arial, sans-serif;font-size:16px;line-height:16px;font-weight:bold;color:#000000;">
+                                                                <td style="width:240px;padding-top:14px;font-family:Helvetica, Arial, sans-serif;font-size:20px;line-height:20px;font-weight:bold;color:#000000;">
                                                                     Flat rocker arm with BTS 80 system: the special solution for unusual 1- and 2-leaf doors
                                                                 </td>
                                                             </tr>
 
                                                             <tr>
-                                                                <td style="padding-top:12px;font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:12px;color:#000000;">
+                                                                <td style="padding-top:20px;font-family:Helvetica, Arial, sans-serif;font-size:14px;line-height:14px;color:#000000;">
                                                                     dormakaba India has released a new digital door lock brochure, showcasing the range and features of our digital door locks.
                                                                 </td>
                                                             </tr>
 
                                                             <tr>
-                                                                <td style="padding-top:16px;font-family:Helvetica, Arial, sans-serif;font-size:10px;line-height:30px;color:#666666;">
+                                                                <td style="padding-top:16px;font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:30px;color:#666666;">
                                                                     Contact
                                                                 </td>
                                                             </tr>
 
                                                             <tr>
-                                                                <td style="padding-top:4px;font-family:Helvetica, Arial, sans-serif;font-weight:bold;font-size:10px;line-height:18px;">
+                                                                <td style="padding-top:4px;font-family:Helvetica, Arial, sans-serif;font-weight:bold;font-size:12px;line-height:18px;">
                                                                     <a href="mailto:jenni.naegele@dormakaba.com" style="color:#cc0000;text-decoration:underline;">
                                                                         jenni.naegele@dormakaba.com
                                                                     </a>
@@ -929,15 +855,22 @@
                                                             </tr>
 
                                                             <tr>
-                                                                <td style="padding-top:18px;font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:20px;font-weight:bold;">
+                                                                <td style="width:150px;padding-top:18px;">
                                                                     <a href="#" style="color:#000000;text-decoration:none;">
-                                                                        Product info BTS / RTS accessories →
+                                                                      <p style="padding-left:0;padding-right:0;font-weight:bold;font-family:Helvetica, Arial, sans-serif;font-size:14px;line-height:20px;">  Product info BTS / <br> RTS accessories </p>
                                                                     </a>
+                                                                </td>
+
+                                                                <td align="left">
+                                                                    <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/3b4c2066-1b25-c3ff-5226-c2c11b62f81f.png"
+                                                                        width="10"
+                                                                        style="display:block;border:0;padding:0;"
+                                                                        alt="">
                                                                 </td>
                                                             </tr>
 
                                                             <tr>
-                                                                <td style="padding-top:18px;">
+                                                                <td style="padding:0;">
                                                                     <a href="#" style="display:inline-block;background:darkblue;color:#ffffff;text-decoration:none;font-family:Helvetica, Arial, sans-serif;font-size:13px;font-weight:bold;padding:10px 18px;">
                                                                         Learn more
                                                                     </a>
@@ -948,6 +881,7 @@
 
                                                     </td>
 
+                                
                                                 </tr>
                                             </table>
 
@@ -975,47 +909,41 @@
                                                 </tr>
                                             </table>
 
-                                            <!-- 2 COLUMNS -->
+                                            <!-- 2 Columns -->
                                             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                                 <tr>
 
                                                     <!-- LEFT -->
-                                                    <td width="250" valign="top" style="padding:0;" class="twoColumn">
+                                                    <td width="280" valign="top" class="twoColumn">
 
-                                                        <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/a73347a1-5e2e-4a45-a529-00a0e2d97b6b.jpg" width="230" alt="" style="display:block;width:230px;height:auto;border:0;">
+                                                        <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/a73347a1-5e2e-4a45-a529-00a0e2d97b6b.jpg" width="250" alt="" style="display:block;width:240px;height:auto;border:0;">
 
                                                         <br>
 
-                                                        <table role="presentation" width="95%" cellpadding="0" cellspacing="0" border="0">
-                                                            <tr>
-                                                                <td style="border-top:1px solid black; font-size:0; line-height:0;">
-                                                                    &nbsp;
-                                                                </td>
-                                                            </tr>
-                                                        </table>
+                                                    
 
                                                         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
 
-                                                            <tr>
-                                                                <td style="padding-top:14px;font-family:Helvetica, Arial, sans-serif;font-size:16px;line-height:16px;font-weight:bold;color:#000000;">
+                                                            <tr >
+                                                                <td style="width:240px;padding-top:14px;font-family:Helvetica, Arial, sans-serif;font-size:20px;line-height:20px;font-weight:bold;color:#000000;">
                                                                     Flat rocker arm with BTS 80 system: the special solution for unusual 1- and 2-leaf doors
                                                                 </td>
                                                             </tr>
 
                                                             <tr>
-                                                                <td style="padding-top:12px;font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:12px;color:#000000;">
+                                                                <td style="padding-top:20px;font-family:Helvetica, Arial, sans-serif;font-size:14px;line-height:14px;color:#000000;">
                                                                     dormakaba India has released a new digital door lock brochure, showcasing the range and features of our digital door locks.
                                                                 </td>
                                                             </tr>
 
                                                             <tr>
-                                                                <td style="padding-top:16px;font-family:Helvetica, Arial, sans-serif;font-size:10px;line-height:30px;color:#666666;">
+                                                                <td style="padding-top:16px;font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:30px;color:#666666;">
                                                                     Contact
                                                                 </td>
                                                             </tr>
 
                                                             <tr>
-                                                                <td style="padding-top:4px;font-family:Helvetica, Arial, sans-serif;font-weight:bold;font-size:10px;line-height:18px;">
+                                                                <td style="padding-top:4px;font-family:Helvetica, Arial, sans-serif;font-weight:bold;font-size:12px;line-height:18px;">
                                                                     <a href="mailto:jenni.naegele@dormakaba.com" style="color:#cc0000;text-decoration:underline;">
                                                                         jenni.naegele@dormakaba.com
                                                                     </a>
@@ -1023,15 +951,22 @@
                                                             </tr>
 
                                                             <tr>
-                                                                <td style="padding-top:18px;font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:20px;font-weight:bold;">
+                                                                <td style="width:150px;padding-top:18px;">
                                                                     <a href="#" style="color:#000000;text-decoration:none;">
-                                                                        Product info BTS / RTS accessories →
+                                                                      <p style="padding-left:0;font-weight:bold;font-family:Helvetica, Arial, sans-serif;font-size:14px;line-height:20px;">  Product info BTS / <br> RTS accessories </p>
                                                                     </a>
+                                                                </td>
+
+                                                                <td >
+                                                                    <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/3b4c2066-1b25-c3ff-5226-c2c11b62f81f.png"
+                                                                        width="10"
+                                                                        style="display:block;border:0;"
+                                                                        alt="">
                                                                 </td>
                                                             </tr>
 
                                                             <tr>
-                                                                <td style="padding-top:18px;">
+                                                                <td style="padding:0;">
                                                                     <a href="#" style="display:inline-block;background:darkblue;color:#ffffff;text-decoration:none;font-family:Helvetica, Arial, sans-serif;font-size:13px;font-weight:bold;padding:10px 18px;">
                                                                         Learn more
                                                                     </a>
@@ -1043,45 +978,40 @@
                                                     </td>
 
                                                     <!-- GUTTER -->
-                                                    <td width="50" class="gutter">&nbsp;</td>
+                                                    <td width="30" class="gutter">&nbsp;</td>
 
                                                     <!-- RIGHT -->
-                                                    <td width="250" valign="top" style="padding:0;" class="twoColumn">
+                                        
+                                                    <td width="280" valign="top" class="twoColumn">
 
-                                                        <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/a73347a1-5e2e-4a45-a529-00a0e2d97b6b.jpg" width="230" alt="" style="display:block;width:230px;height:auto;border:0;">
+                                                        <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/a73347a1-5e2e-4a45-a529-00a0e2d97b6b.jpg" width="250" alt="" style="display:block;width:240px;height:auto;border:0;">
 
                                                         <br>
 
-                                                        <table role="presentation" width="95%" cellpadding="0" cellspacing="0" border="0">
-                                                            <tr>
-                                                                <td style="border-top:1px solid black; font-size:0; line-height:0;">
-                                                                    &nbsp;
-                                                                </td>
-                                                            </tr>
-                                                        </table>
+                                                    
 
                                                         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
 
                                                             <tr>
-                                                                <td style="padding-top:14px;font-family:Helvetica, Arial, sans-serif;font-size:16px;line-height:16px;font-weight:bold;color:#000000;">
+                                                                <td style="width:240px;padding-top:14px;font-family:Helvetica, Arial, sans-serif;font-size:20px;line-height:20px;font-weight:bold;color:#000000;">
                                                                     Flat rocker arm with BTS 80 system: the special solution for unusual 1- and 2-leaf doors
                                                                 </td>
                                                             </tr>
 
                                                             <tr>
-                                                                <td style="padding-top:12px;font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:12px;color:#000000;">
+                                                                <td style="padding-top:20px;font-family:Helvetica, Arial, sans-serif;font-size:14px;line-height:14px;color:#000000;">
                                                                     dormakaba India has released a new digital door lock brochure, showcasing the range and features of our digital door locks.
                                                                 </td>
                                                             </tr>
 
                                                             <tr>
-                                                                <td style="padding-top:16px;font-family:Helvetica, Arial, sans-serif;font-size:10px;line-height:30px;color:#666666;">
+                                                                <td style="padding-top:16px;font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:30px;color:#666666;">
                                                                     Contact
                                                                 </td>
                                                             </tr>
 
                                                             <tr>
-                                                                <td style="padding-top:4px;font-family:Helvetica, Arial, sans-serif;font-weight:bold;font-size:10px;line-height:18px;">
+                                                                <td style="padding-top:4px;font-family:Helvetica, Arial, sans-serif;font-weight:bold;font-size:12px;line-height:18px;">
                                                                     <a href="mailto:jenni.naegele@dormakaba.com" style="color:#cc0000;text-decoration:underline;">
                                                                         jenni.naegele@dormakaba.com
                                                                     </a>
@@ -1089,15 +1019,22 @@
                                                             </tr>
 
                                                             <tr>
-                                                                <td style="padding-top:18px;font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:20px;font-weight:bold;">
+                                                                <td style="width:150px;padding-top:18px;">
                                                                     <a href="#" style="color:#000000;text-decoration:none;">
-                                                                        Product info BTS / RTS accessories →
+                                                                      <p style="padding-left:0;padding-right:0;font-weight:bold;font-family:Helvetica, Arial, sans-serif;font-size:14px;line-height:20px;">  Product info BTS / <br> RTS accessories </p>
                                                                     </a>
+                                                                </td>
+
+                                                                <td align="left">
+                                                                    <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/3b4c2066-1b25-c3ff-5226-c2c11b62f81f.png"
+                                                                        width="10"
+                                                                        style="display:block;border:0;padding:0;"
+                                                                        alt="">
                                                                 </td>
                                                             </tr>
 
                                                             <tr>
-                                                                <td style="padding-top:18px;">
+                                                                <td style="padding:0;">
                                                                     <a href="#" style="display:inline-block;background:darkblue;color:#ffffff;text-decoration:none;font-family:Helvetica, Arial, sans-serif;font-size:13px;font-weight:bold;padding:10px 18px;">
                                                                         Learn more
                                                                     </a>
@@ -1235,7 +1172,7 @@
 
                             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                             <tr>
-                                <td style="padding:20px 18px 0 18px;">
+                                <td style="padding:20px 10px 0 18px;">
 
                                 <!-- SECTION TITLE -->
                                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
@@ -1249,7 +1186,7 @@
                                 <!-- SUBTITLE -->
                                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                     <tr>
-                                    <td style="font-family:Helvetica, Arial, sans-serif;font-size:25px;line-height:auto;font-weight:bold;color:#000000;padding:0 0 30px 10px;">
+                                    <td style="font-family:Helvetica, Arial, sans-serif;font-size:30px;line-height:auto;font-weight:bold;color:#000000;padding:0 0 30px 10px;">
                                         EntriWorX got transition into new CD
                                         
                                     </td>
@@ -1273,7 +1210,7 @@
                                         <tr>
 
                                         <!-- LEFT SMALL IMAGE -->
-                                        <td width="250" valign="top" style="padding:0;">
+                                        <td width="230" valign="top" style="padding:0;">
                                             <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/a73347a1-5e2e-4a45-a529-00a0e2d97b6b.jpg"
                                                 width="250"
                                                 alt=""
@@ -1307,7 +1244,7 @@
                                 <!-- HEADLINE -->
                                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                     <tr>
-                                    <td style="font-family:Helvetica, Arial, sans-serif;font-size:16px;line-height:auto;font-weight:bold;color:#000000;padding:0 0 42px 0;">
+                                    <td style="font-family:Helvetica, Arial, sans-serif;font-size:20px;line-height:auto;font-weight:bold;color:#000000;padding:0 0 30px 0;">
                                         Flat rocker arm with BTS 80 systems: the special solution for unusual 1 and 2-leaf doors
                                     </td>
                                     </tr>
@@ -1316,7 +1253,7 @@
                                 <!-- PARAGRAPHS -->
                                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                     <tr>
-                                    <td style="font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:auto;font-weight:normal;color:#000000;padding:0 0 28px 0;">
+                                    <td style="font-family:Helvetica, Arial, sans-serif;font-size:13px;line-height:auto;font-weight:normal;color:#000000;padding:0 0 28px 0;">
                                         On segment or arched doors with load-bearing hinges, it is often technically impossible to install an overhead door closer. In order not to do without the convenience of a door closer, however, the solution in many cases is to combine the BTS 80 floor spring with a so-called flat rocker arm, which ensures that the force is transmitted from the floor spring to the door leaf.
                                         <br><br>
                                         Whether 1-leaf or 2-leaf, whether with a milled or attached rail, whether on the hinge or hinge side, DIN left or DIN right: with its numerous variants, the flat rocker arm is suitable for a wide variety of installation situations. With an opening angle of almost 180° on the hinge-side variant, it also enables a high level of convenience, while its stainless-steel-colored finish underscores the high-quality design of special doors.
@@ -1367,7 +1304,7 @@
                                 <!-- SUBTITLE -->
                                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                     <tr>
-                                    <td style="font-family:Helvetica, Arial, sans-serif;font-size:25px;line-height:auto;font-weight:bold;color:#000000;padding:0 0 30px 10px;">
+                                    <td style="font-family:Helvetica, Arial, sans-serif;font-size:30px;line-height:auto;font-weight:bold;color:#000000;padding:0 0 30px 10px;">
                                         EntriWorX got transition into new CD
                                         
                                     </td>
@@ -1425,7 +1362,7 @@
                                 <!-- HEADLINE -->
                                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                     <tr>
-                                    <td style="font-family:Helvetica, Arial, sans-serif;font-size:16px;line-height:auto;font-weight:bold;color:#000000;padding:0 0 42px 0;">
+                                    <td style="font-family:Helvetica, Arial, sans-serif;font-size:20px;line-height:auto;font-weight:bold;color:#000000;padding:0 0 30px 0;">
                                         Flat rocker arm with BTS 80 systems: the special solution for unusual 1 and 2-leaf doors
                                     </td>
                                     </tr>
@@ -1434,7 +1371,7 @@
                                 <!-- PARAGRAPHS -->
                                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                     <tr>
-                                    <td style="font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:auto;font-weight:normal;color:#000000;padding:0 0 28px 0;">
+                                    <td style="font-family:Helvetica, Arial, sans-serif;font-size:13px;line-height:auto;font-weight:normal;color:#000000;padding:0 0 28px 0;">
                                         On segment or arched doors with load-bearing hinges, it is often technically impossible to install an overhead door closer. In order not to do without the convenience of a door closer, however, the solution in many cases is to combine the BTS 80 floor spring with a so-called flat rocker arm, which ensures that the force is transmitted from the floor spring to the door leaf.
                                         <br><br>
                                         Whether 1-leaf or 2-leaf, whether with a milled or attached rail, whether on the hinge or hinge side, DIN left or DIN right: with its numerous variants, the flat rocker arm is suitable for a wide variety of installation situations. With an opening angle of almost 180° on the hinge-side variant, it also enables a high level of convenience, while its stainless-steel-colored finish underscores the high-quality design of special doors.
@@ -1507,25 +1444,30 @@
                                     </a>
                                     </div>
 
-                                    <div style="font-size:14px;line-height:14px;font-weight:normal;color:#000000;padding:0 0 30px 0;">
+                                    <div style="font-size:14px;line-height:14px;font-weight:normal;color:#000000;padding:0 0 0 0;">
                                     T: +49 2333 793-5500
                                     </div>
 
                                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-                                    <tr>
-                                        <td valign="top" style="font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:12px;font-weight:bold;color:#000000;padding:0;">
-                                        Product info BTS / RTS<br>
-                                        accessories
-                                        </td>
-                                        <td width="90" valign="top" align="left" style="font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:12px;color:#8B1E2D;padding:0;">
-                                        ↗
-                                        </td>
-                                    </tr>
+                                                            <tr>
+                                                                <td style="width:150px;padding-top:18px;">
+                                                                    <a href="#" style="color:#000000;text-decoration:none;">
+                                                                      <p style="padding-left:0;font-weight:bold;font-family:Helvetica, Arial, sans-serif;font-size:14px;line-height:20px;">  Product info BTS / <br> RTS accessories </p>
+                                                                    </a>
+                                                                </td>
+
+                                                                <td >
+                                                                    <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/3b4c2066-1b25-c3ff-5226-c2c11b62f81f.png"
+                                                                        width="10"
+                                                                        style="display:block;border:0;"
+                                                                        alt="">
+                                                                </td>
+                                                            </tr>
                                     </table>
 
                                     <table role="presentation" cellpadding="0" cellspacing="0" border="0">
                                     <tr>
-                                        <td style="padding:18px 0 0 0;">
+                                        <td style="padding:0 0 0 0;">
                                         <a href="#" style="display:inline-block;background:#003594;color:#ffffff;text-decoration:none;font-family:Helvetica, Arial, sans-serif;font-size:14px;line-height:auto;font-weight:bold;padding:10px 20px 10px 20px;">
                                             Learn more
                                         </a>
@@ -1569,25 +1511,30 @@
                                     </a>
                                     </div>
 
-                                    <div style="font-size:14px;line-height:14px;font-weight:normal;color:#000000;padding:0 0 29px 0;">
+                                    <div style="font-size:14px;line-height:14px;font-weight:normal;color:#000000;padding:0 0 0 0;">
                                     T: +49 2333 793-5500
                                     </div>
 
                                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-                                    <tr>
-                                        <td valign="top" style="font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:12px;font-weight:bold;color:#000000;padding:0;">
-                                        Product info BTS / RTS<br>
-                                        accessories
-                                        </td>
-                                        <td width="90" valign="top" align="left" style="font-family:Helvetica, Arial, sans-serif;font-size:14px;line-height:14px;color:#8B1E2D;padding:0;">
-                                        ↗
-                                        </td>
-                                    </tr>
+                                                            <tr>
+                                                                <td style="width:150px;padding-top:18px;">
+                                                                    <a href="#" style="color:#000000;text-decoration:none;">
+                                                                      <p style="padding-left:0;font-weight:bold;font-family:Helvetica, Arial, sans-serif;font-size:14px;line-height:20px;">  Product info BTS / <br> RTS accessories </p>
+                                                                    </a>
+                                                                </td>
+
+                                                                <td >
+                                                                    <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/3b4c2066-1b25-c3ff-5226-c2c11b62f81f.png"
+                                                                        width="10"
+                                                                        style="display:block;border:0;"
+                                                                        alt="">
+                                                                </td>
+                                                            </tr>
                                     </table>
 
                                     <table role="presentation" cellpadding="0" cellspacing="0" border="0">
                                     <tr>
-                                        <td style="padding:18px 0 0 0;">
+                                        <td style="padding:0 0 0 0;">
                                         <a href="#" style="display:inline-block;background:#003594;color:#ffffff;text-decoration:none;font-family:Helvetica, Arial, sans-serif;font-size:14px;line-height:auto;font-weight:bold;padding:10px 20px 10px 20px;">
                                             Learn more
                                         </a>
@@ -1649,25 +1596,30 @@
                                     </a>
                                     </div>
 
-                                    <div style="font-size:14px;line-height:14px;font-weight:normal;color:#000000;padding:0 0 30px 0;">
+                                    <div style="font-size:14px;line-height:14px;font-weight:normal;color:#000000;padding:0 0 0 0;">
                                     T: +49 2333 793-5500
                                     </div>
 
                                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-                                    <tr>
-                                        <td valign="top" style="font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:12px;font-weight:bold;color:#000000;padding:0;">
-                                        Product info BTS / RTS<br>
-                                        accessories
-                                        </td>
-                                        <td width="90" valign="top" align="left" style="font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:12px;color:#8B1E2D;padding:0;">
-                                        ↗
-                                        </td>
-                                    </tr>
+                                                            <tr>
+                                                                <td style="width:150px;padding-top:18px;">
+                                                                    <a href="#" style="color:#000000;text-decoration:none;">
+                                                                      <p style="padding-left:0;font-weight:bold;font-family:Helvetica, Arial, sans-serif;font-size:14px;line-height:20px;">  Product info BTS / <br> RTS accessories </p>
+                                                                    </a>
+                                                                </td>
+
+                                                                <td >
+                                                                    <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/3b4c2066-1b25-c3ff-5226-c2c11b62f81f.png"
+                                                                        width="10"
+                                                                        style="display:block;border:0;"
+                                                                        alt="">
+                                                                </td>
+                                                            </tr>
                                     </table>
 
                                     <table role="presentation" cellpadding="0" cellspacing="0" border="0">
                                     <tr>
-                                        <td style="padding:18px 0 0 0;">
+                                        <td style="padding:0 0 0 0;">
                                         <a href="#" style="display:inline-block;background:#003594;color:#ffffff;text-decoration:none;font-family:Helvetica, Arial, sans-serif;font-size:14px;line-height:auto;font-weight:bold;padding:10px 20px 10px 20px;">
                                             Learn more
                                         </a>
@@ -1711,25 +1663,30 @@
                                     </a>
                                     </div>
 
-                                    <div style="font-size:14px;line-height:14px;font-weight:normal;color:#000000;padding:0 0 28px 0;">
+                                    <div style="font-size:14px;line-height:14px;font-weight:normal;color:#000000;padding:0 0 0 0;">
                                     T: +49 2333 793-5500
                                     </div>
 
                                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-                                    <tr>
-                                        <td valign="top" style="font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:12px;font-weight:bold;color:#000000;padding:0;">
-                                        Product info BTS / RTS<br>
-                                        accessories
-                                        </td>
-                                        <td width="90" valign="top" align="left" style="font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:12px;color:#8B1E2D;padding:0;">
-                                        ↗
-                                        </td>
-                                    </tr>
+                                                            <tr>
+                                                                <td style="width:150px;padding-top:18px;">
+                                                                    <a href="#" style="color:#000000;text-decoration:none;">
+                                                                      <p style="padding-left:0;font-weight:bold;font-family:Helvetica, Arial, sans-serif;font-size:14px;line-height:20px;">  Product info BTS / <br> RTS accessories </p>
+                                                                    </a>
+                                                                </td>
+
+                                                                <td >
+                                                                    <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/3b4c2066-1b25-c3ff-5226-c2c11b62f81f.png"
+                                                                        width="10"
+                                                                        style="display:block;border:0;"
+                                                                        alt="">
+                                                                </td>
+                                                            </tr>
                                     </table>
 
                                     <table role="presentation" cellpadding="0" cellspacing="0" border="0">
                                     <tr>
-                                        <td style="padding:18px 0 0 0;">
+                                        <td style="padding:0 0 0 0;">
                                         <a href="#" style="display:inline-block;background:#003594;color:#ffffff;text-decoration:none;font-family:Helvetica, Arial, sans-serif;font-size:14px;line-height:auto;font-weight:bold;padding:10px 20px 10px 20px;">
                                             Learn more
                                         </a>
@@ -1760,7 +1717,7 @@
                             <!-- TITLE -->
                             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                 <tr>
-                                <td style="font-family:Helvetica, Arial, sans-serif;font-size:70px;line-height:70px;font-weight:bold;color:#FFFFFF;padding:0 0 20px 0;">
+                                <td style="font-family:Helvetica, Arial, sans-serif;font-size:100px;line-height:110px;font-weight:bold;color:#FFFFFF;padding:0 0 20px 0;">
                                     Register
                                 </td>
                                 </tr>
@@ -1778,7 +1735,7 @@
                             <!-- INFO ROW -->
                             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                 <tr>
-                                <td width="360" valign="middle" style="font-family:Helvetica, Arial, sans-serif;color:#FFFFFF;padding:0;">
+                                <td width="360" valign="middle" style="font-family:Helvetica, Arial, sans-serif;color:#FFFFFF;padding:10px,0;">
                                     <div style="font-size:14px;line-height:14px;font-weight:bold;color:#FFFFFF;">
                                     Partner Congress 16-18. May ’22
                                     </div>
@@ -1822,7 +1779,7 @@
                             <!-- TITLE -->
                             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                 <tr>
-                                <td style="font-family:Helvetica, Arial, sans-serif;font-size:70px;line-height:70px;font-weight:bold;color:#000000;padding:0 0 20px 0;">
+                                <td style="font-family:Helvetica, Arial, sans-serif;font-size:100px;line-height:110px;font-weight:bold;color:#000000;padding:0 0 20px 0;">
                                     Register
                                 </td>
                                 </tr>
@@ -1881,7 +1838,7 @@
                         <tr>
                             <td style="padding:15px 38px 10px 38px;font-family:Helvetica, Arial, sans-serif;color:#000000;">
 
-                            <div style="font-size:68px;line-height:68px;font-weight:bold;color:#ffffff;padding:0 0 5px 0;">
+                            <div style="font-size:90px;line-height:100px;font-weight:bold;color:#ffffff;padding:0 0 5px 0;">
                                 Quote
                             </div>
 
@@ -1889,12 +1846,12 @@
                                 of the month
                             </div>
 
-                            <div style="font-size:12px;line-height:12px;font-weight:normal;color:#ffffff;padding:0 0 15px 0;">
+                            <div style="font-size:14px;line-height:14px;font-weight:normal;color:#ffffff;padding:0 0 15px 0;">
                                 “The people who are crazy enough to think they can change the<br>
                                 world are the ones who do.”
                             </div>
 
-                            <div style="font-size:10px;padding:0 0 10px 0;line-height:10px;font-weight:normal;color:#ffffff;">
+                            <div style="font-size:14px;padding:0 0 10px 0;line-height:14px;font-weight:normal;color:#ffffff;">
                                 Steve Jobs
                             </div>
 
@@ -1911,9 +1868,9 @@
 
                         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                         <tr>
-                            <td style="padding:20px 38px 10px 38px;font-family:Helvetica, Arial, sans-serif;color:#000000;">
+                            <td style="padding:15px 38px 10px 38px;font-family:Helvetica, Arial, sans-serif;color:#000000;">
 
-                            <div style="font-size:68px;line-height:68px;font-weight:bold;color:#000000;padding:0 0 5px 0;">
+                            <div style="font-size:90px;line-height:100px;font-weight:bold;color:#000000;padding:0 0 5px 0;">
                                 Quote
                             </div>
 
@@ -1921,19 +1878,18 @@
                                 of the month
                             </div>
 
-                            <div style="font-size:12px;line-height:12px;font-weight:normal;color:#000000;padding:0 0 15px 0;">
+                            <div style="font-size:14px;line-height:14px;font-weight:normal;color:#000000;padding:0 0 15px 0;">
                                 “The people who are crazy enough to think they can change the<br>
                                 world are the ones who do.”
                             </div>
 
-                            <div style="font-size:10px;line-height:10px;font-weight:normal;padding:0 0 10px 0;color:#000000;">
+                            <div style="font-size:14px;padding:0 0 10px 0;line-height:14px;font-weight:normal;color:#000000;">
                                 Steve Jobs
                             </div>
 
                             </td>
                         </tr>
                         </table>
-
                     </td>
                     </tr>
 
@@ -1944,21 +1900,21 @@
                         <!-- TITLE AREA WITH INNER PADDING -->
                         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                         <tr>
-                            <td style="padding:20px 0 10px 20px;">
+                            <td style="padding:0 0 0 38px;">
 
                             <!-- SECTION TITLE -->
                             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                 <tr>
-                                <td style="font-family:Helvetica, Arial, sans-serif;font-size:40px;line-height:40px;font-weight:bold;color:#000000;padding:20px 0 10px 10px;">
+                                <td style="font-family:Helvetica, Arial, sans-serif;font-size:50px;line-height:50px;font-weight:bold;color:#000000;padding:20px 0 10px 10px;">
                                     News from APAC
                                 </td>
                                 </tr>
                             </table>
 
-                            <!-- LARGE BACKGROUND WORD -->
+                            
                             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                 <tr>
-                                <td style="font-family:Helvetica, Arial, sans-serif;font-size:75px;line-height:75px;font-weight:bold;color:#CFCFCF;padding:0 0 0 10px;">
+                                <td style="font-family:Helvetica, Arial, sans-serif;font-size:80px;line-height:90px;font-weight:bold;color:#CFCFCF;padding:0 0 0 10px;">
                                     Channels
                                 </td>
                                 </tr>
@@ -1968,51 +1924,49 @@
                         </tr>
                         </table>
 
-                        <!-- FULL NEWSLETTER WIDTH LINE -->
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-                        <tr>
-                            <td style="border-top:1px solid #000000;font-size:0;line-height:0;">
-                            &nbsp;
-                            </td>
-                        </tr>
-                        </table>
 
                         <!-- CONTENT AREA WITH INNER PADDING -->
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                         <tr>
-                            <td style="padding:20px 30px 20px 30px;">
+                            <td style="padding:15px 0 0 38px;">
 
                             <!-- CONTENT ROW -->
-                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                                 <tr>
 
                                 <!-- LEFT TEXT -->
-                                <td width="300" valign="top" style="padding:0;font-family:Helvetica, Arial, sans-serif;color:#000000;">
+                                <td width="300" valign="top"  style="padding-left:20px;padding-top:18px;font-family:Helvetica, Arial, sans-serif;color:#000000;">
 
                                     <!-- DESIGN HUB TITLE + ARROW -->
-                                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-                                    <tr>
-                                        <td valign="top" style="font-family:Helvetica, Arial, sans-serif;font-size:14px;line-height:14px;font-weight:bold;color:#000000;padding:0;">
-                                        Design Hub
-                                        </td>
-                                        <td width="50" valign="top" align="left" style="font-family:Helvetica, Arial, sans-serif;font-size:14px;line-height:14px;color:#8B1E2D;padding:0;">
-                                        ↗
-                                        </td>
-                                    </tr>
-                                    </table>
+                                   
+                                        <table role="presentation" width="150"cellpadding="0" cellspacing="0" border="0">
+                                        <tr>
+                                            <td style="font-size:14px;font-weight:bold;color:#000000;">
+                                            Design Hub
+                                            </td>
 
-                                    <div style="font-size:12px;line-height:12px;font-weight:normal;color:#000000;padding:10px 0 0 0;">
+                                            <td align="right">
+                                            <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/3b4c2066-1b25-c3ff-5226-c2c11b62f81f.png"
+                                                width="10"
+                                                style="display:block;border:0;"
+                                                alt="">
+                                            </td>
+                                        </tr>
+                                        </table>
+                               
+
+                                    <div style="font-size:12px;line-height:14px;font-weight:normal;color:#000000;padding:10px 0 0 0;">
                                     To gain access to our shared<br>
                                     knowledge platform where you<br>
                                     can find Product &amp; Interface<br>
                                     Design Guidelines.
                                     </div>
 
-                                    <div style="font-size:12px;line-height:12px;font-weight:bold;color:#000000;padding:0 0 20px 0;">
+                                    <div style="font-size:12px;line-height:14px;font-weight:bold;color:#000000;padding:0 0 20px 0;">
                                     BeautyMeetsBrains
                                     </div>
 
-                                    <div style="font-size:12px;line-height:12px;font-weight:normal;color:#000000;padding:0 0 15px 0;">
+                                    <div style="font-size:12px;line-height:14px;font-weight:normal;color:#000000;padding:0 0 15px 0;">
                                     The Middle East launched a KT<br>
                                     Flex LinkedIn campaign with the<br>
                                     theme “FACADE3 Commitment,<br>
@@ -2022,26 +1976,26 @@
                                     professionals of the region.
                                     </div>
 
-                                    <div style="font-size:12px;line-height:12px;font-weight:normal;color:#000000;padding:0 0 15px 0;">
+                                    <div style="font-size:12px;line-height:14px;font-weight:normal;color:#000000;padding:0 0 15px 0;">
                                     The scope of work included:
                                     </div>
 
                                     <!-- BULLET POINTS: EMAIL-SAFE TABLE BULLETS -->
-                                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" padding-left="10px">
+                                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" padding-left="15px">
                                     <tr>
-                                        <td width="18" valign="top" style="font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:12px;color:#000000;padding:0 0 8px 10px;">
+                                        <td width="18" valign="top" style="font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:14px;color:#000000;padding:0 0 8px 10px;">
                                         •
                                         </td>
-                                        <td valign="top" style="font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:12px;color:#000000;padding:0 0 8px 10px;">
+                                        <td valign="top" style="font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:14px;color:#000000;padding:0 0 8px 10px;">
                                         Customizing the existing<br>
                                         promo video
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td width="18" valign="top" style="font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:12px;color:#000000;padding:0 0 8px 10px;">
+                                        <td width="18" valign="top" style="font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:14px;color:#000000;padding:0 0 8px 10px;">
                                         •
                                         </td>
-                                        <td valign="top" style="font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:12px;color:#000000;padding:0 0 8px 10px;">
+                                        <td valign="top" style="font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:14px;color:#000000;padding:0 0 8px 10px;">
                                         Research and identify<br>
                                         regional targeted<br>
                                         audience profile list of<br>
@@ -2050,10 +2004,10 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td width="18" valign="top" style="font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:12px;color:#000000;padding:0 0 0 10px;">
+                                        <td width="18" valign="top" style="font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:14px;color:#000000;padding:0 0 0 10px;">
                                         •
                                         </td>
-                                        <td valign="top" style="font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:12px;color:#000000;padding:0 0 0 10px;">
+                                        <td valign="top" style="font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:14px;color:#000000;padding:0 0 0 10px;">
                                         Copywriting catchy text<br>
                                         that is non-conventional<br>
                                         and non-promotional.
@@ -2063,14 +2017,10 @@
 
                                 </td>
 
-                                <!-- GUTTER -->
-                                <td width="30" style="font-size:0;line-height:0;">
-                                    &nbsp;
-                                </td>
-
+                              
                                 <!-- RIGHT IMAGE -->
-                                <td width="250" valign="top" align="right" style="padding:0;">
-                                    <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/36380491-4142-c0ac-d293-6141fdf2f6ac.jpg" width="300" alt="" style="display:block;width:250px;height:auto;border:0;">
+                                <td width="300" valign="top">
+                                    <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/36380491-4142-c0ac-d293-6141fdf2f6ac.jpg" width="300" alt="" style="display:block;width:300px;height:auto;border:0;">
                                 </td>
 
                                 </tr>
@@ -2089,8 +2039,8 @@
     <!-- TITLE AREA WHITE -->
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#FFFFFF" style="background-color:#FFFFFF;">
       <tr>
-        <td style="padding:0 38px 22px 38px;font-family:Helvetica, Arial, sans-serif;">
-          <div style="font-size:32px;line-height:38px;font-weight:bold;color:#000000;">
+        <td style="padding:0 38px 15px 38px;font-family:Helvetica, Arial, sans-serif;">
+          <div style="font-size:28px;line-height:28px;font-weight:bold;color:#000000;">
             New functionalities
           </div>
         </td>
@@ -2109,8 +2059,8 @@
     <!-- TITLE AREA LIGHTGREY -->
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#F5F5F5" style="background-color:#F5F5F5;">
       <tr>
-        <td style="padding:10px 38px 15px 38px;font-family:Helvetica, Arial, sans-serif;">
-          <div style="font-size:32px;line-height:38px;font-weight:bold;color:#000000;">
+        <td style="padding:15px 38px 15px 38px;font-family:Helvetica, Arial, sans-serif;">
+          <div style="font-size:28px;line-height:28px;font-weight:bold;color:#000000;">
             New functionalities
           </div>
         </td>
@@ -2174,17 +2124,17 @@
     <!-- TEXT ROW 1: WHITE BACKGROUND -->
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#FFFFFF" style="background-color:#FFFFFF;">
       <tr>
-        <td style="padding:20px 30px 20px 30px;">
+        <td style="padding:20px 30px 20px 38px;">
 
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
             <tr>
 
               <!-- LEFT ITEM -->
               <td width="250" valign="top" style="padding:0;font-family:Helvetica, Arial, sans-serif;color:#000000;">
-                <div style="font-size:14px;line-height:14px;font-weight:bold;color:#000000;padding:0 0 15px 0;">
+                <div style="font-size:18px;line-height:18px;font-weight:bold;color:#000000;padding:0 0 15px 0;">
                   1,600 mm
                 </div>
-                <div style="font-size:12px;line-height:12px;font-weight:normal;color:#000000;">
+                <div style="font-size:14px;line-height:15px;font-weight:normal;color:#000000;">
                   Greater accessibility thanks to<br>
                   expandable additional passages in the<br>
                   same Argus design with passage widths<br>
@@ -2197,10 +2147,10 @@
 
               <!-- RIGHT ITEM -->
               <td width="250" valign="top" style="padding:0;font-family:Helvetica, Arial, sans-serif;color:#000000;">
-                <div style="font-size:14px;line-height:14px;font-weight:bold;color:#000000;padding:0 0 18px 0;">
+                <div style="font-size:18px;line-height:18px;font-weight:bold;color:#000000;padding:0 0 18px 0;">
                   1,600 mm
                 </div>
-                <div style="font-size:12px;line-height:12px;font-weight:normal;color:#000000;">
+                <div style="font-size:14px;line-height:15px;font-weight:normal;color:#000000;">
                   Greater accessibility thanks to<br>
                   expandable additional passages in the<br>
                   same Argus design with passage widths<br>
@@ -2218,20 +2168,20 @@
     <!-- TEXT ROW 2: LIGHTGREY FULL NEWSLETTER WIDTH BACKGROUND -->
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#F5F5F5" style="background-color:#F5F5F5;">
       <tr>
-        <td style="padding:20px 30px 20px 30px;">
+        <td style="padding:20px 30px 20px 38px;">
 
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
             <tr>
 
               <!-- LEFT ITEM -->
               <td width="250" valign="top" style="padding:0;font-family:Helvetica, Arial, sans-serif;color:#000000;">
-                <div style="font-size:14px;line-height:14px;font-weight:bold;color:#000000;padding:0 0 18px 0;">
+                <div style="font-size:18px;line-height:18px;font-weight:bold;color:#000000;padding:0 0 18px 0;">
                   1,600 mm
                 </div>
-                <div style="font-size:12px;line-height:12px;font-weight:normal;color:#000000;">
+                <div style="font-size:14px;line-height:15px;font-weight:normal;color:#000000;">
                   Greater accessibility thanks to<br>
                   expandable additional passages in the<br>
-                  same Argus design with passage widths<br>
+                  same Argus design with passage widths
                   of up to 1,600 mm
                 </div>
               </td>
@@ -2241,13 +2191,13 @@
 
               <!-- RIGHT ITEM -->
               <td width="250" valign="top" style="padding:0;font-family:Helvetica, Arial, sans-serif;color:#000000;">
-                <div style="font-size:14px;line-height:14px;font-weight:bold;color:#000000;padding:0 0 18px 0;">
+                <div style="font-size:18px;line-height:18px;font-weight:bold;color:#000000;padding:0 0 18px 0;">
                   1,600 mm
                 </div>
-                <div style="font-size:12px;line-height:12px;font-weight:normal;color:#000000;">
+                <div style="font-size:14px;line-height:15px;font-weight:normal;color:#000000;">
                   Greater accessibility thanks to<br>
                   expandable additional passages in the<br>
-                  same Argus design with passage widths<br>
+                  same Argus design with passage widths
                   of up to 1,600 mm
                 </div>
               </td>
@@ -2270,8 +2220,8 @@
     <!-- TITLE -->
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
       <tr>
-        <td style="padding:34px 38px 26px 38px;font-family:Helvetica, Arial, sans-serif;">
-          <div style="font-size:44px;line-height:50px;font-weight:bold;color:#000000;">
+        <td style="padding:20px 38px 10px 38px;font-family:Helvetica, Arial, sans-serif;">
+          <div style="font-size:45px;line-height:45px;font-weight:bold;color:#000000;">
             News from AMER
           </div>
         </td>
@@ -2283,16 +2233,16 @@
       <tr>
 
         <!-- LEFT IMAGE AREA -->
-        <td width="230" valign="top" style="padding:0 18px 48px 0;">
+        <td width="320" valign="top" style="padding:0 18px 10px 0;">
 
           <!-- IMAGE CARD / WHITE FRAME -->
-          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="230" style="border-collapse:separate;">
+          <table role="presentation" cellpadding="0" cellspacing="0" width="230">
             <tr>
-              <td bgcolor="#FFFFFF" style="background-color:#FFFFFF;padding:8px;border:1px solid #E6E6E6;">
-                <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/fc575666-d050-b794-2653-60745c82e171.jpg"
+              <td bgcolor="#FFFFFF" style="background-color:#FFFFFF;padding:0;">
+                <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/3a0e8178-4d9c-b226-180e-9bbe7d191e9b.png"
                      width="374"
                      alt=""
-                     style="display:block;width:230px;height:auto;border:0;">
+                     style="display:block;width:320px;height:auto;border:0;">
               </td>
             </tr>
           </table>
@@ -2300,20 +2250,20 @@
         </td>
 
         <!-- RIGHT TEXT AREA -->
-        <td width="380" valign="top" style="padding:0 38px 48px 0;font-family:Helvetica, Arial, sans-serif;color:#000000;">
+        <td width="380" valign="top" style="padding:0 0 40px 0;font-family:Helvetica, Arial, sans-serif;color:#000000;">
 
-          <div style="font-size:14px;line-height:14px;font-weight:bold;color:#000000;padding:10px 0 18px 0;">
+          <div style="font-size:20px;line-height:20px;font-weight:bold;color:#000000;padding:30px 0 15px 0;">
             dormakaba AR entrance app
           </div>
 
-          <div style="font-size:12px;line-height:12px;font-weight:normal;color:#000000;padding:0 0 10px 0;">
+          <div style="font-size:14px;line-height:16px;font-weight:normal;color:#000000;padding:0 0 15px 0;">
             With the dormakaba AR Entrance app, you can also select the design that suits your individual installation situation in terms of shape and color with just a few clicks and visualize it realistically.
           </div>
 
           <table role="presentation" cellpadding="0" cellspacing="0" border="0">
             <tr>
               <td>
-                <a href="#" style="display:inline-block;background:#003594;color:#FFFFFF;text-decoration:none;font-family:Helvetica, Arial, sans-serif;font-size:10px;line-height:10px;font-weight:bold;padding:12px 24px;">
+                <a href="#" style="display:inline-block;background:#003594;color:#FFFFFF;text-decoration:none;font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:12px;font-weight:bold;padding:12px 12px;">
                   Learn more
                 </a>
               </td>
@@ -2328,15 +2278,15 @@
   </td>
 </tr>
 
-<!-- NEWS FROM AMER - LIGHTGREY -->
+<!-- NEWS FROM AMER - lightgrey -->
 <tr>
-  <td valign="top" bgcolor="#F5F5F5" style="background-color:#F5F5F5; padding:0;">
+  <td valign="top" style="background-color:#F5F5F5; padding:0;">
 
     <!-- TITLE -->
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#F5F5F5" style="background-color:#F5F5F5;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
       <tr>
-        <td style="padding:34px 38px 26px 38px;font-family:Helvetica, Arial, sans-serif;">
-          <div style="font-size:44px;line-height:50px;font-weight:bold;color:#000000;">
+        <td style="padding:20px 38px 10px 38px;font-family:Helvetica, Arial, sans-serif;">
+          <div style="font-size:45px;line-height:45px;font-weight:bold;color:#000000;">
             News from AMER
           </div>
         </td>
@@ -2344,20 +2294,20 @@
     </table>
 
     <!-- CONTENT ROW -->
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#F5F5F5" style="background-color:#F5F5F5;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
       <tr>
 
         <!-- LEFT IMAGE AREA -->
-        <td width="230" valign="top" style="padding:0 18px 48px 0;">
+        <td width="320" valign="top" style="padding:0 18px 10px 0;">
 
           <!-- IMAGE CARD / WHITE FRAME -->
-          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="230" style="border-collapse:separate;">
+          <table role="presentation" cellpadding="0" cellspacing="0" width="320">
             <tr>
-              <td bgcolor="#FFFFFF" style="background-color:#FFFFFF;padding:8px;border:1px solid #E6E6E6;">
-                <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/fc575666-d050-b794-2653-60745c82e171.jpg"
+              <td style="padding:0;">
+                <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/13597e93-e115-9d90-80c4-73dd8cd785d7.png"
                      width="374"
                      alt=""
-                     style="display:block;width:230px;height:auto;border:0;">
+                     style="display:block;width:320px;height:auto;border:0;">
               </td>
             </tr>
           </table>
@@ -2365,20 +2315,20 @@
         </td>
 
         <!-- RIGHT TEXT AREA -->
-        <td width="380" valign="top" style="padding:0 38px 48px 0;font-family:Helvetica, Arial, sans-serif;color:#000000;">
+        <td width="380" valign="top" style="padding:0 0 40px 0;font-family:Helvetica, Arial, sans-serif;color:#000000;">
 
-          <div style="font-size:14px;line-height:14px;font-weight:bold;color:#000000;padding:10px 0 18px 0;">
+          <div style="font-size:20px;line-height:20px;font-weight:bold;color:#000000;padding:30px 0 15px 0;">
             dormakaba AR entrance app
           </div>
 
-          <div style="font-size:12px;line-height:12px;font-weight:normal;color:#000000;padding:0 0 10px 0;">
+          <div style="font-size:14px;line-height:16px;font-weight:normal;color:#000000;padding:0 0 15px 0;">
             With the dormakaba AR Entrance app, you can also select the design that suits your individual installation situation in terms of shape and color with just a few clicks and visualize it realistically.
           </div>
 
           <table role="presentation" cellpadding="0" cellspacing="0" border="0">
             <tr>
               <td>
-                <a href="#" style="display:inline-block;background:#003594;color:#FFFFFF;text-decoration:none;font-family:Helvetica, Arial, sans-serif;font-size:10px;line-height:10px;font-weight:bold;padding:12px 24px;">
+                <a href="#" style="display:inline-block;background:#003594;color:#FFFFFF;text-decoration:none;font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:12px;font-weight:bold;padding:12px 12px;">
                   Learn more
                 </a>
               </td>
@@ -2392,62 +2342,352 @@
 
   </td>
 </tr>
-                        <!-- BEGIN FOOTER // -->
-                        <tr>
-                            <td valign="top" id="templateFooter">
 
-                                <!-- BEGIN MODULE: STANDARD FOOTER // -->
-                                <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                      <!--single image-->
+                <tr>
+                      <td max-width= "100%" valign="center" style="background: color lightgray;; padding:0;">
+
+                      
+                        <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                            <td>
+                                <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/da0aa5da-ae37-c7d3-12be-1c18e9918bcf.jpg"
+                                    width="100%"
+                                    alt=""
+                                    style="display:block;width:100%;height:auto;border:0;">
+                            </td>
+                            </tr>
+                        </table>
+
+                        </td>
+
+                </tr>
+
+                <!--New faces in Town-white-->
+                <tr>
+                        <td valign="top" style="background-color:#FFFFFF; padding:0;">
+
+                            <!-- TITLE -->
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                                <td style="padding:15px 38px 10px 38px;font-family:Helvetica, Arial, sans-serif;">
+                                <div style="font-size:44px;line-height:50px;font-weight:bold;color:#000000;">
+                                    New Faces in Town
+                                </div>
+                                </td>
+                            </tr>
+                            </table>
+
+                            <!-- CONTENT ROW -->
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+
+                                <!-- LEFT IMAGE AREA -->
+                                <td width="260" valign="top" style="padding:0 25px 20px 40px;">
+
+                                <!-- IMAGE -->
+                                <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="230">
                                     <tr>
-                                        <td valign="top" id="socialBar">
-                                            <div mc:edit="social_bar">
-                                                <a href="*|TWITTER:PROFILEURL|*" class="utilityLink">Follow on Twitter</a><span class="mobileHide"> &nbsp; | &nbsp; </span><a href="*|FACEBOOK:PROFILEURL|*" class="utilityLink">Friend on Facebook</a>
-                                                <span class="mobileHide"> &nbsp; | &nbsp; </span><a href="*|FORWARD|*" class="utilityLink">Forward to a Friend</a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td valign="top" id="footerContent">
-                                            <div mc:edit="footer_content">
-                                                *|IF:LIST|*
-                                                <em>Copyright &copy; *|CURRENT_YEAR|* *|LIST:COMPANY|*, All rights reserved.</em>
-                                                <br>
-                                                <!-- *|IFNOT:ARCHIVE_PAGE|* -->
-                                                *|LIST:DESCRIPTION|*
-                                                <br>
-                                                <strong>Our mailing address is:</strong>
-                                                <br> *|HTML:LIST_ADDRESS_HTML|*
-                                                <br>
-                                                <!-- *|END:IF|* -->
-                                                *|ELSE:|*
-                                                <!-- *|IFNOT:ARCHIVE_PAGE|* -->
-                                                <em>Copyright &copy; *|CURRENT_YEAR|* *|USER:COMPANY|*, All rights reserved.</em>
-                                                <br>
-                                                <strong>Our mailing address is:</strong>
-                                                <br> *|USER:ADDRESS_HTML|*
-                                                <!-- *|END:IF|* -->
-                                                *|END:IF|*
-                                            </div>
-                                            <div mc:edit="monkeyrewards">
-                                                *|IF:REWARDS|* *|HTML:REWARDS|* *|END:IF|*
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td valign="top" id="utilityBar">
-                                            <div mc:edit="utility_bar">
-                                                <a href="*|UNSUB|*" class="utilityLink">unsubscribe from this list</a><span class="mobileHide"> | </span><a href="*|UPDATE_PROFILE|*" class="utilityLink">update subscription preferences</a>
-                                                <!-- *|IFNOT:ARCHIVE_PAGE|* --><span class="mobileHide"> | </span><a href="*|ARCHIVE|*" class="utilityLink">view email in browser</a>
-                                                <!-- *|END:IF|* -->
-                                            </div>
-                                        </td>
+                                    <td bgcolor="#FFFFFF" style="background-color:#FFFFFF;padding:0;">
+                                        <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/72383e85-0835-7e07-4317-7ea61600cb1e.png"
+                                            width="374"
+                                            alt=""
+                                            style="display:block;width:230px;height:auto;border:0;">
+                                    </td>
                                     </tr>
                                 </table>
-                                <!-- // END MODULE: STANDARD FOOTER -->
 
-                            </td>
+                                </td>
+
+                                <!-- RIGHT TEXT AREA -->
+                                <td width="380" valign="top" style="padding:0 38px 40px 0;font-family:Helvetica, Arial, sans-serif;color:#000000;">
+
+                                <div style="font-size:18px;line-height:18px;font-weight:bold;color:#000000;padding:50px 0 20px 0;">
+                                    Robin Carpenter
+                                </div>
+
+                                <div style="font-size:14px;line-height:16px;font-weight:normal;color:#000000;padding:0 0 20px 0;">
+                                    Senior Brand Specialist & Group Communications
+                                </div>
+
+                                <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                                    <tr>
+                                    <td>
+                                        <a href="mailto:robin.carpenter@dormakaba.com" style="display:inline-block;background:#003594;color:#FFFFFF;text-decoration:none;font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:10px;font-weight:bold;padding:12px 12px;">
+                                        Email
+            
+                                        </a>
+                                    </td>
+                                    </tr>
+                                </table>
+
+                                </td>
+
+                            </tr>
+                            </table>
+
+                        </td>
                         </tr>
-                        <!-- // END FOOTER -->
+
+                        <!--New faces in Town-lightgray-->
+                <tr>
+                        <td valign="top" style="background-color:#F5F5F5; padding:0;">
+
+                            <!-- TITLE -->
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                                <td style="padding:15px 38px 10px 38px;font-family:Helvetica, Arial, sans-serif;">
+                                <div style="font-size:44px;line-height:50px;font-weight:bold;color:#000000;">
+                                    New Faces in Town
+                                </div>
+                                </td>
+                            </tr>
+                            </table>
+
+                            <!-- CONTENT ROW -->
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+
+                                <!-- LEFT IMAGE AREA -->
+                                <td width="260" valign="top" style="padding:0 25px 20px 40px;">
+
+                                <!-- IMAGE -->
+                                <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="230">
+                                    <tr>
+                                    <td style="padding:0;">
+                                        <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/72383e85-0835-7e07-4317-7ea61600cb1e.png"
+                                            width="374"
+                                            alt=""
+                                            style="display:block;width:230px;height:auto;border:0;">
+                                    </td>
+                                    </tr>
+                                </table>
+
+                                </td>
+
+                                <!-- RIGHT TEXT AREA -->
+                                <td width="380" valign="top" style="padding:0 38px 40px 0;font-family:Helvetica, Arial, sans-serif;color:#000000;">
+
+                                <div style="font-size:18px;line-height:18px;font-weight:bold;color:#000000;padding:50px 0 20px 0;">
+                                    Robin Carpenter
+                                </div>
+
+                                <div style="font-size:14px;line-height:16px;font-weight:normal;color:#000000;padding:0 0 20px 0;">
+                                    Senior Brand Specialist & Group Communications
+                                </div>
+
+                                <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                                    <tr>
+                                    <td>
+                                        <a href="mailto:robin.carpenter@dormakaba.com" style="display:inline-block;background:#003594;color:#FFFFFF;text-decoration:none;font-family:Helvetica, Arial, sans-serif;font-size:10px;line-height:12px;font-weight:bold;padding:12px 12px;">
+                                        Email
+            
+                                        </a>
+                                    </td>
+                                    </tr>
+                                </table>
+
+                                </td>
+
+                            </tr>
+                            </table>
+
+                        </td>
+                        </tr>
+                <!--New faces in Town-blue-->
+                <tr>
+                        <td valign="top" style="background-color:#5e7ab8; padding:0;">
+
+                            <!-- TITLE -->
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                                <td style="padding:15px 38px 10px 38px;font-family:Helvetica, Arial, sans-serif;">
+                                <div style="font-size:44px;line-height:50px;font-weight:bold;color:#FFFFFF;">
+                                    New Faces in Town
+                                </div>
+                                </td>
+                            </tr>
+                            </table>
+
+                            <!-- CONTENT ROW -->
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+
+                                <!-- LEFT IMAGE AREA -->
+                                <td width="260" valign="top" style="padding:0 25px 20px 40px;">
+
+                                <!-- IMAGE -->
+                                <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="230">
+                                    <tr>
+                                    <tdstyle="padding:0;">
+                                        <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/72383e85-0835-7e07-4317-7ea61600cb1e.png"
+                                            width="374"
+                                            alt=""
+                                            style="display:block;width:230px;height:auto;border:0;">
+                                    </td>
+                                    </tr>
+                                </table>
+
+                                </td>
+
+                                <!-- RIGHT TEXT AREA -->
+                                <td width="380" valign="top" style="padding:0 38px 40px 0;font-family:Helvetica, Arial, sans-serif;color:#000000;">
+
+                                <div style="font-size:18px;line-height:18px;font-weight:bold;color:#FFFFFF;padding:50px 0 20px 0;">
+                                    Robin Carpenter
+                                </div>
+
+                                <div style="font-size:14px;line-height:12px;font-weight:normal;color:#FFFFFF;padding:0 0 20px 0;">
+                                    Senior Brand Specialist & Group Communications
+                                </div>
+
+                                <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                                    <tr>
+                                    <td>
+                                        <a href="mailto:robin.carpenter@dormakaba.com" style="display:inline-block;background:#003594;color:#FFFFFF;text-decoration:none;font-family:Helvetica, Arial, sans-serif;font-size:10px;line-height:12px;font-weight:bold;padding:12px 12px;">
+                                        Email
+            
+                                        </a>
+                                    </td>
+                                    </tr>
+                                </table>
+
+                                </td>
+
+                            </tr>
+                            </table>
+
+                        </td>
+                        </tr>
+                      <!--Disclaimer-->
+                        <tr>
+                            <td max-width= "100%" valign="center" style="background-color:#FFFFFF; padding:20px,38px,5px,38px;">
+
+                            
+                                <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                                    <tr>
+                                    <td>
+                                        <div style="font-size:22px;line-height:2px;font-weight:bold;color:#000000;padding:40px 0 40px 38px;">
+                                            Disclaimer
+
+                                        <div style="font-size:16px;line-height:18px;font-weight:normal;color:#000000;padding:40px 0 0 0;">
+                                            Please note that the respective national organization is responsible for releasing the 
+                                            products and solutions to the market. Before publication, global marketing materials 
+                                            must be adapted to local circumstances such as language and normative conditions
+                                        </div>
+                                    </td>
+                                    </tr>
+                                </table>
+
+                                </td>
+
+                        </tr>
+
+                    <!-- BEGIN FOOTER // -->
+
+                    <tr>
+                    <td valign="top" id="templateFooter" style="background:#2f2f2f; padding:20px 38px; color:#ffffff; font-family:Helvetica, sans-serif;">
+
+            
+                    <table role="presentation" width="100%"  cellspacing="0" cellpadding="0">
+
+                    <tr>
+
+                        <!-- LEFT COLUMN -->
+                        <td width="50%" valign="top" style="padding-right:40px;">
+
+                        <!-- LOGO -->
+                        <div>
+                            <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/aa992548-cf57-82e6-d0e1-3fed96227f06.png" width="140" style="display:block;" alt="dormakaba">
+                        </div>
+
+                        <!-- COPYRIGHT -->
+                        <div style="font-size:12px; font-family: Helvetica, Arial,sans-serif;line-height:18px; color:#cccccc;" >
+                            dormakaba Group 2024<br>
+                            All rights reserved.
+                        </div>
+
+        <!-- SOCIAL ICONS -->
+        <div style="height:auto;">
+            <a href="https://facebook.com" style="display:inline-block; margin-right:20px; line-height:0;">
+                <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/40ec77f7-17b2-e664-068e-86b6259d93fe.png"
+                width="20"
+                style="display:block; border:0; outline:none; text-decoration:none;"
+                alt="Facebook">
+            </a>
+
+            <a href="https://x.com" style="display:inline-block; margin-right:20px; line-height:0;">
+                <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/37f2fc37-ec34-b335-6d1d-ed974ef75d3a.png"
+                width="20"
+                style="display:block; border:0; outline:none; text-decoration:none;"
+                alt="X">
+            </a>
+
+            <a href="https://instagram.com" style="display:inline-block; margin-right:20px; line-height:0;">
+                <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/eb5f2e20-16a5-19d6-6359-a1b7fb8dbc49.png"
+                width="20"
+                style="display:block; border:0; outline:none; text-decoration:none;"
+                alt="Instagram">
+            </a>
+
+            <a href="https://linkedin.com" style="display:inline-block; margin-right:20px; line-height:0;">
+                <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/8847e189-0ab1-cfcb-1a43-7e9401790cb9.png"
+                width="20"
+                style="display:block; border:0; outline:none; text-decoration:none;"
+                alt="LinkedIn">
+            </a>
+
+            <a href="https://youtube.com" style="display:inline-block; line-height:0;">
+                <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/4bb7fd47-8d77-4c2b-b8d0-880fa7f26020.png"
+                width="20"
+                style="display:block; border:0; outline:none; text-decoration:none;"
+                alt="YouTube">
+            </a>
+        </div>
+
+                        </td>
+
+                        <!-- RIGHT COLUMN -->
+                        <td width="50%" valign="top" style="font-size:12px; line-height:18px; color:#cccccc;">
+
+                        <!-- RECIPIENT -->
+                        <div style="margin-bottom:10px;">
+                            This email was sent to <span style="color:#ffffff;">*|EMAIL|*</span>
+                        </div>
+
+                        <!-- COMPANY INFO -->
+                        <div style="margin-bottom:10px; font-weight:bold;">
+                            By<br> dormakaba Deutschland GmbH<br>
+                            DORMA Platz 1, 58256 Ennepetal, Germany
+                        </div>
+
+                        <!-- EMAIL -->
+                        <div style="margin-bottom:15px;">
+                            <a href="mailto:info@dormakaba.com" style="color:#ffffff; text-decoration:underline;">
+                            info@dormakaba.com
+                            </a>
+                        </div>
+
+                        <!-- LINKS -->
+                        <div style="margin-top:20px;">
+                            <a href="*|UNSUB|*" style="color:#FFFFFF; text-decoration:underline;">Unsubscribe</a>
+                            &nbsp;|&nbsp;
+                            <a href="*|ARCHIVE|*" style="color:#FFFFFF; text-decoration:underline;">View online</a>
+                            &nbsp;|&nbsp;
+                            <a href="*|UPDATE_PROFILE|*" style="color:#FFFFFF; text-decoration:underline;">Manage subscription</a>
+                        </div>
+
+                        </td>
+
+                    </tr>
+
+                    </table>
+                   
+
+                    </td>
+                    </tr>
+                    <!-- END FOOTER // -->
+
 
                     </table>
 
