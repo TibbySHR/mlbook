@@ -352,6 +352,64 @@
             font-size:14px !important;
             line-height:150% !important;
         }
+        .stackColumn{
+    display:block !important;
+    width:100% !important;
+    max-width:100% !important;
+    box-sizing:border-box !important;
+}
+
+.stackColumn img{
+    width:100% !important;
+    max-width:100% !important;
+    height:auto !important;
+}
+
+.mobileGutter,
+.gutter{
+    display:none !important;
+    width:0 !important;
+    max-width:0 !important;
+    height:0 !important;
+    line-height:0 !important;
+    font-size:0 !important;
+    padding:0 !important;
+}
+
+table,
+tbody,
+tr,
+td{
+    max-width:100% !important;
+}
+
+img{
+    max-width:100% !important;
+    height:auto !important;
+}
+
+.templateContainer{
+    width:100% !important;
+    max-width:100% !important;
+}
+
+#templateHeader,
+#templateBody,
+#templateFooter{
+    padding-left:0 !important;
+    padding-right:0 !important;
+}
+
+#templateBody,
+#templateBody p{
+    padding-left:0 !important;
+}
+
+.mobilePadding{
+    padding-left:18px !important;
+    padding-right:18px !important;
+    box-sizing:border-box !important;
+}
         .twoColumn{
             width:100% !important;
             display:block !important;
@@ -381,7 +439,7 @@
                     <td align="center" valign="top" width="600" style="width:600px;">
                     <![endif]-->
 
-                    <table border="0" cellpadding="0" cellspacing="0" width="100%" class="templateContainer">
+                  <table border="0" cellpadding="0" cellspacing="0" width="100%" class="templateContainer">
 
                         <!-- BEGIN HEADER // -->
                         <tr>
@@ -393,12 +451,12 @@
                                     <tr style="padding-right:0;">
 
                                         <!-- LOGO -->
-                                        <td width="200" valign="top" style="padding:20px 10px 0 15px;">
+                                        <td width="200" valign="top" class="stackColumn" style="padding:20px 10px 0 15px;">
                                             <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/5c335030-3aeb-0da1-bec8-925da135d8bd.png" width="140" alt="Dormakaba Logo" style="display:block;border:0;max-width:210px;height:auto;">
                                         </td>
 
                                         <!-- TEXT -->
-                                        <td width="360" valign="top" style="padding:20px 0 0 0;font-family:Helvetica, Arial, sans-serif;color:#000000;">
+                                        <td width="360" valign="top" class="stackColumn" style="padding:20px 0 0 0;font-family:Helvetica, Arial, sans-serif;color:#000000;">
                                             <div style="font-size:12px;line-height:14px;font-weight:400;">
                                                 News, insight and events
                                             </div>
@@ -409,7 +467,7 @@
                                         </td>
 
                                         <!-- RIGHT TAG IMAGE -->
-                                        <td width="30" valign="top" align="right" style="padding:0 0 5px 15px;margin:0;">
+                                        <td width="30" valign="top" align="right" class="stackColumn" style="padding:0 0 5px 15px;margin:0;">
                                             <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/7363c63b-4968-f9e6-0084-3ec2408f5868.png" width="10" alt="Brand tag" style="width:10px;display:block;">
                                         </td>
 
@@ -444,19 +502,12 @@
                                         </tr>
                                     </table>
 
-                                    <p style="margin-bottom:15px; font-size:14px;padding-right:25px;">
+                                    <p style="margin-bottom:15px; font-size:14px;padding-right:25px;padding-bottom:40px;">
                                         In our knowledge database #plus, we provide compact and understandable information on the topics of smart buildings and building security.
                                     </p>
 
                                 </div>
 
-                                <table role="presentation" width="100%" cellpadding="10" cellspacing="10" border="0">
-                                    <tr>
-                                        <td style="border-top:1px solid black; font-size:0; line-height:0;">
-                                            &nbsp;
-                                        </td>
-                                    </tr>
-                                </table>
 
                                 <div mc:edit="body_content_1">
 
@@ -464,13 +515,13 @@
                                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                         <tr>
 
-                                            <td style="font-family:Helvetica, Arial, sans-serif;">
+                                            <td class="stackColumn" style="font-family:Helvetica, Arial, sans-serif;">
                                                 <h3 style="margin:0;">
                                                     News
                                                 </h3>
                                             </td>
 
-                                            <td align="right" valign="bottom" style="font-family:Helvetica, Arial, sans-serif;">
+                                            <td class="stackColumn" align="right" valign="bottom" style="font-family:Helvetica, Arial, sans-serif;">
                                                 <h4 style="margin:0;color:lightgray;">
                                                     06/08
                                                 </h4>
@@ -481,7 +532,7 @@
 
                                     <table role="presentation" cellpadding="0" cellspacing="0" border="0">
                                         <tr>
-                                            <td height="16" style="font-size:20px;line-height:20px;">
+                                            <td height="16" style="font-size:20px;line-height:40px;">
                                                 &nbsp;
                                             </td>
                                         </tr>
@@ -520,11 +571,18 @@
                                 </div>
 
 
+                                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                                    <tr>
+                                        <td align="center" style="padding:0 25px 15px 18px; margin:0;">
+                                            <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/fc575666-d050-b794-2653-60745c82e171.jpg" width="600" alt="" style="display:block; width:100%; max-width:600px; height:auto; border:0; margin:10px auto; padding:0;">
+                                        </td>
+                                    </tr>
+                                </table>
 
                                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                     <tr>
-                                        <td align="center" style="padding-left:18px;padding-right:25px; margin:0;">
-                                            <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/fc575666-d050-b794-2653-60745c82e171.jpg" width="600" alt="" style="display:block; width:100%; max-width:600px; height:auto; border:0; margin:10px auto; padding:0;">
+                                        <td style="border-top:1px solid #D9D9D9; font-size:0; line-height:0;">
+                                            &nbsp;
                                         </td>
                                     </tr>
                                 </table>
@@ -561,7 +619,7 @@
 
                                 <br><br>
 
-                                <!-- NEWS FROM GLOBAL WHITE -->
+                                 <!-- NEWS FROM GLOBAL WHITE -->
                                 <table role="presentation" class="global_news" width="100%" cellpadding="0" cellspacing="0" border="0">
                                     <tr>
                                         <td style="padding:0 18px;">
@@ -582,7 +640,7 @@
                                                     <!-- LEFT -->
                                                     <td width="280" valign="top" class="twoColumn">
 
-                                                        <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/a73347a1-5e2e-4a45-a529-00a0e2d97b6b.jpg" width="250" alt="" style="display:block;width:240px;height:auto;border:0;">
+                                                        <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/a73347a1-5e2e-4a45-a529-00a0e2d97b6b.jpg" width="250" alt="" style="display:block;width:240px;max-width:100%;height:auto;border:0;">
 
                                                         <br>
 
@@ -644,13 +702,13 @@
                                                     </td>
 
                                                     <!-- GUTTER -->
-                                                    <td width="30" class="gutter">&nbsp;</td>
+                                                    <td width="30" class="gutter mobileGutter">&nbsp;</td>
 
                                                     <!-- RIGHT -->
                                         
                                                     <td width="280" valign="top" class="twoColumn">
 
-                                                        <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/a73347a1-5e2e-4a45-a529-00a0e2d97b6b.jpg" width="250" alt="" style="display:block;width:240px;height:auto;border:0;">
+                                                        <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/a73347a1-5e2e-4a45-a529-00a0e2d97b6b.jpg" width="250" alt="" style="display:block;width:240px;max-width:100%;height:auto;border:0;">
 
                                                         <br>
 
@@ -726,7 +784,6 @@
                             </td>
                         </tr>
                         <!-- // END BODY -->
-
                         <!-- NEWS FROM GLOBAL LIGHTGREY -->
                         <tr>
                             <td valign="top" bgcolor="#F5F5F5" style="background-color:#F5F5F5; padding:0;">
@@ -752,7 +809,7 @@
                                                     <!-- LEFT -->
                                                     <td width="280" valign="top" class="twoColumn">
 
-                                                        <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/a73347a1-5e2e-4a45-a529-00a0e2d97b6b.jpg" width="250" alt="" style="display:block;width:240px;height:auto;border:0;">
+                                                        <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/a73347a1-5e2e-4a45-a529-00a0e2d97b6b.jpg" width="250" alt="" style="display:block;width:240px;max-width:100%;height:auto;border:0;">
 
                                                         <br>
 
@@ -814,13 +871,13 @@
                                                     </td>
 
                                                     <!-- GUTTER -->
-                                                    <td width="30" class="gutter">&nbsp;</td>
+                                                    <td width="30" class="gutter mobileGutter">&nbsp;</td>
 
                                                     <!-- RIGHT -->
                                         
                                                     <td width="280" valign="top" class="twoColumn">
 
-                                                        <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/a73347a1-5e2e-4a45-a529-00a0e2d97b6b.jpg" width="250" alt="" style="display:block;width:240px;height:auto;border:0;">
+                                                        <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/a73347a1-5e2e-4a45-a529-00a0e2d97b6b.jpg" width="250" alt="" style="display:block;width:240px;max-width:100%;height:auto;border:0;">
 
                                                         <br>
 
@@ -916,7 +973,7 @@
                                                     <!-- LEFT -->
                                                     <td width="280" valign="top" class="twoColumn">
 
-                                                        <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/a73347a1-5e2e-4a45-a529-00a0e2d97b6b.jpg" width="250" alt="" style="display:block;width:240px;height:auto;border:0;">
+                                                        <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/a73347a1-5e2e-4a45-a529-00a0e2d97b6b.jpg" width="250" alt="" style="display:block;max-width:100%;width:240px;height:auto;border:0;">
 
                                                         <br>
 
@@ -978,13 +1035,13 @@
                                                     </td>
 
                                                     <!-- GUTTER -->
-                                                    <td width="30" class="gutter">&nbsp;</td>
+                                                    <td width="30" class="gutter mobileGutter">&nbsp;</td>
 
                                                     <!-- RIGHT -->
                                         
                                                     <td width="280" valign="top" class="twoColumn">
 
-                                                        <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/a73347a1-5e2e-4a45-a529-00a0e2d97b6b.jpg" width="250" alt="" style="display:block;width:240px;height:auto;border:0;">
+                                                        <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/a73347a1-5e2e-4a45-a529-00a0e2d97b6b.jpg" width="250" alt="" style="display:block;width:240px;max-width:100%;height:auto;border:0;">
 
                                                         <br>
 
@@ -1068,15 +1125,15 @@
                                     <tr>
 
                                     <!-- LEFT IMAGE -->
-                                    <td width="260" valign="top" style="padding:0;">
-                                        <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/833c01cb-a0e8-8684-5ce6-6ff41f5d2331.jpg" width="260" alt="" style="display:block;width:260px;height:auto;border:0;">
+                                    <td width="260" valign="top" class="stackColumn" style="padding:0;">
+                                        <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/833c01cb-a0e8-8684-5ce6-6ff41f5d2331.jpg" width="260" alt="" style="display:block;width:260px;max-width:100%;height:auto;border:0;">
                                     </td>
 
                                     <!-- GUTTER -->
-                                    <td width="40" style="font-size:0;line-height:0;">&nbsp;</td>
+                                    <td width="40" class="mobileGutter" style="font-size:0;line-height:0;">&nbsp;</td>
 
                                     <!-- RIGHT TEXT -->
-                                    <td width="224" valign="middle" style="padding:0;font-family:Helvetica, Arial, sans-serif;color:#000000;">
+                                    <td width="224" class="stackColumn" valign="middle" style="padding:0;font-family:Helvetica, Arial, sans-serif;color:#000000;">
 
                                         <div style="font-size:10px;line-height:10px;font-weight:bold;color:#888888;padding-bottom:4px;">
                                         Safety
@@ -1123,15 +1180,15 @@
                                     <tr>
 
                                     <!-- LEFT IMAGE -->
-                                    <td width="260" valign="top" style="padding:0;">
-                                        <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/833c01cb-a0e8-8684-5ce6-6ff41f5d2331.jpg" width="260" alt="" style="display:block;width:260px;height:auto;border:0;">
+                                    <td width="260" valign="top" class="stackColumn" style="padding:0;">
+                                        <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/833c01cb-a0e8-8684-5ce6-6ff41f5d2331.jpg" width="260" alt="" style="display:block;width:260px;max-width:100%;height:auto;border:0;">
                                     </td>
 
                                     <!-- GUTTER -->
-                                    <td width="40" style="font-size:0;line-height:0;">&nbsp;</td>
+                                    <td width="40" class="mobileGutter" style="font-size:0;line-height:0;">&nbsp;</td>
 
                                     <!-- RIGHT TEXT -->
-                                    <td width="224" valign="middle" style="padding:0;font-family:Helvetica, Arial, sans-serif;color:#000000;">
+                                    <td width="224" class="stackColumn" valign="middle" style="padding:0;font-family:Helvetica, Arial, sans-serif;color:#000000;">
 
                                         <div style="font-size:10px;line-height:10px;font-weight:bold;color:#888888;padding-bottom:4px;">
                                         Safety
@@ -1210,22 +1267,22 @@
                                         <tr>
 
                                         <!-- LEFT SMALL IMAGE -->
-                                        <td width="230" valign="top" style="padding:0;">
+                                        <td width="230" valign="top" class="stackColumn" style="padding:0;">
                                             <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/a73347a1-5e2e-4a45-a529-00a0e2d97b6b.jpg"
                                                 width="250"
                                                 alt=""
-                                                style="display:block;width:264px;height:auto;border:0;">
+                                                style="display:block;width:264px;height:auto;border:0;max-width:100%;">
                                         </td>
 
                                         <!-- GUTTER -->
-                                        <td width="50" bgcolor="#FFFFFF" style="background-color:#FFFFFF;font-size:0;line-height:0;">&nbsp;</td>
+                                        <td width="50" class="mobileGutter" bgcolor="#FFFFFF" style="background-color:#FFFFFF;font-size:0;line-height:0;">&nbsp;</td>
 
                                         <!-- RIGHT SMALL IMAGE -->
-                                        <td width="250" valign="top" style="padding:0;">
+                                        <td width="250" valign="top" class="stackColumn" style="padding:0;">
                                             <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/a73347a1-5e2e-4a45-a529-00a0e2d97b6b.jpg"
                                                 width="264"
                                                 alt=""
-                                                style="display:block;width:264px;height:auto;border:0;">
+                                                style="display:block;width:264px;max-width:100%; height:auto;border:0;">
                                         </td>
 
                                         </tr>
@@ -1320,7 +1377,7 @@
                                         <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/4472a499-ed07-9dba-c717-b89dfc13fc1b.jpg"
                                             width="564"
                                             alt=""
-                                            style="display:block;width:100%;max-width:564px;height:auto;border:0;margin:0;padding:0;">
+                                            style="display:block;max-width:100%; width:100%;max-width:564px;height:auto;border:0;margin:0;padding:0;">
                                     </div>
 
                                     <!-- SMALL IMAGES OVERLAP -->
@@ -1328,22 +1385,22 @@
                                         <tr>
 
                                         <!-- LEFT SMALL IMAGE -->
-                                        <td width="250" valign="top" style="padding:0;">
+                                        <td width="250" class="stackColumn" valign="top" style="padding:0;">
                                             <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/a73347a1-5e2e-4a45-a529-00a0e2d97b6b.jpg"
                                                 width="250"
                                                 alt=""
-                                                style="display:block;width:264px;height:auto;border:0;">
+                                                style="display:block;width:264px;max-width:100%; height:auto;border:0;">
                                         </td>
 
                                         <!-- GUTTER -->
-                                        <td width="50" bgcolor="#FFFFFF" style="background-color:#F5F5F5;font-size:0;line-height:0;">&nbsp;</td>
+                                        <td width="50" classs="mobileGutter" bgcolor="#FFFFFF" style="background-color:#F5F5F5;font-size:0;line-height:0;">&nbsp;</td>
 
                                         <!-- RIGHT SMALL IMAGE -->
-                                        <td width="250" valign="top" style="padding:0;">
+                                        <td width="250" class="stackColumn" valign="top" style="padding:0;">
                                             <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/a73347a1-5e2e-4a45-a529-00a0e2d97b6b.jpg"
                                                 width="264"
                                                 alt=""
-                                                style="display:block;width:264px;height:auto;border:0;">
+                                                style="display:block;width:264px;max-width:100%; height:auto;border:0;">
                                         </td>
 
                                         </tr>
@@ -1414,7 +1471,7 @@
                                 <tr>
 
                                 <!-- LEFT COLUMN -->
-                                <td width="264" valign="top" style="padding:0;font-family:Helvetica, Arial, sans-serif;color:#000000;">
+                                <td width="264" class="stackColumn" valign="top" style="padding:0;font-family:Helvetica, Arial, sans-serif;color:#000000;">
 
                                     <div style="font-size:12px;line-height:12px;font-weight:bold;color:#777777;padding:0 0 0 0;">
                                     Contacts
@@ -1478,10 +1535,10 @@
                                 </td>
 
                                 <!-- GUTTER -->
-                                <td width="50" style="font-size:0;line-height:0;">&nbsp;</td>
+                                <td width="50" class="mobileGutter" style="font-size:0;line-height:0;">&nbsp;</td>
 
                                 <!-- RIGHT COLUMN -->
-                                <td width="264" valign="top" style="padding:0;font-family:Helvetica, Arial, sans-serif;color:#000000;">
+                                <td width="264" class="stackColumn" valign="top" style="padding:0;font-family:Helvetica, Arial, sans-serif;color:#000000;">
 
                                     <div style="font-size:12px;line-height:12px;font-weight:bold;color:#777777;padding:0 0 0 0;">
                                     Downloads
@@ -1566,7 +1623,7 @@
                                 <tr>
 
                                 <!-- LEFT COLUMN -->
-                                <td width="264" valign="top" style="padding:0;font-family:Helvetica, Arial, sans-serif;color:#000000;">
+                                <td width="264" class="stackColumn" valign="top" style="padding:0;font-family:Helvetica, Arial, sans-serif;color:#000000;">
 
                                     <div style="font-size:12px;line-height:12px;font-weight:bold;color:#777777;padding:0 0 0 0;">
                                     Contacts
@@ -1630,10 +1687,10 @@
                                 </td>
 
                                 <!-- GUTTER -->
-                                <td width="50" style="font-size:0;line-height:0;">&nbsp;</td>
+                                <td width="50" class="mobileGutter" style="font-size:0;line-height:0;">&nbsp;</td>
 
                                 <!-- RIGHT COLUMN -->
-                                <td width="264" valign="top" style="padding:0;font-family:Helvetica, Arial, sans-serif;color:#000000;">
+                                <td width="264" class="stackColumn" svalign="top" style="padding:0;font-family:Helvetica, Arial, sans-serif;color:#000000;">
 
                                     <div style="font-size:12px;line-height:12px;font-weight:bold;color:#777777;padding:0 0 0 0;">
                                     Downloads
@@ -1735,7 +1792,7 @@
                             <!-- INFO ROW -->
                             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                 <tr>
-                                <td width="360" valign="middle" style="font-family:Helvetica, Arial, sans-serif;color:#FFFFFF;padding:10px,0;">
+                                <td width="360" class="stackColumn" valign="middle" style="font-family:Helvetica, Arial, sans-serif;color:#FFFFFF;padding:10px,0;">
                                     <div style="font-size:14px;line-height:14px;font-weight:bold;color:#FFFFFF;">
                                     Partner Congress 16-18. May ’22
                                     </div>
@@ -1744,7 +1801,7 @@
                                     </div>
                                 </td>
 
-                                <td width="126" valign="middle" align="right" style="padding:10px 0;">
+                                <td width="126" class="stackColumn" valign="middle" align="right" style="padding:10px 0;">
                                     <a href="#" style="display:inline-block;background:#FFFFFF;color:#000000;text-decoration:none;font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:12px;font-weight:normal;padding:10px 28px;">
                                     Learn more
                                     </a>
@@ -1797,7 +1854,7 @@
                             <!-- INFO ROW -->
                             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                 <tr>
-                                <td width="360" valign="middle" style="font-family:Helvetica, Arial, sans-serif;color:#000000;padding:0;">
+                                <td width="360" class="stackColumn" valign="middle" style="font-family:Helvetica, Arial, sans-serif;color:#000000;padding:0;">
                                     <div style="font-size:14px;line-height:14px;font-weight:bold;color:#000000;">
                                     Partner Congress 16-18. May ’22
                                     </div>
@@ -1806,7 +1863,7 @@
                                     </div>
                                 </td>
 
-                                <td width="126" valign="middle" align="right" style="padding:10px 0;">
+                                <td width="126" class="stackColumn" valign="middle" align="right" style="padding:10px 0;">
                                     <a href="#" style="display:inline-block;background:#003594;color:#FFFFFF;text-decoration:none;font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:12px;font-weight:bold;padding:10px 28px;">
                                     Learn more
                                     </a>
@@ -1935,7 +1992,7 @@
                                 <tr>
 
                                 <!-- LEFT TEXT -->
-                                <td width="300" valign="top"  style="padding-left:20px;padding-top:18px;font-family:Helvetica, Arial, sans-serif;color:#000000;">
+                                <td width="300" class="stackColumn" valign="top"  style="padding-left:20px;padding-top:18px;font-family:Helvetica, Arial, sans-serif;color:#000000;">
 
                                     <!-- DESIGN HUB TITLE + ARROW -->
                                    
@@ -2019,8 +2076,8 @@
 
                               
                                 <!-- RIGHT IMAGE -->
-                                <td width="300" valign="top">
-                                    <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/36380491-4142-c0ac-d293-6141fdf2f6ac.jpg" width="300" alt="" style="display:block;width:300px;height:auto;border:0;">
+                                <td width="300" class="stackColumn" valign="top">
+                                    <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/36380491-4142-c0ac-d293-6141fdf2f6ac.jpg" width="300" alt="" style="display:block;width:300px;max-width:100%;height:auto;border:0;">
                                 </td>
 
                                 </tr>
@@ -2085,22 +2142,22 @@
             <tr>
 
               <!-- LEFT LARGE IMAGE -->
-              <td width="300" valign="top" style="padding:0;">
+              <td width="300" class="stackColumn" valign="top" style="padding:0;">
                 <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/deafdbb5-e754-1a60-36a1-51cef3e7cea1.jpg"
                      width="300"
                      alt=""
-                     style="display:block;width:300px;height:auto;border:0;">
+                     style="display:block;max-width:100%; width:300px;height:auto;border:0;">
               </td>
 
               <!-- RIGHT STACKED IMAGES -->
-              <td width="300" valign="top" style="padding:0;">
-                <table role="presentation" width="240" cellpadding="0" cellspacing="0" border="0">
+              <td width="300" class="stackColumn" valign="top" style="padding:0;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                   <tr>
                     <td style="padding:0;">
                       <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/b902524b-2cef-ecbb-7959-6604f551c710.jpg"
                            width="300"
                            alt=""
-                           style="display:block;width:300px;height:auto;border:0;">
+                           style="display:block;width:300px;max-width:100%;height:auto;border:0;">
                     </td>
                   </tr>
                   <tr>
@@ -2108,7 +2165,7 @@
                       <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/4472a499-ed07-9dba-c717-b89dfc13fc1b.jpg"
                            width="300"
                            alt=""
-                           style="display:block;width:300px;height:auto;border:0;">
+                           style="display:block;width:300px;max-width:100%; height:auto;border:0;">
                     </td>
                   </tr>
                 </table>
@@ -2130,7 +2187,7 @@
             <tr>
 
               <!-- LEFT ITEM -->
-              <td width="250" valign="top" style="padding:0;font-family:Helvetica, Arial, sans-serif;color:#000000;">
+              <td width="250" class="stackColumn" valign="top" style="padding:0;font-family:Helvetica, Arial, sans-serif;color:#000000;">
                 <div style="font-size:18px;line-height:18px;font-weight:bold;color:#000000;padding:0 0 15px 0;">
                   1,600 mm
                 </div>
@@ -2143,10 +2200,10 @@
               </td>
 
               <!-- GUTTER -->
-              <td width="30" style="font-size:0;line-height:0;">&nbsp;</td>
+              <td width="30" class="mobileGutter" style="font-size:0;line-height:0;">&nbsp;</td>
 
               <!-- RIGHT ITEM -->
-              <td width="250" valign="top" style="padding:0;font-family:Helvetica, Arial, sans-serif;color:#000000;">
+              <td width="250" class="stackColumn" valign="top" style="padding:0;font-family:Helvetica, Arial, sans-serif;color:#000000;">
                 <div style="font-size:18px;line-height:18px;font-weight:bold;color:#000000;padding:0 0 18px 0;">
                   1,600 mm
                 </div>
@@ -2174,7 +2231,7 @@
             <tr>
 
               <!-- LEFT ITEM -->
-              <td width="250" valign="top" style="padding:0;font-family:Helvetica, Arial, sans-serif;color:#000000;">
+              <td width="250" valign="top" class="stackColumn"  style="padding:0;font-family:Helvetica, Arial, sans-serif;color:#000000;">
                 <div style="font-size:18px;line-height:18px;font-weight:bold;color:#000000;padding:0 0 18px 0;">
                   1,600 mm
                 </div>
@@ -2187,10 +2244,10 @@
               </td>
 
               <!-- GUTTER -->
-              <td width="48" style="font-size:0;line-height:0;">&nbsp;</td>
+              <td width="48" classs="mobileGutter" style="font-size:0;line-height:0;">&nbsp;</td>
 
               <!-- RIGHT ITEM -->
-              <td width="250" valign="top" style="padding:0;font-family:Helvetica, Arial, sans-serif;color:#000000;">
+              <td width="250" valign="top" class="stackColumn"  style="padding:0;font-family:Helvetica, Arial, sans-serif;color:#000000;">
                 <div style="font-size:18px;line-height:18px;font-weight:bold;color:#000000;padding:0 0 18px 0;">
                   1,600 mm
                 </div>
@@ -2233,16 +2290,16 @@
       <tr>
 
         <!-- LEFT IMAGE AREA -->
-        <td width="320" valign="top" style="padding:0 18px 10px 0;">
+        <td width="320" valign="top" class="stackColumn"  style="padding:0 18px 10px 0;">
 
           <!-- IMAGE CARD / WHITE FRAME -->
-          <table role="presentation" cellpadding="0" cellspacing="0" width="230">
+          <table role="presentation" cellpadding="0" cellspacing="0" width="100%">
             <tr>
               <td bgcolor="#FFFFFF" style="background-color:#FFFFFF;padding:0;">
                 <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/3a0e8178-4d9c-b226-180e-9bbe7d191e9b.png"
                      width="374"
                      alt=""
-                     style="display:block;width:320px;height:auto;border:0;">
+                     style="display:block;width:320px;max-width:100%; height:auto;border:0;">
               </td>
             </tr>
           </table>
@@ -2250,7 +2307,7 @@
         </td>
 
         <!-- RIGHT TEXT AREA -->
-        <td width="380" valign="top" style="padding:0 0 40px 0;font-family:Helvetica, Arial, sans-serif;color:#000000;">
+        <td width="380" valign="top" class="stackColumn"  style="padding:0 0 40px 0;font-family:Helvetica, Arial, sans-serif;color:#000000;">
 
           <div style="font-size:20px;line-height:20px;font-weight:bold;color:#000000;padding:30px 0 15px 0;">
             dormakaba AR entrance app
@@ -2298,16 +2355,16 @@
       <tr>
 
         <!-- LEFT IMAGE AREA -->
-        <td width="320" valign="top" style="padding:0 18px 10px 0;">
+        <td width="320" valign="top" class="stackColumn" style="padding:0 18px 10px 0;">
 
           <!-- IMAGE CARD / WHITE FRAME -->
-          <table role="presentation" cellpadding="0" cellspacing="0" width="320">
+          <table role="presentation" cellpadding="0" cellspacing="0" width="100%">
             <tr>
               <td style="padding:0;">
                 <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/13597e93-e115-9d90-80c4-73dd8cd785d7.png"
                      width="374"
                      alt=""
-                     style="display:block;width:320px;height:auto;border:0;">
+                     style="display:block;max-width:100%;width:320px;height:auto;border:0;">
               </td>
             </tr>
           </table>
@@ -2315,7 +2372,7 @@
         </td>
 
         <!-- RIGHT TEXT AREA -->
-        <td width="380" valign="top" style="padding:0 0 40px 0;font-family:Helvetica, Arial, sans-serif;color:#000000;">
+        <td width="380" valign="top" class="stackColumn" style="padding:0 0 40px 0;font-family:Helvetica, Arial, sans-serif;color:#000000;">
 
           <div style="font-size:20px;line-height:20px;font-weight:bold;color:#000000;padding:30px 0 15px 0;">
             dormakaba AR entrance app
@@ -2383,16 +2440,16 @@
                             <tr>
 
                                 <!-- LEFT IMAGE AREA -->
-                                <td width="260" valign="top" style="padding:0 25px 20px 40px;">
+                                <td width="260" valign="top" class="stackColumn" style="padding:0 25px 20px 40px;">
 
                                 <!-- IMAGE -->
-                                <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="230">
+                                <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
                                     <tr>
                                     <td bgcolor="#FFFFFF" style="background-color:#FFFFFF;padding:0;">
                                         <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/72383e85-0835-7e07-4317-7ea61600cb1e.png"
                                             width="374"
                                             alt=""
-                                            style="display:block;width:230px;height:auto;border:0;">
+                                            style="display:block;width:230px;max-width:100%;height:auto;border:0;">
                                     </td>
                                     </tr>
                                 </table>
@@ -2400,7 +2457,7 @@
                                 </td>
 
                                 <!-- RIGHT TEXT AREA -->
-                                <td width="380" valign="top" style="padding:0 38px 40px 0;font-family:Helvetica, Arial, sans-serif;color:#000000;">
+                                <td width="380" valign="top" class="stackColumn" style="padding:0 38px 40px 0;font-family:Helvetica, Arial, sans-serif;color:#000000;">
 
                                 <div style="font-size:18px;line-height:18px;font-weight:bold;color:#000000;padding:50px 0 20px 0;">
                                     Robin Carpenter
@@ -2449,16 +2506,16 @@
                             <tr>
 
                                 <!-- LEFT IMAGE AREA -->
-                                <td width="260" valign="top" style="padding:0 25px 20px 40px;">
+                                <td width="260" valign="top" class="stackColumn" style="padding:0 25px 20px 40px;">
 
                                 <!-- IMAGE -->
-                                <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="230">
+                                <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
                                     <tr>
                                     <td style="padding:0;">
                                         <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/72383e85-0835-7e07-4317-7ea61600cb1e.png"
                                             width="374"
                                             alt=""
-                                            style="display:block;width:230px;height:auto;border:0;">
+                                            style="display:block;width:230px;max-width:100%;height:auto;border:0;">
                                     </td>
                                     </tr>
                                 </table>
@@ -2466,7 +2523,7 @@
                                 </td>
 
                                 <!-- RIGHT TEXT AREA -->
-                                <td width="380" valign="top" style="padding:0 38px 40px 0;font-family:Helvetica, Arial, sans-serif;color:#000000;">
+                                <td width="380" valign="top" class="stackColumn" style="padding:0 38px 40px 0;font-family:Helvetica, Arial, sans-serif;color:#000000;">
 
                                 <div style="font-size:18px;line-height:18px;font-weight:bold;color:#000000;padding:50px 0 20px 0;">
                                     Robin Carpenter
@@ -2514,16 +2571,16 @@
                             <tr>
 
                                 <!-- LEFT IMAGE AREA -->
-                                <td width="260" valign="top" style="padding:0 25px 20px 40px;">
+                                <td width="260" valign="top" class="stackColumn" style="padding:0 25px 20px 40px;">
 
                                 <!-- IMAGE -->
-                                <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="230">
+                                <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
                                     <tr>
                                     <tdstyle="padding:0;">
                                         <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/72383e85-0835-7e07-4317-7ea61600cb1e.png"
                                             width="374"
                                             alt=""
-                                            style="display:block;width:230px;height:auto;border:0;">
+                                            style="display:block;width:230px;max-width:100%;height:auto;border:0;">
                                     </td>
                                     </tr>
                                 </table>
@@ -2531,7 +2588,7 @@
                                 </td>
 
                                 <!-- RIGHT TEXT AREA -->
-                                <td width="380" valign="top" style="padding:0 38px 40px 0;font-family:Helvetica, Arial, sans-serif;color:#000000;">
+                                <td width="380" valign="top" class="stackColumn" style="padding:0 38px 40px 0;font-family:Helvetica, Arial, sans-serif;color:#000000;">
 
                                 <div style="font-size:18px;line-height:18px;font-weight:bold;color:#FFFFFF;padding:50px 0 20px 0;">
                                     Robin Carpenter
@@ -2561,15 +2618,15 @@
                         </tr>
                       <!--Disclaimer-->
                         <tr>
-                            <td max-width= "100%" valign="center" style="background-color:#FFFFFF; padding:20px,38px,5px,38px;">
+                            <td valign="top" style="background-color:#FFFFFF; padding:20px 38px 5px 38px;">
 
                             
-                                <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                     <tr>
-                                    <td>
+                                    <td style="padding:0;">
                                         <div style="font-size:22px;line-height:2px;font-weight:bold;color:#000000;padding:40px 0 40px 38px;">
                                             Disclaimer
-
+                                        </div>
                                         <div style="font-size:16px;line-height:18px;font-weight:normal;color:#000000;padding:40px 0 0 0;">
                                             Please note that the respective national organization is responsible for releasing the 
                                             products and solutions to the market. Before publication, global marketing materials 
@@ -2594,11 +2651,11 @@
                     <tr>
 
                         <!-- LEFT COLUMN -->
-                        <td width="50%" valign="top" style="padding-right:40px;">
+                        <td width="50%" valign="top" class="stackColumn">
 
                         <!-- LOGO -->
                         <div>
-                            <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/aa992548-cf57-82e6-d0e1-3fed96227f06.png" width="140" style="display:block;" alt="dormakaba">
+                            <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/aa992548-cf57-82e6-d0e1-3fed96227f06.png" width="140" style="display:block;max-width:100%;height:auto;" alt="dormakaba">
                         </div>
 
                         <!-- COPYRIGHT -->
@@ -2606,49 +2663,64 @@
                             dormakaba Group 2024<br>
                             All rights reserved.
                         </div>
+                        <!-- SOCIAL ICONS -->
+                        <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-top:10px;margin-left:0;">
+                            <tr>
+                                <!-- Facebook -->
+                                <td width="25" valign="middle" align="left" style="width:25px;height:20px;line-height:0;padding-right:10px;">
+                                    <a href="https://facebook.com" style="display:block;line-height:0;text-decoration:none;">
+                                        <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/40ec77f7-17b2-e664-068e-86b6259d93fe.png"
+                                            width="8"
+                                            alt="Facebook"
+                                            style="display:block;width:8px;height:auto;border:0;outline:none;text-decoration:none;">
+                                    </a>
+                                </td>
 
-        <!-- SOCIAL ICONS -->
-        <div style="height:auto;">
-            <a href="https://facebook.com" style="display:inline-block; margin-right:20px; line-height:0;">
-                <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/40ec77f7-17b2-e664-068e-86b6259d93fe.png"
-                width="20"
-                style="display:block; border:0; outline:none; text-decoration:none;"
-                alt="Facebook">
-            </a>
+                                <!-- X -->
+                                <td width="25" valign="middle" align="left" style="width:25px;height:20px;line-height:0;padding-right:20px;">
+                                    <a href="https://x.com" style="display:block;line-height:0;text-decoration:none;">
+                                        <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/37f2fc37-ec34-b335-6d1d-ed974ef75d3a.png"
+                                            width="23"
+                                            alt="X"
+                                            style="display:block;width:24px;height:auto;border:0;outline:none;text-decoration:none;">
+                                    </a>
+                                </td>
 
-            <a href="https://x.com" style="display:inline-block; margin-right:20px; line-height:0;">
-                <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/37f2fc37-ec34-b335-6d1d-ed974ef75d3a.png"
-                width="20"
-                style="display:block; border:0; outline:none; text-decoration:none;"
-                alt="X">
-            </a>
+                                <!-- Instagram -->
+                                <td width="28" valign="middle" align="left" style="width:28px;height:20px;line-height:0;padding-right:20px;">
+                                    <a href="https://instagram.com" style="display:block;line-height:0;text-decoration:none;">
+                                        <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/eb5f2e20-16a5-19d6-6359-a1b7fb8dbc49.png"
+                                            width="18"
+                                            alt="Instagram"
+                                            style="display:block;width:18px;height:auto;border:0;outline:none;text-decoration:none;">
+                                    </a>
+                                </td>
 
-            <a href="https://instagram.com" style="display:inline-block; margin-right:20px; line-height:0;">
-                <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/eb5f2e20-16a5-19d6-6359-a1b7fb8dbc49.png"
-                width="20"
-                style="display:block; border:0; outline:none; text-decoration:none;"
-                alt="Instagram">
-            </a>
+                                <!-- LinkedIn -->
+                                <td width="28" valign="middle" align="left" style="width:28px;height:20px;line-height:0;padding-right:20px;">
+                                    <a href="https://linkedin.com" style="display:block;line-height:0;text-decoration:none;">
+                                        <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/8847e189-0ab1-cfcb-1a43-7e9401790cb9.png"
+                                            width="18"
+                                            alt="LinkedIn"
+                                            style="display:block;width:18px;height:auto;border:0;outline:none;text-decoration:none;">
+                                    </a>
+                                </td>
 
-            <a href="https://linkedin.com" style="display:inline-block; margin-right:20px; line-height:0;">
-                <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/8847e189-0ab1-cfcb-1a43-7e9401790cb9.png"
-                width="20"
-                style="display:block; border:0; outline:none; text-decoration:none;"
-                alt="LinkedIn">
-            </a>
-
-            <a href="https://youtube.com" style="display:inline-block; line-height:0;">
-                <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/4bb7fd47-8d77-4c2b-b8d0-880fa7f26020.png"
-                width="20"
-                style="display:block; border:0; outline:none; text-decoration:none;"
-                alt="YouTube">
-            </a>
-        </div>
-
+                                <!-- YouTube -->
+                                <td width="28" valign="middle" align="left" style="width:28px;height:20px;line-height:0;padding:0;">
+                                    <a href="https://youtube.com" style="display:block;line-height:0;text-decoration:none;">
+                                        <img src="https://mcusercontent.com/3bc37aaf9766c4fd2a953a1e0/images/4bb7fd47-8d77-4c2b-b8d0-880fa7f26020.png"
+                                            width="18"
+                                            alt="YouTube"
+                                            style="display:block;width:18px;height:auto;border:0;outline:none;text-decoration:none;">
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
                         </td>
 
                         <!-- RIGHT COLUMN -->
-                        <td width="50%" valign="top" style="font-size:12px; line-height:18px; color:#cccccc;">
+                        <td width="50%" valign="top" class="stackColumn" style="font-size:12px; line-height:18px; color:#cccccc;">
 
                         <!-- RECIPIENT -->
                         <div style="margin-bottom:10px;">
